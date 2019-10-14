@@ -1,47 +1,13 @@
-initBoard([[empty, empty, empty, empty],
-            [empty, empty, empty, empty],
-            [empty, empty, empty, empty],
-            [empty, empty, empty, empty]
-        ]).
+include("printer.pl").
 
-start:- initBoard(X), printInicialLine, pb(X).
+initBoard([
+    [empty, empty, empty, empty],
+    [empty, empty, empty, empty],
+    [empty, empty, empty, empty],
+    [empty, empty, empty, empty]
+    ]).
 
-pb([]). %print board
+start :- 
+    initBoard(X), 
+    printBoard(X).
 
-pb([L|T]) :- 
-%printInicialLine, 
-pLineBegin, pl(L), pNewLine, printLine,pb(T).
-
-pl([]).
-pl([C|T]):-  pc(C), pl(T).
-
-pc(C):-
- translate(C, P), write(P), psep.
-
-translate(empty, '..').
-
-% white pieces
-translate(sphere_white, Ow).
-translate(cylinder_white, Hw).
-translate(sphere_white, Ow).
-translate(cylinder_white, Hw).
-
-% brown pieces
-translate(sphere_brown, Ob).
-translate(cylinder_brown, Hb).
-translate(sphere_brown, Ob).
-translate(cylinder_brown, Hb).
-
-printInicialLine:-
-write(' ___________________________\n').
-
-printLine:-
-write('|_____|______|______|______|\n').
-
-pNewLine:-
-write('\n').
-
-psep:- write('  |  ').
-
-pLineBegin:- 
-write('| ').
