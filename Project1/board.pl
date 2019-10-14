@@ -1,4 +1,4 @@
-include("printer.pl").
+:- include('printer.pl').
 
 initBoard([
     [empty, empty, empty, empty],
@@ -9,5 +9,5 @@ initBoard([
 
 start :- 
     initBoard(X), 
-    printBoard(X).
+    display_game(X).
 
