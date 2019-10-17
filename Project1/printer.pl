@@ -38,21 +38,27 @@ translate(cube_brown, 'Mb').
 translate(cone_brown, 'Ab').
 
 % special prints
-printColumnCoordinates :-   write('  __0___ __1___ __2___ __3___ \n').
-printLineSeperators(2) :-   write(' |xxxxxx|xxxxxxXxxxxxx|xxxxxx|\n').
-printLineSeperators(_) :-   write(' |______|______X______|______|\n').
+printColumnCoordinates :-   
+    write('\n     0      1      2      3    \n'),
+    write('  xxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n').
+
+printLineSeperators(2) :-   write('  Xxxxxxx|xxxxxxXxxxxxx|xxxxxxX\n').
+printLineSeperators(4) :-   write('  XxxxxxxxxxxxxxXxxxxxxxxxxxxxX\n').
+printLineSeperators(_) :-   write('  X______|______X______|______X\n').
 printNewLine :-             write('\n').
 printSeperator(2) :-        write('  X  ').
+printSeperator(4) :-        write('  X  ').
 printSeperator(_) :-        write('  |  ').
 printLineCoord(N) :- 
     write(N),
-    write('|  ').
+    write(' X  ').
 
 printLegend :- 
     write('LEGEND:\n'),
-    write('Piece: <solid><color>\n'),
-    write(' Solids   - Symbol     Colors  -  Symbol\n'),
-    write('  Cube    -  M          Brown  -    b\n'),
-    write(' Sphere   -  O          White  -    w\n'),
-    write('  Cone    -  A\n'),
-    write('Cylinder  -  H\n').
+    write('Piece: <solid>_<color>\n'),
+    write(' Solid    -  Symbol     Color  -  Symbol\n'),
+    write('  Cone    -    A        Brown  -    b\n'),
+    write('  Cube    -    M        White  -    w\n'),
+    write('Cylinder  -    H\n'),
+    write(' Sphere   -    O\n').
+     
