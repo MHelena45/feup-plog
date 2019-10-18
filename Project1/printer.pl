@@ -38,7 +38,7 @@ translate(cube_brown, 'Mb').
 translate(cone_brown, 'Ab').
 
 % special prints
-printColumnCoordinates :-   write('  __0___ __1___ __2___ __3___ \n').
+printColumnCoordinates :-   write('  __1___ __2___ __3___ __4___ \n').
 printLineSeperators(2) :-   write(' |xxxxxx|xxxxxxXxxxxxx|xxxxxx|\n').
 printLineSeperators(_) :-   write(' |______|______X______|______|\n').
 printNewLine :-             write('\n').
