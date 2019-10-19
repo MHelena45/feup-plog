@@ -34,11 +34,21 @@ start :-
     initBoard(X), 
     display_game(X).
 
-% Indicates which player has the next turn (1  || 2)
+% Indicates which player has the next turn (1 || 2)
 :- (dynamic nextPlayer/1).
 nextPlayer(1).
 
-play :-
+/**
+ * Clears everyThing done before, to torn the code more 
+ * a game style
+ */  
+clearEverything :-
+    write('\33\[2J').
+
+/**
+ * asks the play what we wants to play, and puts it on the board
+ */
+play(P) :-
     nextPlayer(P),
     board(X),
     write('What piece do you want to play?\n '),
@@ -49,16 +59,19 @@ play :-
     read(Column),
     playPiece(Row, Column, Piece, X, Y),
     assert(board(Y)),
+    clearEverything,
     display_game(Y),
     set_next_player(P).
 
-/** 
- * set_next_player(+Player)
+/**
+ * game with only two players
+ * set_next_player(current Player)
+ * sets the other play the current player that can play
  */ 
-set_next_player(1):-
+set_next_player(1) :-
     assert(nextPlayer(2)).
 
-set_next_player(2):-
+set_next_player(2) :-
     assert(nextPlayer(1)).
 
 playPiece(Row, Column, Piece, TabIn, TabOut) :-
