@@ -22,21 +22,55 @@ finBoard([
     [empty, empty, empty, cube_brown]
     ]).
 
+:- (dynamic board/1).
+board([
+    [empty, empty, empty, empty],
+    [empty, empty, empty, empty],
+    [empty, empty, empty, empty],
+    [empty, empty, empty, empty]
+    ]).
 
 start :- 
     initBoard(X), 
     display_game(X).
 
-% playPiece(Row, Column, Piece, TabIn, TabOut) :-
-%   updateRow(Row, Column, Piece, TabIn, TabOut).
+% Indicates which player has the next turn (1  || 2)
+:- (dynamic nextPlayer/1).
+nextPlayer(1).
 
-%updateRow(1, Column, Piece, [Row| More], [NewRow| More]):-
-%    updateColumn(Column, Piece, Row, NewRow).
+play :-
+    nextPlayer(P),
+    board(X),
+    write('What piece do you want to play?\n '),
+    read(Piece), 
+    write('In which row?\n'),
+    read(Row), 
+    write('In which collumn?\n'),
+    read(Column),
+    playPiece(Row, Column, Piece, X, Y),
+    assert(board(Y)),
+    display_game(Y),
+    set_next_player(P).
 
-%updateRow(N, Column, Piece, [Row| More], [Row| MoreRows]) :-
-%    N > 1, Next is N-1, updateRow(Next, Column, Piece, More, MoreRows).
+/** 
+ * set_next_player(+Player)
+ */ 
+set_next_player(1):-
+    assert(nextPlayer(2)).
 
-%updateColumn(1, Piece, [_ | Rest], [Piece | Rest]).
+set_next_player(2):-
+    assert(nextPlayer(1)).
 
-%updateColumn(N, Piece, [P | Rest], [P| More]) :-
-%    N>1, Next is N-1, updateColumn(Next, Piece, Rest, More).
+playPiece(Row, Column, Piece, TabIn, TabOut) :-
+   updateRow(Row, Column, Piece, TabIn, TabOut).
+
+updateRow(1, Column, Piece, [Row| More], [NewRow| More]):-
+    updateColumn(Column, Piece, Row, NewRow).
+
+updateRow(N, Column, Piece, [Row| More], [Row| MoreRows]) :-
+    N > 1, Next is N-1, updateRow(Next, Column, Piece, More, MoreRows).
+
+updateColumn(1, Piece, [_ | Rest], [Piece | Rest]).
+
+updateColumn(N, Piece, [P | Rest], [P| More]) :-
+    N>1, Next is N-1, updateColumn(Next, Piece, Rest, More).
