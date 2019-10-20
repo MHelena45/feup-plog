@@ -1,27 +1,5 @@
 :- include('printer.pl').
 
-initBoard([
-    [empty, empty, empty, empty],
-    [empty, empty, empty, empty],
-    [empty, empty, empty, empty],
-    [empty, empty, empty, empty]
-    ]).
-
-midBoard([
-    [sphere_white, empty, empty, cylinder_white],
-    [cube_brown, empty, empty, empty],
-    [empty, cube_white, cone_brown, empty],
-    [empty, empty, empty, cube_brown]
-    ]).
-
-
-finBoard([
-    [sphere_white, empty, empty, cylinder_white],
-    [cube_brown, cylinder_white, empty,cone_white],
-    [empty, cube_white, cone_brown, sphere_brown],
-    [empty, empty, empty, cube_brown]
-    ]).
-
 :- (dynamic board/1).
 board([
     [empty, empty, empty, empty],
@@ -31,7 +9,7 @@ board([
     ]).
 
 start :- 
-    initBoard(X), 
+    board(X), 
     display_game(X).
 
 % Indicates which player has the next turn (1 || 2)
