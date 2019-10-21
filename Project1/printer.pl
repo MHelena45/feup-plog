@@ -1,4 +1,4 @@
-display_game(X) :-
+display_game(X, W, B) :-
     printColumnCoordinates,
     printBoardContent(X, 1),
     printLegend.

@@ -1,15 +1,31 @@
 :- include('printer.pl').
 
 board([
-    [empty, empty, empty, empty],
-    [empty, empty, empty, empty],
-    [empty, empty, empty, empty],
-    [empty, empty, empty, empty]
-    ]).
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0]
+]).
+
+whitePieces([
+    [11, 11], %cone
+    [21, 21], %cube
+    [31, 31], %cyliner
+    [41, 41] %sphere
+]).
+
+brownPieces([
+    [12, 12], %cone
+    [22, 22], %cube
+    [32, 32], %cyliner
+    [42, 42] %sphere
+]).
 
 start :- 
     board(X), 
-    display_game(X),
+    whitePieces(W),
+    brownPieces(B),
+    display_game(X, W, B),
     play(1, X).
 
 /**
@@ -49,8 +65,8 @@ play(P,X) :-
     playPiece(Row, Column, Piece, X, Y),
     clearEverything,
     display_game(Y),
-    NP is ((P+1)mod 2),
-    play(NP, Y).
+    NP is ((P+1)mod 2), % chnges player
+    play(NP, Y).  % changes current board
 
 % white pieces
 translate(sphere_white, sphere , 1).
@@ -58,7 +74,7 @@ translate(cylinder_white, cylinder, 1).
 translate(cube_white, cube, 1).
 translate(cone_white, cone, 1).
 
-% white pieces
+% brown pieces
 translate(sphere_brown, sphere , 2).
 translate(cylinder_brown, cylinder, 2).
 translate(cube_brown, cube, 2).
