@@ -1,6 +1,5 @@
 :- include('printer.pl').
 
-:- (dynamic board/1).
 board([
     [empty, empty, empty, empty],
     [empty, empty, empty, empty],
@@ -10,11 +9,8 @@ board([
 
 start :- 
     board(X), 
-    display_game(X).
-
-% Indicates which player has the next turn (1 || 2)
-:- (dynamic nextPlayer/1).
-nextPlayer(1).
+    display_game(X),
+    play(1, X).
 
 /**
  * Clears everyThing done before, to torn the code more 
@@ -23,34 +19,50 @@ nextPlayer(1).
 clearEverything :-
     write('\33\[2J').
 
+writeColor(1):-
+    write('white').
+
+writeColor(2):-
+    write('brown').   
+
 /**
- * asks the play what we wants to play, and puts it on the board
+ * asks the play what we wants to play
  */
-play(P) :-
-    nextPlayer(P),
-    board(X),
-    write('What piece do you want to play?\n '),
+getPlay(ColorPiece, Row, Column, P):-
+    write('\nPlayer '),
+    write(P),
+    write(' is your turn!\nYour pieces are '),
+    writeColor(P),
+    write('\nWhat piece do you want to play?\n '),
     read(Piece), 
+    translate(ColorPiece, Piece, P),
     write('In which row?\n'),
     read(Row), 
     write('In which collumn?\n'),
-    read(Column),
-    playPiece(Row, Column, Piece, X, Y),
-    assert(board(Y)),
-    clearEverything,
-    display_game(Y),
-    set_next_player(P).
+    read(Column).
 
 /**
- * game with only two players
- * set_next_player(current Player)
- * sets the other play the current player that can play
- */ 
-set_next_player(1) :-
-    assert(nextPlayer(2)).
+ * given the number of the player, plays the piece the player want
+ */
+play(P,X) :-
+    getPlay(Piece, Row, Column, 1),
+    playPiece(Row, Column, Piece, X, Y),
+    clearEverything,
+    display_game(Y),
+    NP is ((P+1)mod 2),
+    play(NP, Y).
 
-set_next_player(2) :-
-    assert(nextPlayer(1)).
+% white pieces
+translate(sphere_white, sphere , 1).
+translate(cylinder_white, cylinder, 1).
+translate(cube_white, cube, 1).
+translate(cone_white, cone, 1).
+
+% white pieces
+translate(sphere_brown, sphere , 2).
+translate(cylinder_brown, cylinder, 2).
+translate(cube_brown, cube, 2).
+translate(cone_brown, cone, 2).
 
 playPiece(Row, Column, Piece, TabIn, TabOut) :-
    updateRow(Row, Column, Piece, TabIn, TabOut).
