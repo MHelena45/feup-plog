@@ -8,10 +8,10 @@ board([
 ]).
 
 whitePieces([
-    [11, 11], %cone
-    [21, 21], %cube
-    [31, 31], %cyliner
-    [41, 41] %sphere
+    [11, 11], % cone
+    [21, 21], % cube
+    [31, 31], % cyliner
+    [41, 41] % sphere
 ]).
 
 brownPieces([
@@ -26,7 +26,7 @@ start :-
     whitePieces(W),
     brownPieces(B),
     display_game(X, W, B),
-    play(1, X).
+    play(1, X, W, B).
 
 /**
  * Clears everyThing done before, to torn the code more 
@@ -60,25 +60,25 @@ getPlay(ColorPiece, Row, Column, P):-
 /**
  * given the number of the player, plays the piece the player want
  */
-play(P,X) :-
+play(P,X, W, B) :-
     getPlay(Piece, Row, Column, 1),
     playPiece(Row, Column, Piece, X, Y),
     clearEverything,
-    display_game(Y),
+    display_game(Y, W, B),
     NP is ((P+1)mod 2), % chnges player
-    play(NP, Y).  % changes current board
+    play(NP, Y, W, B).  % changes current board
 
 % white pieces
-translate(sphere_white, sphere , 1).
-translate(cylinder_white, cylinder, 1).
-translate(cube_white, cube, 1).
-translate(cone_white, cone, 1).
+translate(41, sphere , 1).
+translate(31, cylinder, 1).
+translate(21, cube, 1).
+translate(11, cone, 1).
 
 % brown pieces
-translate(sphere_brown, sphere , 2).
-translate(cylinder_brown, cylinder, 2).
-translate(cube_brown, cube, 2).
-translate(cone_brown, cone, 2).
+translate(42, sphere , 2).
+translate(32, cylinder, 2).
+translate(22, cube, 2).
+translate(12, cone, 2).
 
 playPiece(Row, Column, Piece, TabIn, TabOut) :-
    updateRow(Row, Column, Piece, TabIn, TabOut).

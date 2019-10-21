@@ -23,19 +23,19 @@ printCell(C, N) :-
     write(P), 
     printSeperator(N).
 
-translate(empty, '..').
+translate(0, '..').
 
 % white pieces
-translate(sphere_white, 'Ow').
-translate(cylinder_white, 'Hw').
-translate(cube_white, 'Mw').
-translate(cone_white, 'Aw').
+translate(41, 'Ow').
+translate(31, 'Hw').
+translate(21, 'Mw').
+translate(11, 'Aw').
 
 % brown pieces
-translate(sphere_brown, 'Ob').
-translate(cylinder_brown, 'Hb').
-translate(cube_brown, 'Mb').
-translate(cone_brown, 'Ab').
+translate(42, 'Ob').
+translate(32, 'Hb').
+translate(22, 'Mb').
+translate(12, 'Ab').
 
 % special prints
 printColumnCoordinates :-   
