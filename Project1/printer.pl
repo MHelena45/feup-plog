@@ -26,15 +26,15 @@ printCell(C, N) :-
 translate(0, '..').
 
 % white pieces
-translate(41, 'Ow').
-translate(31, 'Hw').
-translate(21, 'Mw').
+translate(91, 'Ow').
+translate(71, 'Hw').
+translate(51, 'Mw').
 translate(11, 'Aw').
 
 % brown pieces
-translate(42, 'Ob').
-translate(32, 'Hb').
-translate(22, 'Mb').
+translate(92, 'Ob').
+translate(72, 'Hb').
+translate(52, 'Mb').
 translate(12, 'Ab').
 
 % special prints
