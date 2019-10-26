@@ -25,6 +25,14 @@ writeColor(2):-
     write('brown').   
 
 /**
+ * Accepted pieces
+ */
+checkPiece(cone).
+checkPiece(sphere).
+checkPiece(cylinder).
+checkPiece(cube).
+
+/**
  * asks the play what we wants to play
  */
 getPlay(ColorPiece, Row, Column, P):-
@@ -32,10 +40,10 @@ getPlay(ColorPiece, Row, Column, P):-
     write(P),
     write(' is your turn!\nYour pieces are '),
     writeColor(P),
-    repeat,
+    repeat, % if the player inserts a invalid piece, ask the piece again
     write('.\nWhat piece do you want to play?\n '),
     read(Piece), 
-    % check Piece
+    checkPiece(Piece),
     translate(ColorPiece, Piece, P),
     repeat, % if the player inserts a invalid row, ask the row again
     write('In which row?\n'),
@@ -50,7 +58,7 @@ getPlay(ColorPiece, Row, Column, P):-
 /**
  * given the number of the player, plays the piece the player want
  */
-play(P, X) :-
+play(1, X) :-
     repeat,
     getPlay(Piece, Row, Column, 1),
     % valid_move
@@ -58,8 +66,17 @@ play(P, X) :-
     clearEverything,
     display_game(Y),
     %checkEnd
-    NP is ((P+1)mod 2), % chnges player
-    play(NP, Y).  % changes current board
+    play(2, Y).  % changes current board and player
+
+play(2, X) :-
+    repeat,
+    getPlay(Piece, Row, Column, 2),
+    % valid_move
+    playPiece(Row, Column, Piece, X, Y),    
+    clearEverything,
+    display_game(Y),
+    %checkEnd
+    play(1, Y).  % changes current board and player
 
 % white pieces
 translate(11, cone, 1).
