@@ -1,25 +1,5 @@
 :- include('printer.pl').
-
-board([
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0]
-]).
-
-whitePieces([
-    [11, 11], % cone
-    [21, 21], % cube
-    [31, 31], % cyliner
-    [41, 41] % sphere
-]).
-
-brownPieces([
-    [12, 12], %cone
-    [22, 22], %cube
-    [32, 32], %cyliner
-    [42, 42] %sphere
-]).
+:- include('dataStructs.pl').
 
 start :- 
     board(X), 
@@ -27,6 +7,11 @@ start :-
     brownPieces(B),
     display_game(X, W, B),
     play(1, X, W, B).
+
+% check if row and Column are valid(between 1 and 4 inclusive)
+checkPosition(Pos):-
+    Pos < 5,
+    Pos > 0.
 
 /**
  * Clears everyThing done before, to torn the code more 
@@ -49,35 +34,45 @@ getPlay(ColorPiece, Row, Column, P):-
     write(P),
     write(' is your turn!\nYour pieces are '),
     writeColor(P),
-    write('\nWhat piece do you want to play?\n '),
+    repeat,
+    write('.\nWhat piece do you want to play?\n '),
     read(Piece), 
+    % check Piece
     translate(ColorPiece, Piece, P),
+    repeat, % if the player inserts a invalid row, ask the row again
     write('In which row?\n'),
     read(Row), 
+    checkPosition(Row),
+    repeat, % if the player inserts a invalid column, ask the column again
     write('In which collumn?\n'),
-    read(Column).
+    read(Column),
+    checkPosition(Column),
+    !.
 
 /**
  * given the number of the player, plays the piece the player want
  */
 play(P,X, W, B) :-
+    repeat,
     getPlay(Piece, Row, Column, 1),
-    playPiece(Row, Column, Piece, X, Y),
+    % valid_move
+    playPiece(Row, Column, Piece, X, Y),    
     clearEverything,
     display_game(Y, W, B),
+    %checkEnd
     NP is ((P+1)mod 2), % chnges player
     play(NP, Y, W, B).  % changes current board
 
 % white pieces
-translate(41, sphere , 1).
-translate(31, cylinder, 1).
-translate(21, cube, 1).
+translate(91, sphere , 1).
+translate(71, cylinder, 1).
+translate(51, cube, 1).
 translate(11, cone, 1).
 
 % brown pieces
-translate(42, sphere , 2).
-translate(32, cylinder, 2).
-translate(22, cube, 2).
+translate(92, sphere , 2).
+translate(72, cylinder, 2).
+translate(52, cube, 2).
 translate(12, cone, 2).
 
 playPiece(Row, Column, Piece, TabIn, TabOut) :-
