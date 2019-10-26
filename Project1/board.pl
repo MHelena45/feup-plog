@@ -3,10 +3,8 @@
 
 start :- 
     board(X), 
-    whitePieces(W),
-    brownPieces(B),
-    display_game(X, W, B),
-    play(1, X, W, B).
+    display_game(X),
+    play(1, X).
 
 % check if row and Column are valid(between 1 and 4 inclusive)
 checkPosition(Pos):-
@@ -52,28 +50,28 @@ getPlay(ColorPiece, Row, Column, P):-
 /**
  * given the number of the player, plays the piece the player want
  */
-play(P,X, W, B) :-
+play(P, X) :-
     repeat,
     getPlay(Piece, Row, Column, 1),
     % valid_move
     playPiece(Row, Column, Piece, X, Y),    
     clearEverything,
-    display_game(Y, W, B),
+    display_game(Y),
     %checkEnd
     NP is ((P+1)mod 2), % chnges player
-    play(NP, Y, W, B).  % changes current board
+    play(NP, Y).  % changes current board
 
 % white pieces
-translate(91, sphere , 1).
-translate(71, cylinder, 1).
-translate(51, cube, 1).
 translate(11, cone, 1).
+translate(51, cube, 1).
+translate(71, cylinder, 1).
+translate(91, sphere , 1).
 
 % brown pieces
-translate(92, sphere , 2).
-translate(72, cylinder, 2).
-translate(52, cube, 2).
 translate(12, cone, 2).
+translate(52, cube, 2).
+translate(72, cylinder, 2).
+translate(92, sphere , 2).
 
 playPiece(Row, Column, Piece, TabIn, TabOut) :-
    updateRow(Row, Column, Piece, TabIn, TabOut).

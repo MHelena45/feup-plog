@@ -1,57 +1,63 @@
 :- include('piecesPrinter.pl').
 
-display_game(Board, WhitePieces, BrownPieces) :-
+display_game(Board) :-
     printColumnCoordinates,
-    printBoardContent(Board, 1),
-    printLegend.
+    printBoardContent(Board, 1).
 
 printBoardContent([], _). 
 printBoardContent([Line|Rest], NumLine) :- 
-    printLineCoord(NumLine), 
-    printBoardLine(Line, 1), 
-    printNewLine, 
+    printBoardLine(Line, NumLine, 1), 
     printLineSeperators(NumLine),
     NumLine1 is NumLine + 1,
     printBoardContent(Rest, NumLine1).
 
-printBoardLine(Line, PieceLine) :-
-    PieceLine < 20,
-    printLine(Line, 1, PieceLine),
+printBoardLine(Line, _, 16).
+printBoardLine(Line, NumLine, PieceLine) :-
+    printLine(Line, NumLine, 1, PieceLine),
+    printNewLine,
     PieceLine1 is PieceLine + 1,
-    printBoardLine(Line, PieceLine1).
+    printBoardLine(Line, NumLine, PieceLine1).
 
-printLine([], _).
-printLine([Cell|Rest], NumCol, PieceLine) :-  
-    printCell(Cell, NumCol, PieceLine), 
+printLine([], _, _, _).
+printLine([Cell|Rest], NumLine, NumCol, PieceLine) :-  
+    printCell(Cell, NumLine, NumCol, PieceLine), 
     NumCol1 is NumCol + 1,
-    printLine(Rest, NumCol1, PieceLine).
+    printLine(Rest, NumLine, NumCol1, PieceLine).
 
-printCell(Cell, NumCol, PieceLine) :-
+% Specific printer to display number of board line
+printCell(Cell, NumLine, 1, 7) :-
+    printLineCoord(NumLine),
+    printPiece(Cell, PieceLine),
+    printColumnSeperator(1). 
+
+%Specific printer to display a seperator in the begining of each line
+printCell(Cell, _, 1, _) :-
+    printColumnSeperator(0),
+    printPiece(Cell, PieceLine),
+    printColumnSeperator(1).
+
+% General cell printer that displays the piece and then a cell seperator
+printCell(Cell, NumLine, NumCol, PieceLine) :-
     printPiece(Cell, PieceLine), 
-    printSeperator(NumCol).
+    printColumnSeperator(NumCol).
 
 % special prints
 printColumnCoordinates :-   
-    write('\n     1      2      3      4    \n'),
-    write('  xxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n').
+    write('\n             1                  2                   3                   4          \n'),
+    printLineSeperators(0).
+                               
+printLineSeperators(1) :-       write('______________________|___________________X___________________|___________________X\n').
+printLineSeperators(3) :-       write('______________________|___________________X___________________|___________________X\n').
+printLineSeperators(_) :-       write('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n').
 
-printLineSeperators(2) :-   write('  Xxxxxxx|xxxxxxXxxxxxx|xxxxxxX\n').
-printLineSeperators(4) :-   write('  XxxxxxxxxxxxxxXxxxxxxxxxxxxxX\n').
-printLineSeperators(_) :-   write('  X______|______X______|______X\n').
-printNewLine :-             write('\n').
-printSeperator(2) :-        write('  X  ').
-printSeperator(4) :-        write('  X  ').
-printSeperator(_) :-        write('  |  ').
-printLineCoord(N) :- 
-    write(N),
+printNewLine :-                 write('\n').
+printColumnSeperator(0) :-      write('  X  ').
+printColumnSeperator(1) :-      write('  |  ').
+printColumnSeperator(2) :-      write('  X  ').
+printColumnSeperator(3) :-      write('  |  ').
+printColumnSeperator(4) :-      write('  X  ').
+
+printLineCoord(NumLine) :- 
+    write(NumLine),
     write(' X  ').
-
-printLegend :- 
-    write('LEGEND:\n'),
-    write('Piece: <solid>_<color>\n'),
-    write(' Solid    -  Symbol     Color  -  Symbol\n'),
-    write('  Cone    -    A        Brown  -    b\n'),
-    write('  Cube    -    M        White  -    w\n'),
-    write('Cylinder  -    H\n'),
-    write(' Sphere   -    O\n').
      
