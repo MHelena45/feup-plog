@@ -27,11 +27,11 @@ printLine([Cell|Rest], NumLine, NumCol, PieceLine) :-
 % Specific printer to display number of board line
 printCell(Cell, NumLine, 1, 7) :-
     printLineCoord(NumLine),
-    printPiece(Cell, PieceLine),
+    printPiece(Cell, 7),
     printColumnSeperator(1). 
 
 %Specific printer to display a seperator in the begining of each line
-printCell(Cell, _, 1, _) :-
+printCell(Cell, _, 1, PieceLine) :-
     printColumnSeperator(0),
     printPiece(Cell, PieceLine),
     printColumnSeperator(1).
@@ -46,9 +46,9 @@ printColumnCoordinates :-
     write('\n             1                  2                   3                   4          \n'),
     printLineSeperators(0).
                                
-printLineSeperators(1) :-       write('______________________|___________________X___________________|___________________X\n').
-printLineSeperators(3) :-       write('______________________|___________________X___________________|___________________X\n').
-printLineSeperators(_) :-       write('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n').
+printLineSeperators(1) :-       write('__X___________________|___________________X___________________|___________________X\n').
+printLineSeperators(3) :-       write('__X___________________|___________________X___________________|___________________X\n').
+printLineSeperators(_) :-       write('--XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n').
 
 printNewLine :-                 write('\n').
 printColumnSeperator(0) :-      write('  X  ').
