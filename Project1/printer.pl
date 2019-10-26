@@ -1,41 +1,34 @@
-display_game(X, W, B) :-
+:- include('piecesPrinter.pl').
+
+display_game(Board, WhitePieces, BrownPieces) :-
     printColumnCoordinates,
-    printBoardContent(X, 1),
+    printBoardContent(Board, 1),
     printLegend.
 
 printBoardContent([], _). 
-printBoardContent([L|T], N) :- 
-    printLineCoord(N), 
-    printLine(L, 1), 
+printBoardContent([Line|Rest], NumLine) :- 
+    printLineCoord(NumLine), 
+    printBoardLine(Line, 1), 
     printNewLine, 
-    printLineSeperators(N),
-    N1 is N + 1,
-    printBoardContent(T, N1).
+    printLineSeperators(NumLine),
+    NumLine1 is NumLine + 1,
+    printBoardContent(Rest, NumLine1).
+
+printBoardLine(Line, PieceLine) :-
+    PieceLine < 20,
+    printLine(Line, 1, PieceLine),
+    PieceLine1 is PieceLine + 1,
+    printBoardLine(Line, PieceLine1).
 
 printLine([], _).
-printLine([C|T], N) :-  
-    printCell(C, N), 
-    N1 is N + 1,
-    printLine(T, N1).
+printLine([Cell|Rest], NumCol, PieceLine) :-  
+    printCell(Cell, NumCol, PieceLine), 
+    NumCol1 is NumCol + 1,
+    printLine(Rest, NumCol1, PieceLine).
 
-printCell(C, N) :-
-    translate(C, P), 
-    write(P), 
-    printSeperator(N).
-
-translate(0, '..').
-
-% white pieces
-translate(41, 'Ow').
-translate(31, 'Hw').
-translate(21, 'Mw').
-translate(11, 'Aw').
-
-% brown pieces
-translate(42, 'Ob').
-translate(32, 'Hb').
-translate(22, 'Mb').
-translate(12, 'Ab').
+printCell(Cell, NumCol, PieceLine) :-
+    printPiece(Cell, PieceLine), 
+    printSeperator(NumCol).
 
 % special prints
 printColumnCoordinates :-   
