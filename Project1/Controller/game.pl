@@ -15,7 +15,7 @@ play(Player, Board, WhitePieces, BrownPieces) :-
     getPlay(Piece, Row, Column, Player),
     % valid_move
     playPiece(Row, Column, Piece, Board, NewBoard),
-    removePiece(Piece, WhitePieces, BrownPieces, NewWhitePieces, NewBrownPieces),  
+    removePiece(Piece, Player, WhitePieces, BrownPieces, NewWhitePieces, NewBrownPieces),  
     displayGame(NewBoard, NewWhitePieces, NewBrownPieces),
     % checkEnd
     changePlayer(Player, NewPlayer), % Changes current player
@@ -33,7 +33,7 @@ getPiece(ColorPiece, Player) :-
     repeat, % If the player inserts an invalid piece, ask the piece again
     askPiece(Piece),
     checkPiece(Piece),
-    translate(ColorPiece, Piece, Player).
+    translate(Piece, Player, ColorPiece).
 
 getRow(Row) :-
     repeat, % If the player inserts an invalid row, ask the row again
@@ -58,8 +58,9 @@ updateColumn(1, Piece, [_ | Rest], [Piece | Rest]).
 updateColumn(N, Piece, [P | Rest], [P| More]) :-
     N > 1, Next is N-1, updateColumn(Next, Piece, Rest, More).
 
-removePiece(Piece, WhitePieces, BrownPieces, NewWhitePieces, NewBrownPieces) :- 
-    searchBoard(Piece, WhitePieces, NewWhitePieces),
+removePiece(Piece, 1, WhitePieces, BrownPieces, NewWhitePieces, BrownPieces) :- 
+    searchBoard(Piece, WhitePieces, NewWhitePieces).
+removePiece(Piece, 2, WhitePieces, BrownPieces, WhitePieces, NewBrownPieces) :- 
     searchBoard(Piece, BrownPieces, NewBrownPieces).
 
 searchBoard(_, [], _).
@@ -84,18 +85,21 @@ checkPiece(sphere).
 checkPiece(cylinder).
 checkPiece(cube).
 
+checkPlay(Piece, Row, Column, Player) :-
+    checkValidRow(Piece, Player, Row).
+
 % --------------------------- TRANSLATIONS -----------------------------
 % White pieces
-translate(11, cone, 1).
-translate(51, cube, 1).
-translate(71, cylinder, 1).
-translate(91, sphere , 1).
+translate(cone, 1, 11).
+translate(cube, 1, 51).
+translate(cylinder, 1, 71).
+translate(sphere, 1, 91).
 
 % Brown pieces
-translate(12, cone, 2).
-translate(52, cube, 2).
-translate(72, cylinder, 2).
-translate(92, sphere , 2).
+translate(cone, 2, 12).
+translate(cube, 2, 52).
+translate(cylinder, 2, 71).
+translate(sphere, 2, 92).
 
 % Changes the current player
 changePlayer(1, 2).

@@ -5,7 +5,7 @@ displayGame(Board, WhitePieces, BrownPieces) :-
     printHeaderLine,
     printBoardsContent(Board, WhitePieces, BrownPieces, 1).
 
-printBoardsContent(_, _, _, 5). 
+printBoardsContent([], [], [], _). 
 printBoardsContent([BoardLine|BoardRest], [WhiteLine|WhiteRest], [BrownLine|BrownRest], NumLine) :- 
     printBoardsLine(BoardLine, WhiteLine, BrownLine, NumLine, 1), 
     printLineSeperators(NumLine),
