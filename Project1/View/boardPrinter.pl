@@ -1,6 +1,7 @@
 :- include('piecesPrinter.pl').
 
-display_game(Board) :-
+display_game(Board, _, _) :-
+    clearEverything,
     printColumnCoordinates,
     printBoardContent(Board, 1).
 
@@ -11,7 +12,7 @@ printBoardContent([Line|Rest], NumLine) :-
     NumLine1 is NumLine + 1,
     printBoardContent(Rest, NumLine1).
 
-printBoardLine(Line, _, 16).
+printBoardLine(Line, _, 11).
 printBoardLine(Line, NumLine, PieceLine) :-
     printLine(Line, NumLine, 1, PieceLine),
     printNewLine,
@@ -30,7 +31,7 @@ printCell(Cell, NumLine, 1, 7) :-
     printPiece(Cell, 7),
     printColumnSeperator(1). 
 
-%Specific printer to display a seperator in the begining of each line
+% Specific printer to display a seperator in the begining of each line
 printCell(Cell, _, 1, PieceLine) :-
     printColumnSeperator(0),
     printPiece(Cell, PieceLine),
@@ -41,7 +42,7 @@ printCell(Cell, NumLine, NumCol, PieceLine) :-
     printPiece(Cell, PieceLine), 
     printColumnSeperator(NumCol).
 
-% special prints
+% Special prints
 printColumnCoordinates :-   
     write('\n             1                  2                   3                   4          \n'),
     printLineSeperators(0).
@@ -51,6 +52,7 @@ printLineSeperators(3) :-       write('__X___________________|__________________
 printLineSeperators(_) :-       write('--XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n').
 
 printNewLine :-                 write('\n').
+
 printColumnSeperator(0) :-      write('  X  ').
 printColumnSeperator(1) :-      write('  |  ').
 printColumnSeperator(2) :-      write('  X  ').
@@ -60,4 +62,9 @@ printColumnSeperator(4) :-      write('  X  ').
 printLineCoord(NumLine) :- 
     write(NumLine),
     write(' X  ').
+
+% Clears the screen to better visualize the game 
+clearEverything :-
+    write('\33\[2J').
+
      
