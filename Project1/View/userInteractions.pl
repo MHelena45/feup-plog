@@ -22,3 +22,13 @@ writeColor(1):-
 
 writeColor(2):-
     write('brown').  
+
+wrongMove :-
+    write('Can not do that move. Play again.\n').
+
+notEmpty(Row, Collumn) :-
+    write('\nRow '),
+    write(Row),
+    write(' Collumn '),
+    write(Collumn),
+    write(' with a piece. Can not Replace pieces.\n').
