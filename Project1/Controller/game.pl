@@ -44,10 +44,9 @@ getColumn(Column) :-
     askColumn(Column),
     checkPosition(Column).
 
+% --------------------------- BOARD UPDATES -----------------------------
 playPiece(Row, Column, Piece, TabIn, TabOut) :-
    updateRow(Row, Column, Piece, TabIn, TabOut).
-
-% --------------------------- BOARD UPDATES -----------------------------
 
 updateRow(1, Column, Piece, [Row| More], [NewRow| More]):-
     updateColumn(Column, Piece, Row, NewRow).
