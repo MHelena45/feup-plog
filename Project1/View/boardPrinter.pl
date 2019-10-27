@@ -1,6 +1,6 @@
 :- include('piecesPrinter.pl').
 
-display_game(Board, WhitePieces, BrownPieces) :-
+displayGame(Board, WhitePieces, BrownPieces) :-
     clearEverything,
     printHeaderLine,
     printBoardsContent(Board, WhitePieces, BrownPieces, 1).
