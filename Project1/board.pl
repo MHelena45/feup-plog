@@ -1,5 +1,7 @@
 :- include('printer.pl').
 :- include('dataStructs.pl').
+:- include('moves.pl').
+:- use_module(library(lists)).
 
 start :- 
     board(X), 
@@ -35,7 +37,7 @@ checkPiece(cube).
 /**
  * asks the play what we wants to play
  */
-getPlay(ColorPiece, Row, Column, P):-
+getPlay(ColorPiece, Row, Column, P) :-
     write('\nPlayer '),
     write(P),
     write(' is your turn!\nYour pieces are '),
@@ -52,31 +54,30 @@ getPlay(ColorPiece, Row, Column, P):-
     repeat, % if the player inserts a invalid column, ask the column again
     write('In which collumn?\n'),
     read(Column),
-    checkPosition(Column),
-    !.
+    checkPosition(Column).
 
 /**
  * given the number of the player, plays the piece the player want
  */
-play(1, X) :-
-    repeat,
+play(1, Board1) :-
     getPlay(Piece, Row, Column, 1),
     % valid_move
-    playPiece(Row, Column, Piece, X, Y),    
+    isEmpty(Board1, Row, Column, 1),   
+    playPiece(Row, Column, Piece, Board1, Board2),    
     clearEverything,
-    display_game(Y),
+    display_game(Board2),
     %checkEnd
-    play(2, Y).  % changes current board and player
+    play(2, Board2).  % changes current board and player
 
-play(2, X) :-
-    repeat,
+play(2, Board1) :-
     getPlay(Piece, Row, Column, 2),
     % valid_move
-    playPiece(Row, Column, Piece, X, Y),    
+    isEmpty(Board1, Row, Column, 2),   
+    playPiece(Row, Column, Piece, Board1, Board2),    
     clearEverything,
-    display_game(Y),
+    display_game(Board2),
     %checkEnd
-    play(1, Y).  % changes current board and player
+    play(1, Board2).  % changes current board and player
 
 % white pieces
 translate(11, cone, 1).
@@ -103,3 +104,5 @@ updateColumn(1, Piece, [_ | Rest], [Piece | Rest]).
 
 updateColumn(N, Piece, [P | Rest], [P| More]) :-
     N>1, Next is N-1, updateColumn(Next, Piece, Rest, More).
+
+
