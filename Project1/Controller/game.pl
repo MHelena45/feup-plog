@@ -75,7 +75,6 @@ searchRow(Piece, [Piece| Rest], [0| Rest]).
 searchRow(Piece, [P| Rest], [P| More]) :-
     searchRow(Piece, Rest, More).
 
-
 % --------------------------- TRANSLATIONS -----------------------------
 % White pieces
 translate(cone, 1, 11).
