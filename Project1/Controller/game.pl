@@ -14,8 +14,7 @@ start :-
 play(Player, Board, WhitePieces, BrownPieces) :-
     repeat,
     getPlay(Piece, Row, Column, Player),
-    isEmpty(Board,WhitePieces, BrownPieces, Row, Column, Player), 
-    valid_move(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece),
+    validPlay(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece),
     playPiece(Row, Column, Piece, Board, NewBoard),
     removePiece(Piece, Player, WhitePieces, BrownPieces, NewWhitePieces, NewBrownPieces),  
     displayGame(NewBoard, NewWhitePieces, NewBrownPieces),

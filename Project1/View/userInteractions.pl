@@ -32,3 +32,6 @@ notEmpty(Row, Collumn) :-
     write(' Collumn '),
     write(Collumn),
     write(' with a piece. Can not Replace pieces.\n').
+
+unavailablePiece :-
+    write('You dont\'t have any more of those pieces. Choose a diferent one.\n').

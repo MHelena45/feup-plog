@@ -2,6 +2,72 @@
 % --------------------------- VERIFICATIONS ------------------------------
 % =========================================================================
 
+% =================================================================================
+%       Deal with invalid plays
+% =================================================================================
+
+validPlay(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece) :-
+    isEmpty(Board, WhitePieces, BrownPieces, Row, Column, Player), % Checks if the position is empty 
+    validMove(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece), % Checks if the move is valid
+    isPieceAvailable(Player, Board, Piece, WhitePieces, BrownPieces). % Checks if the piece is available (2 equal pieces max per player)
+
+/* Check if Row and column don't have a piece, if true the game continues */
+isEmpty(Board, _WhitePieces, _BrownPieces, Row, Column, _Player) :-
+    getPieceFromBoard(Board, Row, Column, Piece),
+    Piece == 0.
+    
+/* If is not empty, player as to play again. An error message is displayed. */
+isEmpty(Board, WhitePieces, BrownPieces, Row, Column, P) :-
+    notEmpty(Row, Column), % Displays message to user
+    play(P, Board, WhitePieces, BrownPieces).
+
+validMove(_Player, Board, _WhitePieces, _BrownPieces, Row, Column, Piece) :-
+    Row1 is Row + 1,
+    checkTop(Board, Row1, Column, Piece),
+    Row2 is Row - 1,
+    checkDown(Board, Row2, Column, Piece), 
+    Column1 is Column + 1,
+    checkLeft(Board, Row, Column1, Piece),
+    Column2 is Column - 1,
+    checkRigth(Board, Row, Column2, Piece),
+    checkSquare1(Board, Row, Column, Piece),
+    checkSquare2(Board, Row, Column, Piece),
+    checkSquare3(Board, Row, Column, Piece),
+    checkSquare4(Board, Row, Column, Piece).
+
+/* If move isn't valid, repeat that play */
+validMove(Player, Board, WhitePieces, BrownPieces, _Row, _Column, _Piece) :-
+    wrongMove, % Displays message to player
+    play(Player, Board, WhitePieces, BrownPieces).
+
+isPieceAvailable(1, _Board, Piece, WhitePieces, _BrownPieces) :-
+    searchPiece(Piece, WhitePieces).
+
+isPieceAvailable(2, _Board, Piece, _WhitePieces, BrownPieces) :-
+    searchPiece(Piece, BrownPieces).
+
+isPieceAvailable(Player, Board, _Piece, WhitePieces, BrownPieces) :-
+    unavailablePiece,
+    play(Player, Board, WhitePieces, BrownPieces).
+
+searchPiece(Piece, Board) :-
+    pieceRow(Piece, NumRow),
+    searchPieceInRow(Piece, Board, NumRow).
+
+searchPieceInRow(Piece, [Row| _Rest], 1) :-
+    searchPieceInColumns(Piece, Row).
+searchPieceInRow(Piece, [_Row| Rest], NumRow) :- 
+    NumRow > 1, NumRow1 is NumRow - 1,
+    searchPieceInRow(Piece, Rest, NumRow1).
+
+searchPieceInColumns(Piece, [Piece| _More]). % Found piece
+searchPieceInColumns(Piece, [_Column| More]) :-
+    searchPieceInColumns(Piece, More).
+
+
+
+
+
 % Check if row and Column are valid (between 1 and 4 inclusive)
 checkPosition(Pos) :-
     Pos < 5,
@@ -14,122 +80,130 @@ checkPiece(cylinder).
 checkPiece(cube).
 
 /* Piece we can not find in the same row, column ou square */
-opost(11, 12).
-opost(51, 52).
-opost(71, 72).
-opost(91, 92).
+opposite(11, 12).
+opposite(51, 52).
+opposite(71, 72).
+opposite(91, 92).
 
-opost(12, 11).
-opost(52, 51).
-opost(72, 71).
-opost(92, 91).
+opposite(12, 11).
+opposite(52, 51).
+opposite(72, 71).
+opposite(92, 91).
 
-checkPlay(Piece, Row, _Column, Player) :-
-    checkValidRow(Piece, Player, Row).
+% Row in Pieces Board for each piece
+pieceRow(11, 1).
+pieceRow(51, 2).
+pieceRow(71, 3).
+pieceRow(91, 4).
 
-check_Top(_Board, 5, _Column, _Piece).
-check_Top(Board, Row, Column, Piece) :-
-    opost(Opost , Piece),
+pieceRow(12, 1).
+pieceRow(52, 2).
+pieceRow(72, 3).
+pieceRow(92, 4).
+
+checkTop(_Board, 5, _Column, _Piece).
+checkTop(Board, Row, Column, Piece) :-
+    opposite(Opposite, Piece),
     getPieceFromBoard(Board, Row, Column, PieceThere),
-    PieceThere =\= Opost,
-    NewRow is Row+1,
-    check_Top(Board, NewRow, Column, Piece).
+    PieceThere =\= Opposite,
+    NewRow is Row + 1,
+    checkTop(Board, NewRow, Column, Piece).
 
-check_Down(_Board, 0, _Column, _Piece).
-check_Down(Board, Row, Column, Piece) :-
-    opost(Opost , Piece),
+checkDown(_Board, 0, _Column, _Piece).
+checkDown(Board, Row, Column, Piece) :-
+    opposite(Opposite, Piece),
     getPieceFromBoard(Board, Row, Column, PieceThere),
-    PieceThere =\= Opost,
-    NewRow is Row-1,
-    check_Down(Board, NewRow, Column, Piece).
+    PieceThere =\= Opposite,
+    NewRow is Row - 1,
+    checkDown(Board, NewRow, Column, Piece).
 
-check_Left(_Board, _Row, 5, _Piece).
-check_Left(Board, Row, Column, Piece) :-
-    opost(Opost , Piece),
+checkLeft(_Board, _Row, 5, _Piece).
+checkLeft(Board, Row, Column, Piece) :-
+    opposite(Opposite, Piece),
     getPieceFromBoard(Board, Row, Column, PieceThere),
-    PieceThere =\= Opost,
-    NewCollumn is Column + 1,
-    check_Left(Board, Row, NewCollumn, Piece).
+    PieceThere =\= Opposite,
+    NewColumn is Column + 1,
+    checkLeft(Board, Row, NewColumn, Piece).
 
-check_Rigth(_Board, _Row, 0, _Piece).
-check_Rigth(Board, Row, Column, Piece) :-
-    opost(Opost , Piece),
+checkRigth(_Board, _Row, 0, _Piece).
+checkRigth(Board, Row, Column, Piece) :-
+    opposite(Opposite , Piece),
     getPieceFromBoard(Board, Row, Column, PieceThere),
-    PieceThere =\= Opost,
+    PieceThere =\= Opposite,
     NewColumn is Column - 1,
-    check_Rigth(Board, Row, NewColumn, Piece).
+    checkRigth(Board, Row, NewColumn, Piece).
 
-check_square_1(Board, Row, Column, Piece) :-
+checkSquare1(Board, Row, Column, Piece) :-
     Row < 3, Column < 3,
-    opost(Opost , Piece),
+    opposite(Opposite, Piece),
     getPieceFromBoard(Board, 1, 1, PieceThere),
-    PieceThere =\= Opost,
+    PieceThere =\= Opposite,
     getPieceFromBoard(Board, 1, 2, PieceThere1),
-    PieceThere1 =\= Opost,
+    PieceThere1 =\= Opposite,
     getPieceFromBoard(Board, 2, 1, PieceThere2),
-    PieceThere2 =\= Opost,
+    PieceThere2 =\= Opposite,
     getPieceFromBoard(Board, 2, 2, PieceThere3),
-    PieceThere3 =\= Opost.
+    PieceThere3 =\= Opposite.
 
 /* Piece is not going to be place in the first square */
-check_square_1(_Board, Row, _Column, _Piece):-
+checkSquare1(_Board, Row, _Column, _Piece):-
     Row > 2. 
-check_square_1(_Board, _Row, Column, _Piece):-
+checkSquare1(_Board, _Row, Column, _Piece):-
     Column > 2.
 
-check_square_2(Board, Row, Column, Piece) :-
+checkSquare2(Board, Row, Column, Piece) :-
     Row > 2, Column < 3,
-    opost(Opost , Piece),
+    opposite(Opposite , Piece),
     getPieceFromBoard(Board, 1, 3, PieceThere),
-    PieceThere =\= Opost,
+    PieceThere =\= Opposite,
     getPieceFromBoard(Board, 1, 4, PieceThere1),
-    PieceThere1 =\= Opost,
+    PieceThere1 =\= Opposite,
     getPieceFromBoard(Board, 2, 3, PieceThere2),
-    PieceThere2 =\= Opost,
+    PieceThere2 =\= Opposite,
     getPieceFromBoard(Board, 2, 4, PieceThere3),
-    PieceThere3 =\= Opost.
+    PieceThere3 =\= Opposite.
 
 /* Piece is not going to be place in the second square */
-check_square_2(_Board, Row, _Column, _Piece) :-
+checkSquare2(_Board, Row, _Column, _Piece) :-
     Row < 3.
-check_square_2(_Board, _Row, Column, _Piece) :-
+checkSquare2(_Board, _Row, Column, _Piece) :-
     Column > 2.
 
-check_square_3(Board, Row, Column, Piece) :-
+checkSquare3(Board, Row, Column, Piece) :-
     Row > 2, Column < 3,
-    opost(Opost , Piece),
+    opposite(Opposite , Piece),
     getPieceFromBoard(Board, 3, 1, PieceThere),
-    PieceThere =\= Opost,
+    PieceThere =\= Opposite,
     getPieceFromBoard(Board, 3, 2, PieceThere1),
-    PieceThere1 =\= Opost,
+    PieceThere1 =\= Opposite,
     getPieceFromBoard(Board, 4, 1, PieceThere2),
-    PieceThere2 =\= Opost,
+    PieceThere2 =\= Opposite,
     getPieceFromBoard(Board, 4, 2, PieceThere3),
-    PieceThere3 =\= Opost.
+    PieceThere3 =\= Opposite.
 
 /* Piece is not going to be place in the first square */
-check_square_3(_Board, Row, _Column, _Piece):-
+checkSquare3(_Board, Row, _Column, _Piece):-
     Row < 3. 
-check_square_3(_Board, _Row, Column, _Piece):-
+checkSquare3(_Board, _Row, Column, _Piece):-
     Column > 2.
 
-check_square_4(Board, Row, Column, Piece) :-
+checkSquare4(Board, Row, Column, Piece) :-
     Row > 2,
     Column > 2,
-    opost(Opost , Piece),
+    opposite(Opposite , Piece),
     getPieceFromBoard(Board, 3, 3, PieceThere),
-    PieceThere =\= Opost,
+    PieceThere =\= Opposite,
     getPieceFromBoard(Board, 3, 4, PieceThere1),
-    PieceThere1 =\= Opost,
+    PieceThere1 =\= Opposite,
     getPieceFromBoard(Board, 4, 3, PieceThere2),
-    PieceThere2 =\= Opost,
+    PieceThere2 =\= Opposite,
     getPieceFromBoard(Board, 4, 4, PieceThere3),
-    PieceThere3 =\= Opost.
+    PieceThere3 =\= Opposite.
 
 /* Piece is not going to be place in the second square */
-check_square_4(_Board, Row, _Column, _Piece) :-
+checkSquare4(_Board, Row, _Column, _Piece) :-
     Row < 3.
-check_square_4(_Board, _Row, Column, _Piece) :-
+checkSquare4(_Board, _Row, Column, _Piece) :-
     Column < 3.
 
 % =================================
@@ -151,36 +225,3 @@ getPieceFromBoard([_H|T], Row, Column, Piece) :-
     Row > 1,
     Row1 is Row - 1,
     getPieceFromBoard(T, Row1, Column, Piece).
-
-% =================================================================================
-%       Deal with invalid plays
-% =================================================================================
-
-/* Check if Row and column don't have a piece, if true the game continues */
-isEmpty(Board, _WhitePieces, _BrownPieces, Row, Column, _Player) :-
-    getPieceFromBoard(Board, Row, Column, Piece),
-    Piece == 0.
-    
-/* if is not empty, player as to play again. A error mensage is displayed. */
-isEmpty(Board, WhitePieces, BrownPieces, Row, Column, P) :-
-    notEmpty(Row, Column),
-    play(P, Board, WhitePieces, BrownPieces).
-
-valid_move(_Player, Board, _WhitePieces, _BrownPieces, Row, Column, Piece) :-
-    Row1 is Row + 1,
-    check_Top(Board, Row1, Column, Piece),
-    Row2 is Row - 1,
-    check_Down(Board, Row2, Column, Piece), 
-    Column1 is Column + 1,
-    check_Left(Board, Row, Column1, Piece),
-    Column2 is Column - 1,
-    check_Rigth(Board, Row, Column2, Piece),
-    check_square_1(Board, Row, Column, Piece),
-    check_square_2(Board, Row, Column, Piece),
-    check_square_3(Board, Row, Column, Piece),
-    check_square_4(Board, Row, Column, Piece).
-
-/* if move isn't valid, repeat that play */
-valid_move(Player, Board, WhitePieces, BrownPieces, _Row, _Column, _Piece) :-
-    wrongMove,
-    play(Player, Board, WhitePieces, BrownPieces).
