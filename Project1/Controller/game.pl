@@ -18,7 +18,7 @@ play(Player, Board, WhitePieces, BrownPieces) :-
     playPiece(Row, Column, Piece, Board, NewBoard),
     removePiece(Piece, Player, WhitePieces, BrownPieces, NewWhitePieces, NewBrownPieces),  
     displayGame(NewBoard, NewWhitePieces, NewBrownPieces),
-    % checkEnd
+    !, % TODO: checkEnd(Player, Board, Row, Column),
     changePlayer(Player, NewPlayer), % Changes current player
     play(NewPlayer, NewBoard, NewWhitePieces, NewBrownPieces).  % Changes current board
 

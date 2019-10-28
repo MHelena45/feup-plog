@@ -1,4 +1,4 @@
-% Greets the player letting him/her know the colour of his/hers pieces
+% Greets the player letting him/her know the color of his/hers pieces
 greetPlayer(P):-
     write('\nPlayer '),
     write(P),
@@ -35,3 +35,4 @@ notEmpty(Row, Collumn) :-
 
 unavailablePiece :-
     write('You dont\'t have any more of those pieces. Choose a diferent one.\n').
+    
