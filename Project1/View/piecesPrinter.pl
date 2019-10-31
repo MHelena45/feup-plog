@@ -2,7 +2,7 @@
 % Empty simbol
 printPiece(0, _) :-     write('...............').
 
-% ------------------WHITE PIECES -------------------
+% ------------------ WHITE PIECES -------------------
 % Cone
 printPiece(11, 2) :-    write('      /\\       ').
 printPiece(11, 3) :-    write('     /  \\      ').
@@ -46,7 +46,7 @@ printPiece(91, 8) :-    write('    "WWWwww"   ').
 printPiece(91, 9) :-    write('       ""      ').
 printPiece(91, _) :-    write('               ').
 
-% ------------------BROWN PIECES -------------------
+% ------------------ BROWN PIECES -------------------
 % Cone
 printPiece(12, 2) :-    write('      /\\       ').
 printPiece(12, 3) :-    write('     /  \\      ').

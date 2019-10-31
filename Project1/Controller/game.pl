@@ -18,7 +18,7 @@ play(Player, Board, WhitePieces, BrownPieces) :-
     playPiece(Row, Column, Piece, Board, NewBoard),
     removePiece(Piece, Player, WhitePieces, BrownPieces, NewWhitePieces, NewBrownPieces),  
     displayGame(NewBoard, NewWhitePieces, NewBrownPieces),
-    !, % TODO: checkEnd(Player, Board, Row, Column),
+    checkEnd(Player, NewBoard, Row, Column),
     changePlayer(Player, NewPlayer), % Changes current player
     play(NewPlayer, NewBoard, NewWhitePieces, NewBrownPieces).  % Changes current board
 
@@ -55,7 +55,7 @@ updateRow(1, Column, Piece, [Row| More], [NewRow| More]):-
 updateRow(N, Column, Piece, [Row| More], [Row| MoreRows]) :-
     N > 1, Next is N-1, updateRow(Next, Column, Piece, More, MoreRows).
 
-updateColumn(1, Piece, [_ | Rest], [Piece | Rest]).
+updateColumn(1, Piece, [_P | Rest], [Piece | Rest]).
 updateColumn(N, Piece, [P | Rest], [P| More]) :-
     N > 1, Next is N-1, updateColumn(Next, Piece, Rest, More).
 
@@ -64,12 +64,12 @@ removePiece(Piece, 1, WhitePieces, BrownPieces, NewWhitePieces, BrownPieces) :-
 removePiece(Piece, 2, WhitePieces, BrownPieces, WhitePieces, NewBrownPieces) :- 
     searchBoard(Piece, BrownPieces, NewBrownPieces).
 
-searchBoard(_, [], _).
+searchBoard(_Piece, [], _NewBoard).
 searchBoard(Piece, [Row| Rest], [NewRow| MoreRows]) :-
     searchRow(Piece, Row, NewRow),
     searchBoard(Piece, Rest, MoreRows).
 
-searchRow(_, [], _).
+searchRow(_Piece, [], _NewRow).
 searchRow(Piece, [Piece| Rest], [0| Rest]).
 searchRow(Piece, [P| Rest], [P| More]) :-
     searchRow(Piece, Rest, More).
@@ -84,7 +84,7 @@ translate(sphere, 1, 91).
 % Brown pieces
 translate(cone, 2, 12).
 translate(cube, 2, 52).
-translate(cylinder, 2, 71).
+translate(cylinder, 2, 72).
 translate(sphere, 2, 92).
 
 % Changes the current player
