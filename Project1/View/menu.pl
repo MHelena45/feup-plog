@@ -1,4 +1,7 @@
-  
+% ========================================================================
+% --------------------------- ALl MENUS   --------------------------------
+% =========================================================================
+
 mainMenu :-
     printMainMenu,
     askMenuOption,
@@ -10,16 +13,16 @@ manageInput(1) :-
     mainMenu.
 
 manageInput(2) :-
-    start2Players,
+    start2Players, %not implemented wet
     mainMenu.
 
 manageInput(3) :-
-    start2Players,
+    start2Players, % not implemented wet
     mainMenu.
 
 manageInput(4) :-
     help,
-    write('Tap any button to go back to menu '),
+    write('Tap any button to go back to the main menu '),
     read(_Ans),
     mainMenu.
 
@@ -71,14 +74,37 @@ congratulatePlayer(Player) :-
     write('|                                                                       |'),nl,
     write('|       Your Options:                                                   |'),nl,
     write('|                                                                       |'),nl,
-    write('|                         1.Play again Player vs Player                 |'),nl,
+    write('|                         1. Player vs Player                           |'),nl,
     write('|                                                                       |'),nl,
     write('|                         2. Player vs Computer                         |'),nl,
     write('|                                                                       |'),nl,
 	write('|                         3. Computer vs Computer                       |'),nl,
     write('|                                                                       |'),nl,
+    write('|                         4. help                                       |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                         0. Exit                                       |'),nl,
+    write('|                                                                       |'),nl,
     write('|_______________________________________________________________________| '),nl,nl,nl.
 
+SorryPlayer :-
+    nl,nl,
+    write(' _______________________________________________________________________ '),nl,
+    write('|                                                                       |'),nl,
+    write('|                The Computer win this time                             |'),nl,
+    write('|                                                                       |'),nl,
+    write('|       Your Options:                                                   |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                         1. Player vs Player                           |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                         2. Player vs Computer                         |'),nl,
+    write('|                                                                       |'),nl,
+	write('|                         3. Computer vs Computer                       |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                         4. help                                       |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                         0. Exit                                       |'),nl,
+    write('|                                                                       |'),nl,
+    write('|_______________________________________________________________________| '),nl,nl,nl.
 help :-
     nl,nl,
     write(' _______________________________________________________________________ '),nl,
