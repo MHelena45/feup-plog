@@ -1,9 +1,13 @@
 :- include('../Model/dataStructs.pl').
 :- include('../View/boardPrinter.pl').
 :- include('../View/userInteractions.pl').
+:- include('../View/menu.pl').
 :- include('verifications.pl').
 
-start :- 
+start :-
+    mainMenu.
+
+start2Players :- 
     board(Board), % Initialization of the board
     whitePieces(WhitePieces), % Initialization of the white pieces board
     brownPieces(BrownPieces), % Initialization of the brown pieces board
@@ -12,7 +16,6 @@ start :-
 
  % Given the player, it plays the piece on the given position
 play(Player, Board, WhitePieces, BrownPieces) :-
-    repeat,
     getPlay(Piece, Row, Column, Player),
     validPlay(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece),
     playPiece(Row, Column, Piece, Board, NewBoard),

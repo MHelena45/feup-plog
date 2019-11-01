@@ -36,8 +36,5 @@ notEmpty(Row, Collumn) :-
 unavailablePiece :-
     write('You dont\'t have any more of those pieces. Choose a diferent one.\n').
 
-congratulatePlayer(Player) :-
-    write(' Congratulations, player '),
-    write(Player),
-    write('!! You have won the game!!\n').
-    
+askMenuOption :-
+    write('> What is your option ? ').

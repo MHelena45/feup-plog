@@ -69,7 +69,10 @@ checkEnd(_Player, Board, Row, Column) :-
     SquareSum =\= 22.
 
 checkEnd(Player, _Board, _Row, _Column) :-
-   congratulatePlayer(Player), !.
+    congratulatePlayer(Player),
+    askMenuOption,
+    read(Input),
+    manageInput(Input).
 
 getRowSum([Row| _Rest], 1, Solution) :-
     sumRow(Row, 0, Solution).
