@@ -13,11 +13,11 @@ manageInput(1) :-
     mainMenu.
 
 manageInput(2) :-
-    start2Players, %not implemented wet
+    startPlayervsComputer,
     mainMenu.
 
 manageInput(3) :-
-    start2Players, % not implemented wet
+    startComputervsComputer,
     mainMenu.
 
 manageInput(4) :-
@@ -86,7 +86,7 @@ congratulatePlayer(Player) :-
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________| '),nl,nl,nl.
 
-SorryPlayer :-
+sorryPlayer :-
     nl,nl,
     write(' _______________________________________________________________________ '),nl,
     write('|                                                                       |'),nl,
@@ -104,7 +104,8 @@ SorryPlayer :-
     write('|                                                                       |'),nl,
     write('|                         0. Exit                                       |'),nl,
     write('|                                                                       |'),nl,
-    write('|_______________________________________________________________________| '),nl,nl,nl.
+    write('|_______________________________________________________________________|'),nl,nl,nl.
+
 help :-
     nl,nl,
     write(' _______________________________________________________________________ '),nl,

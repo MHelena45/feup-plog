@@ -12,6 +12,7 @@ validPlay(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece) :-
     isPieceAvailable(Player, Board, Piece, WhitePieces, BrownPieces). % Checks if the piece is available (2 equal pieces max per player)
 
 % ----------------------------------- IS EMPTY ---------------------------------
+
 /* Check if Row and column don't have a piece, if true the game continues */
 isEmpty(Board, _WhitePieces, _BrownPieces, Row, Column, _Player) :-
     getPieceFromBoard(Row, Column, Board, Piece),
@@ -23,6 +24,7 @@ isEmpty(Board, WhitePieces, BrownPieces, Row, Column, P) :-
     play(P, Board, WhitePieces, BrownPieces).
 
 % ----------------------------------- PIECE AVAILABLE ---------------------------------
+
 isPieceAvailable(1, _Board, Piece, WhitePieces, _BrownPieces) :-
     searchPiece(Piece, WhitePieces).
 
@@ -141,6 +143,19 @@ getSquareValue(Row, Column, Board, Value) :-
     Value is div(Piece, 10).
 
 % ----------------------------------- VALID MOVE ---------------------------------
+
+validMoveC(_Player, Board, _WhitePieces, _BrownPieces, Row, Column, Piece) :-
+    Row1 is Row + 1,
+    checkTop(Row1, Column, Board, Piece),
+    Row2 is Row - 1,
+    checkDown(Row2, Column, Board, Piece), 
+    Column1 is Column + 1,
+    checkLeft(Row, Column1, Board, Piece),
+    Column2 is Column - 1,
+    checkRigth(Row, Column2, Board, Piece),
+    getSquareNum(Row, Column, SquareNum),
+    checkSquare(SquareNum, Piece, Board).
+
 validMove(_Player, Board, _WhitePieces, _BrownPieces, Row, Column, Piece) :-
     Row1 is Row + 1,
     checkTop(Row1, Column, Board, Piece),

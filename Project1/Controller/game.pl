@@ -3,6 +3,7 @@
 :- include('../View/userInteractions.pl').
 :- include('../View/menu.pl').
 :- include('verifications.pl').
+:- include('computer.pl').
 
 start :-
     mainMenu.
@@ -14,14 +15,50 @@ start2Players :-
     displayGame(Board, WhitePieces, BrownPieces), % Displaying the main game & the available pieces
     play(1, Board, WhitePieces, BrownPieces). % Player 1 starts the game
 
- % Given the player, it plays the piece on the given position
-play(Player, Board, WhitePieces, BrownPieces) :-
+startPlayervsComputer :-
+    board(Board), % Initialization of the board
+    whitePieces(WhitePieces), % Initialization of the white pieces board
+    brownPieces(BrownPieces), % Initialization of the brown pieces board
+    displayGame(Board, WhitePieces, BrownPieces), % Displaying the main game & the available pieces
+    playPvsC(Board, WhitePieces, BrownPieces). % Player 1 starts the game
+
+startComputervsComputer :-
+    board(Board), % Initialization of the board
+    whitePieces(WhitePieces), % Initialization of the white pieces board
+    brownPieces(BrownPieces), % Initialization of the brown pieces board
+    displayGame(Board, WhitePieces, BrownPieces), % Displaying the main game & the available pieces
+    playCvsC(Board, WhitePieces, BrownPieces). % Player 1 starts the game
+
+playComputer(Player, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces):-
+    repeat,
+    generatePlay(Player, Row, Column, Piece),
+    validCPlay(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece),
+    playPiece(Row, Column, Piece, Board, NewBoard),
+    removePiece(Piece, Player, WhitePieces, BrownPieces, NewWhitePieces, NewBrownPieces),  
+    displayGame(NewBoard, NewWhitePieces, NewBrownPieces),
+    checkEnd(Player, NewBoard, Row, Column).
+
+playPvsC(Board, WhitePieces, BrownPieces) :-
+    playPerson(1, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces),
+    playComputer(2, NewBoard, NewWhitePieces, NewBrownPieces, NewBoard1, NewWhitePieces1, NewBrownPieces1),
+    playPvsC(NewBoard1, NewWhitePieces1, NewBrownPieces1).
+
+playCvsC(Board, WhitePieces, BrownPieces) :-
+    playComputer(1, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces),
+    playComputer(2, NewBoard, NewWhitePieces, NewBrownPieces, NewBoard1, NewWhitePieces1, NewBrownPieces1),
+    playCvsC(NewBoard1, NewWhitePieces1, NewBrownPieces1).
+
+playPerson(Player, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces) :-
     getPlay(Piece, Row, Column, Player),
     validPlay(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece),
     playPiece(Row, Column, Piece, Board, NewBoard),
     removePiece(Piece, Player, WhitePieces, BrownPieces, NewWhitePieces, NewBrownPieces),  
     displayGame(NewBoard, NewWhitePieces, NewBrownPieces),
-    checkEnd(Player, NewBoard, Row, Column),
+    checkEnd(Player, NewBoard, Row, Column).
+
+ % Given the player, it plays the piece on the given position
+play(Player, Board, WhitePieces, BrownPieces) :-
+    playPerson(Player, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces),  
     changePlayer(Player, NewPlayer), % Changes current player
     play(NewPlayer, NewBoard, NewWhitePieces, NewBrownPieces).  % Changes current board
 
