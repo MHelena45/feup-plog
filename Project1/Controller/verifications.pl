@@ -61,6 +61,7 @@ pieceRow(72, 3). % Brown Cylinder
 pieceRow(92, 4). % Brown Sphere
 
 % ----------------------------------- CHECK END ---------------------------------
+% sucess if game is not over
 checkEnd(_Player, Board, Row, Column, _CongratulateNumber) :-
     getRowSum(Board, Row, RowSum),
     RowSum =\= 22,
@@ -70,12 +71,14 @@ checkEnd(_Player, Board, Row, Column, _CongratulateNumber) :-
     getSquareSum(SquareNum, Board, SquareSum),
     SquareSum =\= 22.
 
+% if game end and the winner a person ou a Computer is a game Computer vs computer
 checkEnd(Player, _Board, _Row, _Column, 1) :-
     congratulatePlayer(Player),
     askMenuOption,
     read(Input),
     manageInput(Input).
 
+% if game end and the winner of the play Computer vs Person is the COmputer
 checkEnd(_Player, _Board, _Row, _Column, 2) :-
     sorryPlayer, % if computer wins a person, congratulate Menu is different
     askMenuOption,
