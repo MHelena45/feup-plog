@@ -24,198 +24,161 @@ getForm(Sum, Piece) :-
 %    checks for every column, row and square the sum of the pieces
 % ======================================================================
 % Row
-winRowPlay(Board, Row, Piece):-
-    getRowSum(Board, 1, RowSum),
-    getForm(RowSum, Piece), 
-    Row = 1.
+winRowPlay(Board, Row, Piece) :-
+    getRowSumC(Board, Row, RowSum),
+    getForm(RowSum, Piece).
 
-winRowPlay(Board, Row, Piece):-
-    getRowSum(Board, 2, RowSum),
-    getForm(RowSum, Piece),
-    Row = 2.
+getRowSumC(Board, 1, RowSum) :-
+    getRowSum(Board, 1, RowSum).
 
-winRowPlay(Board, Row, Piece):-
-    getRowSum(Board, 3, RowSum),
-    getForm(RowSum, Piece),
-    Row = 3.
+getRowSumC(Board, 2, RowSum) :-
+    getRowSum(Board, 2, RowSum).
 
-winRowPlay(Board, Row, Piece):-
-    getRowSum(Board, 4, RowSum),
-    getForm(RowSum, Piece), 
-    Row = 4.
+getRowSumC(Board, 3, RowSum) :-
+    getRowSum(Board, 3, RowSum).
+
+getRowSumC(Board, 4, RowSum) :-
+    getRowSum(Board, 4, RowSum).
 
 % Column
-winColumnPlay(Board, Column, Piece):-
-    getColumnSum(Board, 1, 0, ColSum),
-    getForm(ColSum, Piece), 
-    Column = 1.
+getColumnSumC(Board, 1, 0, ColSum) :-
+    getColumnSum(Board, 1, 0, ColSum).
+
+getColumnSumC(Board, 2, 0, ColSum) :-
+    getColumnSum(Board, 2, 0, ColSum).
+
+getColumnSumC(Board, 3, 0, ColSum) :-
+    getColumnSum(Board, 3, 0, ColSum).
+
+getColumnSumC(Board, 4, 0, ColSum) :-
+    getColumnSum(Board, 4, 0, ColSum).
 
 winColumnPlay(Board, Column, Piece):-
-    getColumnSum(Board, 2, 0, ColSum),
-    getForm(ColSum, Piece), 
-    Column = 2.
+    getColumnSumC(Board, Column, 0, ColSum),
+    getForm(ColSum, Piece).
 
-winColumnPlay(Board, Column, Piece):-
-    getColumnSum(Board, 3, 0, ColSum),
-    getForm(ColSum, Piece), 
-    Column = 3.
+% square
+getSquareSumC(1, Board, SquareSum) :-
+    getSquareSum(1, Board, SquareSum).
 
-winColumnPlay(Board, Column, Piece):-
-    getColumnSum(Board, 4, 0, ColSum),
-    getForm(ColSum, Piece), 
-    Column = 4.
+getSquareSumC(2, Board, SquareSum) :-
+    getSquareSum(2, Board, SquareSum).
 
-%square
-winSquarePlay(Board, SquareNum, Piece):-
-    getSquareSum(1, Board, SquareSum),
-    getForm(SquareSum, Piece), 
-    SquareNum = 1.
+getSquareSumC(3, Board, SquareSum) :-
+    getSquareSum(3, Board, SquareSum).
 
-winSquarePlay(Board, SquareNum, Piece):-
-    getSquareSum(2, Board, SquareSum),
-    getForm(SquareSum, Piece), 
-    SquareNum = 2.
+getSquareSumC(4, Board, SquareSum) :-
+    getSquareSum(4, Board, SquareSum).
 
 winSquarePlay(Board, SquareNum, Piece):-
-    getSquareSum(3, Board, SquareSum),
-    getForm(SquareSum, Piece), 
-    SquareNum = 3.
-
-winSquarePlay(Board, SquareNum, Piece) :-
-    getSquareSum(4, Board, SquareSum),
-    getForm(SquareSum, Piece), 
-    SquareNum = 4.
+    getSquareSumC(SquareNum, Board, SquareSum),
+    getForm(SquareSum, Piece).
 
 % ======================================================================
 %      Gets the empty column of the piece missing to do the win move
 % ======================================================================
-getEmptyColumn(Board, Row, Column) :-
-    isEmpty(Board, Row, 1), % Checks if the position is empty 
-    Column = 1.
+getEmptyColumn(Board, Row, 1) :-
+    isEmpty(Board, Row, 1). % Checks if the position is empty 
 
-getEmptyColumn(Board, Row, Column) :-
-    isEmpty(Board, Row, 2), % Checks if the position is empty 
-    Column = 2.
+getEmptyColumn(Board, Row, 2) :-
+    isEmpty(Board, Row, 2). % Checks if the position is empty 
 
-getEmptyColumn(Board, Row, Column) :-
-    isEmpty(Board, Row, 3), % Checks if the position is empty 
-    Column = 3.
+getEmptyColumn(Board, Row, 3) :-
+    isEmpty(Board, Row, 3). % Checks if the position is empty 
 
-getEmptyColumn(Board, Row, Column) :-
-    isEmpty(Board, Row, 4), % Checks if the position is empty 
-    Column = 4.
+getEmptyColumn(Board, Row, 4) :-
+    isEmpty(Board, Row, 4). % Checks if the position is empty 
 
 % ======================================================================
 %         Gets the empty row of the piece missing to do the win move
 % ======================================================================
+getEmptyRow(Board, 1, Column) :-
+    isEmpty(Board, 1, Column).  % Checks if the position is empty 
 
-getEmptyRow(Board, Row, Column) :-
-    isEmpty(Board, 1, Column), % Checks if the position is empty 
-    Row = 1.
+getEmptyRow(Board, 2, Column) :-
+    isEmpty(Board, 2, Column).  % Checks if the position is empty 
 
-getEmptyRow(Board, Row, Column) :-
-    isEmpty(Board, 2, Column), % Checks if the position is empty 
-    Row = 2.
+getEmptyRow(Board, 3, Column) :-
+    isEmpty(Board, 3, Column).  % Checks if the position is empty 
 
-getEmptyRow(Board, Row, Column) :-
-    isEmpty(Board, 3, Column), % Checks if the position is empty 
-    Row = 3.
-
-getEmptyRow(Board, Row, Column) :-
-    isEmpty(Board, 4, Column), % Checks if the position is empty 
-    Row = 4.
+getEmptyRow(Board, 4, Column) :-
+    isEmpty(Board, 4, Column).  % Checks if the position is empty 
 
 % ==================================================================================================
 %      Gets the empty row and Column (on the square given) of the piece missing to do the win move
 % ==================================================================================================
 % first Square
-getEmptySquare(Board, Row, Column, 1) :-
-    isEmpty(Board, 1, 1), % Checks if the position is empty 
-    Row = 1, Column = 1.
+getEmptySquare(Board, 1, 1, 1) :-
+    isEmpty(Board, 1, 1). % Checks if the position is empty 
 
-getEmptySquare(Board, Row, Column, 1) :-
-    isEmpty(Board, 1, 2), % Checks if the position is empty 
-    Row = 1, Column = 2.
+getEmptySquare(Board, 1, 2 , 1) :-
+    isEmpty(Board, 1, 2). % Checks if the position is empty 
 
-getEmptySquare(Board, Row, Column, 1) :-
-    isEmpty(Board, 2, 1), % Checks if the position is empty 
-    Row = 2, Column = 1.
+getEmptySquare(Board, 2, 1, 1) :-
+    isEmpty(Board, 2, 1). % Checks if the position is empty 
 
-getEmptySquare(Board, Row, Column, 1) :-
-    isEmpty(Board, 2, 2), % Checks if the position is empty 
-    Row = 2, Column = 2.
+getEmptySquare(Board, 2, 2, 1) :-
+    isEmpty(Board, 2, 2). % Checks if the position is empty 
 
 % second Square
-getEmptySquare(Board, Row, Column, 2) :-
-    isEmpty(Board, 1, 3), % Checks if the position is empty 
-    Row = 1, Column = 3.
+getEmptySquare(Board, 1, 3, 2) :-
+    isEmpty(Board, 1, 3). % Checks if the position is empty 
 
-getEmptySquare(Board, Row, Column, 2) :-
-    isEmpty(Board, 1, 4), % Checks if the position is empty 
-    Row = 1, Column = 4.
+getEmptySquare(Board, 1, 4, 2) :-
+    isEmpty(Board, 1, 4). % Checks if the position is empty 
 
-getEmptySquare(Board, Row, Column, 2) :-
-    isEmpty(Board, 2, 3), % Checks if the position is empty 
-    Row = 2, Column = 3.
+getEmptySquare(Board, 2, 3, 2) :-
+    isEmpty(Board, 2, 3). % Checks if the position is empty 
 
-getEmptySquare(Board, Row, Column, 2) :-
-    isEmpty(Board, 2, 4), % Checks if the position is empty 
-    Row = 2, Column = 4.
+getEmptySquare(Board, 2, 4, 2) :-
+    isEmpty(Board, 2, 4). % Checks if the position is empty 
 
 % third Square
-getEmptySquare(Board, Row, Column, 3) :-
-    isEmpty(Board, 3, 1), % Checks if the position is empty 
-    Row = 3, Column = 1.
+getEmptySquare(Board, 3, 1, 3) :-
+    isEmpty(Board, 3, 1). % Checks if the position is empty 
 
-getEmptySquare(Board, Row, Column, 3) :-
-    isEmpty(Board, 3, 2), % Checks if the position is empty 
-    Row = 3, Column = 2.
+getEmptySquare(Board, 3, 2, 3) :-
+    isEmpty(Board, 3, 2). % Checks if the position is empty 
 
-getEmptySquare(Board, Row, Column, 3) :-
-    isEmpty(Board, 4, 1), % Checks if the position is empty 
-    Row = 4, Column = 1.
+getEmptySquare(Board, 4, 1, 3) :-
+    isEmpty(Board, 4, 1). % Checks if the position is empty 
 
-getEmptySquare(Board, Row, Column, 3) :-
-    isEmpty(Board, 4, 2), % Checks if the position is empty 
-    Row = 4, Column = 2.
+getEmptySquare(Board, 4, 2, 3) :-
+    isEmpty(Board, 4, 2). % Checks if the position is empty 
 
 % 4 Square
-getEmptySquare(Board, Row, Column, 4) :-
-    isEmpty(Board, 3, 3), % Checks if the position is empty 
-    Row = 3, Column = 3.
+getEmptySquare(Board, 3, 3, 4) :-
+    isEmpty(Board, 3, 3). % Checks if the position is empty 
 
-getEmptySquare(Board, Row, Column, 4) :-
-    isEmpty(Board, 3, 4), % Checks if the position is empty 
-    Row = 3, Column = 4.
+getEmptySquare(Board, 3, 4, 4) :-
+    isEmpty(Board, 3, 4). % Checks if the position is empty 
 
-getEmptySquare(Board, Row, Column, 4) :-
-    isEmpty(Board, 4, 3), % Checks if the position is empty 
-    Row = 4, Column = 3.
+getEmptySquare(Board, 4, 3, 4) :-
+    isEmpty(Board, 4, 3). % Checks if the position is empty 
 
-getEmptySquare(Board, Row, Column, 4) :-
-    isEmpty(Board, 4, 4), % Checks if the position is empty 
-    Row = 4, Column = 4.
+getEmptySquare(Board, 4, 4, 4) :-
+    isEmpty(Board, 4, 4). % Checks if the position is empty 
 
 % ======================================================================
 %                  generates a winner play if exists
 % ======================================================================
 % winning row
-winPlay(Board, Row, Column, Piece) :-
+winPlay(Board, Row, Column, Piece) :- % returns the Row, Column and Piece of the winning play
     winRowPlay(Board, Row, Piece),
     getEmptyColumn(Board, Row, Column).
 
 % winning row
-winPlay(Board, Row, Column, Piece) :-
+winPlay(Board, Row, Column, Piece) :- % returns the Row, Column and Piece of the winning play
     winColumnPlay(Board, Column, Piece),
     getEmptyRow(Board, Row, Column).
 
 % winning square
-winPlay(Board, Row, Column, Piece) :-
+winPlay(Board, Row, Column, Piece) :- % returns the Row, Column and Piece of the winning play
     winSquarePlay(Board, SquareNum, Piece),
     getEmptySquare(Board, Row, Column , SquareNum).
 
 generatePlay(Player, Board, Row, Column, ColorPiece, WhitePieces, BrownPieces):-
-    winPlay(Board, Row, Column, Piece), % Only returns a empty Row and column position
+    winPlay(Board, Row, Column, Piece), % Only returns a valid Row and column position that is empty
     translate(Piece, Player, ColorPiece),
     validMove(Board, Row, Column, ColorPiece), % Checks if the move is valid
     isPieceAvailable(ColorPiece, WhitePieces, BrownPieces). % Checks if the piece is available (2 equal pieces max per player)
