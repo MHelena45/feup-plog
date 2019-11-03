@@ -144,18 +144,6 @@ getSquareValue(Row, Column, Board, Value) :-
 
 % ----------------------------------- VALID MOVE ---------------------------------
 
-validMoveC(_Player, Board, _WhitePieces, _BrownPieces, Row, Column, Piece) :-
-    Row1 is Row + 1,
-    checkTop(Row1, Column, Board, Piece),
-    Row2 is Row - 1,
-    checkDown(Row2, Column, Board, Piece), 
-    Column1 is Column + 1,
-    checkLeft(Row, Column1, Board, Piece),
-    Column2 is Column - 1,
-    checkRigth(Row, Column2, Board, Piece),
-    getSquareNum(Row, Column, SquareNum),
-    checkSquare(SquareNum, Piece, Board).
-
 validMove(_Player, Board, _WhitePieces, _BrownPieces, Row, Column, Piece) :-
     Row1 is Row + 1,
     checkTop(Row1, Column, Board, Piece),

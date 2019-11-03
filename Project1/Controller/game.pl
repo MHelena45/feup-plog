@@ -30,9 +30,7 @@ startComputervsComputer :-
     playCvsC(Board, WhitePieces, BrownPieces). % Player 1 starts the game
 
 playComputer(Player, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces):-
-    repeat,
-    generatePlay(Player, Row, Column, Piece),
-    validCPlay(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece),
+    generatePlay(Player, Board, Row, Column, Piece, WhitePieces, BrownPieces), % only generates valid moves
     playPiece(Row, Column, Piece, Board, NewBoard),
     removePiece(Piece, Player, WhitePieces, BrownPieces, NewWhitePieces, NewBrownPieces),  
     displayGame(NewBoard, NewWhitePieces, NewBrownPieces),
