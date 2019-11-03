@@ -37,7 +37,8 @@ manageInput(_Other) :-
     manageInput(Input).
 
 printMainMenu :-
-    nl,nl,
+    clearEverything,
+    nl,
     write(' _______________________________________________________________________ '),nl,
     write('|                                                                       |'),nl,
     write('|                      Welcome to Quantik!!!!                           |'),nl,
@@ -90,7 +91,7 @@ sorryPlayer :-
     nl,nl,
     write(' _______________________________________________________________________ '),nl,
     write('|                                                                       |'),nl,
-    write('|                The Computer win this time                             |'),nl,
+    write('|                The Computer won this time                             |'),nl,
     write('|                                                                       |'),nl,
     write('|       Your Options:                                                   |'),nl,
     write('|                                                                       |'),nl,
@@ -107,20 +108,21 @@ sorryPlayer :-
     write('|_______________________________________________________________________|'),nl,nl,nl.
 
 help :-
-    nl,nl,
-    write(' _______________________________________________________________________ '),nl,
-    write('|                                                                       |'),nl,
-    write('|                      Rules of Quantik                                 |'),nl,
-    write('|                                                                       |'),nl,
-    write('|-At each turn, players alternately place one of their pieces on the    |'),nl,
-    write('|  board.                                                               |'),nl,
-    write('|                                                                       |'),nl,
-    write('|                                                                       |'),nl,
-    write('|-When placing a piece on the board, each player must adhere to the     |'),nl,
-    write('|following rule: It is not allowed to place a piece in a special column,|'),nl, 
-    write('|row or zone in which the opponent has already placed a piece in the    |'),nl,
-    write('|same way. A zone is any of the four squares formed at the ends of the  |'),nl,
-    write('|board.An example of a square being formed by the 4 positions(1,1),     |'),nl,
-    write('|(1,2), (2,1) and (2,2).                                                |'),nl,
-    write('|                                                                       |'),nl,
-    write('|_______________________________________________________________________| '),nl,nl,nl.
+    clearEverything,
+    nl,
+    write(' _________________________________________________________________________'),nl,
+    write('|                                                                         |'),nl,
+    write('|                       Rules of Quantik                                  |'),nl,
+    write('|                                                                         |'),nl,
+    write('| -At each turn, players alternately place one of their pieces on the     |'),nl,
+    write('|   board.                                                                |'),nl,
+    write('|                                                                         |'),nl,
+    write('|                                                                         |'),nl,
+    write('| -When placing a piece on the board, each player must adhere to the      |'),nl,
+    write('| following rule: It is not allowed to place a piece in a special column, |'),nl, 
+    write('| row or zone in which the opponent has already placed a piece in the     |'),nl,
+    write('| same way. A zone is any of the four squares formed at the ends of the   |'),nl,
+    write('| board.An example of a square being formed by the 4 positions(1,1),      |'),nl,
+    write('| (1,2), (2,1) and (2,2).                                                 |'),nl,
+    write('|                                                                         |'),nl,
+    write('|_________________________________________________________________________| '),nl,nl,nl.

@@ -61,7 +61,7 @@ pieceRow(72, 3). % Brown Cylinder
 pieceRow(92, 4). % Brown Sphere
 
 % ----------------------------------- CHECK END ---------------------------------
-checkEnd(_Player, Board, Row, Column) :-
+checkEnd(_Player, Board, Row, Column, _CongratulateNumber) :-
     getRowSum(Board, Row, RowSum),
     RowSum =\= 22,
     getColumnSum(Board, Column, 0, ColSum),
@@ -70,8 +70,14 @@ checkEnd(_Player, Board, Row, Column) :-
     getSquareSum(SquareNum, Board, SquareSum),
     SquareSum =\= 22.
 
-checkEnd(Player, _Board, _Row, _Column) :-
+checkEnd(Player, _Board, _Row, _Column, 1) :-
     congratulatePlayer(Player),
+    askMenuOption,
+    read(Input),
+    manageInput(Input).
+
+checkEnd(_Player, _Board, _Row, _Column, 2) :-
+    sorryPlayer, % if computer wins a person, congratulate Menu is different
     askMenuOption,
     read(Input),
     manageInput(Input).

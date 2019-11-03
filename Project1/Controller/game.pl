@@ -29,21 +29,21 @@ startComputervsComputer :-
     displayGame(Board, WhitePieces, BrownPieces), % Displaying the main game & the available pieces
     playCvsC(Board, WhitePieces, BrownPieces). % Player 1 starts the game
 
-playComputer(Player, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces):-
+playComputer(Player, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces, _CongratulateNumber):-
     generatePlay(Player, Board, Row, Column, Piece, WhitePieces, BrownPieces), % only generates valid moves
     playPiece(Row, Column, Piece, Board, NewBoard),
     removePiece(Piece, Player, WhitePieces, BrownPieces, NewWhitePieces, NewBrownPieces),  
     displayGame(NewBoard, NewWhitePieces, NewBrownPieces),
-    checkEnd(Player, NewBoard, Row, Column).
+    checkEnd(Player, NewBoard, Row, Column, _CongratulateNumber). % type of Congratulation is different if compVScomp or personVSComp
 
 playPvsC(Board, WhitePieces, BrownPieces) :-
     playPerson(1, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces),
-    playComputer(2, NewBoard, NewWhitePieces, NewBrownPieces, NewBoard1, NewWhitePieces1, NewBrownPieces1),
+    playComputer(2, NewBoard, NewWhitePieces, NewBrownPieces, NewBoard1, NewWhitePieces1, NewBrownPieces1, 2),
     playPvsC(NewBoard1, NewWhitePieces1, NewBrownPieces1).
 
 playCvsC(Board, WhitePieces, BrownPieces) :-
-    playComputer(1, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces),
-    playComputer(2, NewBoard, NewWhitePieces, NewBrownPieces, NewBoard1, NewWhitePieces1, NewBrownPieces1),
+    playComputer(1, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces, 1),
+    playComputer(2, NewBoard, NewWhitePieces, NewBrownPieces, NewBoard1, NewWhitePieces1, NewBrownPieces1, 1),
     playCvsC(NewBoard1, NewWhitePieces1, NewBrownPieces1).
 
 playPerson(Player, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces) :-
@@ -52,7 +52,7 @@ playPerson(Player, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, Ne
     playPiece(Row, Column, Piece, Board, NewBoard),
     removePiece(Piece, Player, WhitePieces, BrownPieces, NewWhitePieces, NewBrownPieces),  
     displayGame(NewBoard, NewWhitePieces, NewBrownPieces),
-    checkEnd(Player, NewBoard, Row, Column).
+    checkEnd(Player, NewBoard, Row, Column, 1).
 
  % Given the player, it plays the piece on the given position
 play(Player, Board, WhitePieces, BrownPieces) :-
