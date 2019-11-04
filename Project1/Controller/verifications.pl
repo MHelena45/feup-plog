@@ -77,6 +77,7 @@ checkEnd(Player, _Board, _Row, _Column, CongratulateMenu) :-
     read(Input),
     manageInput(Input).
 
+
 % if game end and the winner is a person(play Person vs Person) ou a Computer it is a game Computer vs computer
 getCongratulateMenu(1, Player) :-
     congratulatePlayer(Player).
@@ -86,8 +87,8 @@ getCongratulateMenu(2, _Player) :-
     sorryPlayer. % if computer wins a person, congratulate Menu is different
 
 % if game end and the winner of the play Computer vs Person is the Person
-getCongratulateMenu(3, _Player) :
-    congratulateWinner. % if computer wins a person, congratulate Menu is different
+getCongratulateMenu(3, _Player) :-
+   congratulateWinner. % if computer wins a person, congratulate Menu is different
 
 getRowSum([Row| _Rest], 1, Solution) :-
     sumRow(Row, 0, Solution).
