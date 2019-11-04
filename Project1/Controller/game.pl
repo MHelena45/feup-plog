@@ -20,65 +20,65 @@ elements(Board, WhitePieces, BrownPieces)  :-
     displayGame(Board, WhitePieces, BrownPieces). % Displaying the main game & the available pieces
 
 start2Players :- 
-    elements(Board, WhitePieces, BrownPieces),
+    elements(Board, WhitePieces, BrownPieces), % inits the elements comuns to all types of game
     play(1, Board, WhitePieces, BrownPieces). % Player 1 starts the game
 
-startPlayervsComputer :-
-    elements(Board, WhitePieces, BrownPieces),
-    emptyCells(Cells), % empty cells used to computer moves
-    bPieces(BP),  % Used to computer moves
-    playPvsC(Board, WhitePieces, BrownPieces, Cells, BP). % Player 1 starts the game against computer
+startPlayervsComputer(Level) :-
+    elements(Board, WhitePieces, BrownPieces), % inits the elements comuns to all types of game
+    emptyCells(EmptyCells), % empty cells used to computer moves
+    bPieces(BrownPiecesAvailable),  % Used to computer moves
+    playPvsC(Board, WhitePieces, BrownPieces, EmptyCells, BrownPiecesAvailable, Level). % Player 1 starts the game against computer
 
-startComputervsPlayer :-
-    elements(Board, WhitePieces, BrownPieces),   
-    emptyCells(Cells), % empty cells used to computer moves
-    wPieces(WP),  % Used to computer moves
-    playCvsP(Board, WhitePieces, BrownPieces, Cells, WP). % computer is Player 1 and starts the game
+startComputervsPlayer(Level) :-
+    elements(Board, WhitePieces, BrownPieces),    % inits the elements comuns to all types of game
+    emptyCells(EmptyCells), % empty cells used to computer moves
+    wPieces(WhitePiecesAvailable),  % white pieces availabe, used to computer moves
+    playCvsP(Board, WhitePieces, BrownPieces, EmptyCells, WhitePiecesAvailable, Level). % computer is Player 1 and starts the game
 
-startComputervsComputer :-
-    elements(Board, WhitePieces, BrownPieces),   
-    emptyCells(Cells), % empty cells used to computer moves
-    wPieces(WP), % Used to computer moves
-    bPieces(BP),
-    playCvsC(Board, WhitePieces, BrownPieces, Cells, WP, BP). % Player 1 starts the game (Computer against computer)
+startComputervsComputer(Level) :-
+    elements(Board, WhitePieces, BrownPieces),   % inits the elements comuns to all types of game
+    emptyCells(EmptyCells), % empty cells used to computer moves
+    wPieces(WhitePiecesAvailable), % white pieces available, used to computer moves
+    bPieces(BrownPiecesAvailable), % brown pieces available, used to computer moves
+    playCvsC(Board, WhitePieces, BrownPieces, EmptyCells, WhitePiecesAvailable, BrownPiecesAvailable, Level). % Player 1 starts the game (Computer against computer)
 
 % ============================================================================================================
 %      Main loop of the 4 differnte kinds of game
 % ================================================================================================================
 
-playComputer(Player, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces, Cells, NewCells, CongratulateNumber, Pieces, NewPieces):-
-    generatePlay(Player, Board, Row, Column, Piece, Cells, NewCells, Pieces, NewPieces), % only generates valid moves
-    playPiece(Row, Column, Piece, Board, NewBoard),
-    removePiece(Piece, Player, WhitePieces, BrownPieces, NewWhitePieces, NewBrownPieces),  % used in display
-    displayGame(NewBoard, NewWhitePieces, NewBrownPieces),
-    sleep(1),
-    checkEnd(Player, NewBoard, Row, Column, CongratulateNumber). % type of Congratulation is different if compVScomp or personVSComp
+playComputer(Player, Board, WhitePieces, BrownPieces, Board1, WhitePieces1,BrownPieces1, EmptyCells, EmptyCells1, CongratulateNumber, PiecesAvailable, PiecesAvailable1, Level):-
+    generatePlay(Player, Board, Row, Column, Piece, EmptyCells, EmptyCells1, PiecesAvailable, PiecesAvailable1, Level), % only generates valid moves
+    playPiece(Row, Column, Piece, Board, Board1),
+    removePiece(Piece, Player, WhitePieces, BrownPieces, WhitePieces1, BrownPieces1),  % used in display
+    displayGame(Board1, WhitePieces1, BrownPieces1),
+    checkEnd(Player, Board1, Row, Column, CongratulateNumber),  % type of Congratulation is different if compVScomp or personVSComp
+    sleep(1).
 
-playPvsC(Board, WhitePieces, BrownPieces, Cells, BP) :-
-    playPerson(1, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces, Row, Column, 3),
-    select([Row, Column], Cells, NewCells), %removes from the list of available pieces to play
-    playComputer(2, NewBoard, NewWhitePieces, NewBrownPieces, NewBoard1, NewWhitePieces1, NewBrownPieces1, NewCells, NewCells1, 2, BP, BP1),
-    playPvsC(NewBoard1, NewWhitePieces1, NewBrownPieces1, NewCells1, BP1).
+playPvsC(Board, WhitePieces, BrownPieces, EmptyCells, BrownPiecesAvailable, Level) :-
+    playPerson(1, Board, WhitePieces, BrownPieces, Board1, WhitePieces1, BrownPieces1, Row, Column, 3),
+    select([Row, Column], EmptyCells, EmptyCells1), %removes from the list of available pieces to play
+    playComputer(2, Board1, WhitePieces1, BrownPieces1, Board2, WhitePieces2, BrownPieces2, EmptyCells1, EmptyCells2, 2, BrownPiecesAvailable, BrownPiecesAvailable1, Level),
+    playPvsC( Board2, WhitePieces2, BrownPieces2, EmptyCells2, BrownPiecesAvailable1, Level).
 
-playCvsP(Board, WhitePieces, BrownPieces, Cells, BP) :-
-    playComputer(1, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces, Cells, NewCells, 2, BP, BP1),
-    playPerson(2, NewBoard, NewWhitePieces, NewBrownPieces, NewBoard1, NewWhitePieces1, NewBrownPieces1, Row, Column, 3),
-    select([Row, Column], NewCells, Cells1),
-    playCvsP(NewBoard1, NewWhitePieces1, NewBrownPieces1, Cells1, BP1).
+playCvsP(Board, WhitePieces, BrownPieces, EmptyCells, BrownPiecesAvailable, Level) :-
+    playComputer(1, Board, WhitePieces, BrownPieces, Board1, WhitePieces1, BrownPieces1, EmptyCells, EmptyCells1, 2, BrownPiecesAvailable, BrownPiecesAvailable1, Level),
+    playPerson(2, Board1, WhitePieces1, BrownPieces1, Board2, WhitePieces2, BrownPieces2, Row, Column, 3),
+    select([Row, Column], EmptyCells1, EmptyCells2),
+    playCvsP(Board2, WhitePieces2, BrownPieces2, EmptyCells2, BrownPiecesAvailable1, Level).
 
-playCvsC(Board, WhitePieces, BrownPieces, Cells, WP, BP) :-
-    playComputer(1, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces, Cells, NewCells,  1, WP, WP1),
-    playComputer(2, NewBoard, NewWhitePieces, NewBrownPieces, NewBoard1, NewWhitePieces1, NewBrownPieces1, NewCells, Cells1, 1, BP, BP2),
-    playCvsC(NewBoard1, NewWhitePieces1, NewBrownPieces1, Cells1, WP1, BP2).
+playCvsC(Board, WhitePieces, BrownPieces, EmptyCells, WhitePiecesAvailable, BrownPiecesAvailable, Level) :-
+    playComputer(1, Board, WhitePieces, BrownPieces, Board1, WhitePieces1, BrownPieces1, EmptyCells, EmptyCells1,  1, WhitePiecesAvailable, WhitePiecesAvailable1, Level),
+    playComputer(2, Board1, WhitePieces1, BrownPieces1, Board2, WhitePieces2, BrownPieces2, EmptyCells1, EmptyCells2, 1, BrownPiecesAvailable, BrownPiecesAvailable1, Level),
+    playCvsC(Board2, WhitePieces2, BrownPieces2, EmptyCells2, WhitePiecesAvailable1, BrownPiecesAvailable1, Level).
 
-playPerson(Player, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces, Row, Column, CongratulateNumber) :-
+playPerson(Player, Board, WhitePieces, BrownPieces, Board1, WhitePieces1, BrownPieces1, Row, Column, CongratulateNumber) :-
     repeat, % if the colocation of the piece fails, we ask again the all play
     getPlay(Piece, Row, Column, Player), % ask the play
     validPlay(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece), % checks if it is valid, fails if not
-    playPiece(Row, Column, Piece, Board, NewBoard),
-    removePiece(Piece, Player, WhitePieces, BrownPieces, NewWhitePieces, NewBrownPieces),  
-    displayGame(NewBoard, NewWhitePieces, NewBrownPieces),
-    checkEnd(Player, NewBoard, Row, Column, CongratulateNumber).
+    playPiece(Row, Column, Piece, Board, Board1),
+    removePiece(Piece, Player, WhitePieces, BrownPieces, WhitePieces1, BrownPieces1),  
+    displayGame(Board1, WhitePieces1, BrownPieces1),
+    checkEnd(Player, Board1, Row, Column, CongratulateNumber).
 
  % Given the player, it plays the piece on the given position
 play(Player, Board, WhitePieces, BrownPieces) :-

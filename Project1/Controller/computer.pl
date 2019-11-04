@@ -178,7 +178,8 @@ winPlay(Board, Row, Column, Piece) :- % returns the Row, Column and Piece of the
     winSquarePlay(Board, SquareNum, Piece),
     getEmptySquare(Board, Row, Column , SquareNum).
 
-generatePlay(Player, Board, Row, Column, ColorPiece, WhitePieces, BrownPieces, _Cells, _NewCells):-
+generatePlay(Player, Board, Row, Column, ColorPiece, WhitePieces, BrownPieces, _Cells, _NewCells, Level):-
+    Level =\= 1, % if Level one, only generates random plays
     winPlay(Board, Row, Column, Piece), % Only returns a valid Row and column position that is empty
     translate(Piece, Player, ColorPiece),
     validMoveC(Board, Row, Column, ColorPiece), % Checks if the move is valid
@@ -188,7 +189,7 @@ generatePlay(Player, Board, Row, Column, ColorPiece, WhitePieces, BrownPieces, _
  * when there are not any winning play, we do a valid random play
  * The arg Pieces is the avalaible pieces of the Player playing and NewPieces, the Pieces except that is being play
  */
-generatePlay(_Player, Board, Row, Column, Piece, Cells, NewCells, Pieces, NewPieces):-
+generatePlay(_Player, Board, Row, Column, Piece, Cells, NewCells, Pieces, NewPieces, _Level):-
     repeat,
     random_member([Row| Column], Cells),
     random_member(Piece, Pieces),

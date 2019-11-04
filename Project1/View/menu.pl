@@ -11,21 +11,41 @@ mainMenu :-
 % =============================================================================
 % deals with the inputs of the player in anymenu
 % =============================================================================
+level(1).
+level(2).
+level(3).
+getLevel(Level) :-  
+    read(Level), 
+    level(Level).
+
+getLevel(_Level) :-
+    invalidLevel,
+    fail.
+
 % choose play Person vs Person
-manageInput(1) :-
+manageInput(1) :- 
     start2Players.
 
 % choose play Person vs Computer
 manageInput(2) :-
-    startPlayervsComputer.
+    levelMenu, % ask the level of difficulty of the game
+    repeat,
+    getLevel(Level),
+    startPlayervsComputer(Level).
 
 % choose play computer vs Person
 manageInput(3) :-
-    startComputervsPlayer.
+    levelMenu, % ask the level of difficult of the game
+    repeat,
+    getLevel(Level),
+    startComputervsPlayer(Level).
 
 % choose play computer vs Computer
 manageInput(4) :-
-    startComputervsComputer.
+    levelMenu, % ask the level of difficult of the game
+    repeat,
+    getLevel(Level),
+    startComputervsComputer(Level).
 
 % choose help menu
 manageInput(5) :-
@@ -41,7 +61,7 @@ manageInput(0) :-
 
 % deals with invalid option
 manageInput(_Other) :-
-    write('\nInvalid Option! Options between 0 to 3.\n\n'),
+    invalidOptionMessage,
     askMenuOption,
     read(Input),
     manageInput(Input).
@@ -81,10 +101,34 @@ printMainMenu :-
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________| '),nl,nl,nl.
 
+
+levelMenu :-
+    clearEverything,
+    nl,
+    write(' _______________________________________________________________________ '),nl,
+    write('|                                                                       |'),nl,
+    write('|                            Quantik                                    |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                                                                       |'),nl,
+    write('|      Choose level of difficulty:                                                    |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                                                                       |'),nl,
+    write('|           Press 1 - level 1                                           |'),nl,
+    write('|                                                                       |'),nl,
+    write('|           Press 2 - level 2                                           |'),nl,
+    write('|                                                                       |'),nl,
+	write('|           Press 3 - level 3                                           |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                                                                       |'),nl,
+    write('|_______________________________________________________________________| '),nl,nl,nl.
+
 % Menu in case of games (Player vs Player) and (Computer vs Computer) Only
 congratulatePlayer(Player) :-
     nl,nl,
     write(' _______________________________________________________________________ '),nl,
+    write('|                                                                       |'),nl,
+    write('|                            Quantik                                    |'),nl,
     write('|                                                                       |'),nl,
     write('|                    Congratulations, player '),
     write(Player),
@@ -111,6 +155,8 @@ congratulateWinner :-
     nl,nl,
     write(' _______________________________________________________________________ '),nl,
     write('|                                                                       |'),nl,
+    write('|                            Quantik                                    |'),nl,
+    write('|                                                                       |'),nl,
     write('|      Congratulations, you won against the computer                    |'),nl,
     write('|                                                                       |'),nl,
     write('|       Your Options:                                                   |'),nl,
@@ -133,6 +179,8 @@ congratulateWinner :-
 sorryPlayer :-
     nl,nl,
     write(' _______________________________________________________________________ '),nl,
+    write('|                                                                       |'),nl,
+    write('|                            Quantik                                    |'),nl,
     write('|                                                                       |'),nl,
     write('|                 The Computer won this time                            |'),nl,
     write('|                                                                       |'),nl,

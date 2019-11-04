@@ -38,3 +38,9 @@ unavailablePiece :-
 
 askMenuOption :-
     write('> What is your option ? ').
+
+invalidOptionMessage:-
+    write('\nInvalid Option! Options between 0 to 5.\n\n').
+
+invalidLevel :-
+    write('\nInvalid Level Number! Level must be 1, 2 or 3.\nWhat\'s the level of difficulty?\n').
