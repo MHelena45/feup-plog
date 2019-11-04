@@ -1,4 +1,5 @@
 :- use_module(library(random)).
+:- use_module(library(lists)).
 
 % ======================================================================
 %     checks if exists a row, Column or square with one piece left
@@ -177,34 +178,23 @@ winPlay(Board, Row, Column, Piece) :- % returns the Row, Column and Piece of the
     winSquarePlay(Board, SquareNum, Piece),
     getEmptySquare(Board, Row, Column , SquareNum).
 
-generatePlay(Player, Board, Row, Column, ColorPiece, WhitePieces, BrownPieces):-
+generatePlay(Player, Board, Row, Column, ColorPiece, WhitePieces, BrownPieces, _Cells, _NewCells):-
     winPlay(Board, Row, Column, Piece), % Only returns a valid Row and column position that is empty
     translate(Piece, Player, ColorPiece),
-    validMove(Board, Row, Column, ColorPiece), % Checks if the move is valid
+    validMoveC(Board, Row, Column, ColorPiece), % Checks if the move is valid
     isPieceAvailable(ColorPiece, WhitePieces, BrownPieces). % Checks if the piece is available (2 equal pieces max per player)
 
 /**
  * when there are not any winning play, we do a valid random play
+ * The arg Pieces is the avalaible pieces of the Player playing and NewPieces, the Pieces except that is being play
  */
-generatePlay(Player, Board, Row, Column, ColorPiece, WhitePieces, BrownPieces):-
+generatePlay(_Player, Board, Row, Column, Piece, Cells, NewCells, Pieces, NewPieces):-
     repeat,
-    random(1, 5, Row),
-    random(1, 5, Column),
-    isEmpty(Board, Row, Column), % Checks if the position is empty 
-    repeat,
-    random(1, 5, NumberPiece),
-    numberToPiece(Piece, NumberPiece),
-    translate(Piece, Player, ColorPiece),
-    validMove(Board, Row, Column, ColorPiece), % Checks if the move is valid
-    isPieceAvailable(ColorPiece, WhitePieces, BrownPieces). % Checks if the piece is available (2 equal pieces max per player)
-    
-% ======================================================================
-%         converts number between [1, 4] into a possible piece
-% ======================================================================
-numberToPiece('cone', 1).
-numberToPiece('cylinder', 2).
-numberToPiece('sphere', 3).
-numberToPiece('cube', 4).
+    random_member([Row| Column], Cells),
+    select([Row | Column], Cells, NewCells), % removes from empty cells
+    random_member(Piece, Pieces),
+    validMoveC(Board, Row, Column, Piece), 
+    select(Piece, Pieces, NewPieces).
 
 % ====================================================================================
 %  Verification of computer moves (if not valid fail but don't warn on the screen)
@@ -215,7 +205,7 @@ isEmpty(Board, Row, Column) :-
     Piece == 0.
 
 /* Check if the random movimen done by the computer is correct */
-validMove(Board, Row, Column, Piece) :-
+validMoveC(Board, Row, Column, Piece) :-
     Row1 is Row + 1,
     checkTop(Row1, Column, Board, Piece),
     Row2 is Row - 1,

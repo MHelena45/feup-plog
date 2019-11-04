@@ -9,16 +9,13 @@ mainMenu :-
     manageInput(Input).
 
 manageInput(1) :-
-    start2Players,
-    mainMenu.
+    start2Players.
 
 manageInput(2) :-
-    startPlayervsComputer,
-    mainMenu.
+    startPlayervsComputer.
 
 manageInput(3) :-
-    startComputervsComputer,
-    mainMenu.
+    startComputervsComputer.
 
 manageInput(4) :-
     help,
@@ -86,6 +83,26 @@ congratulatePlayer(Player) :-
     write('|                         0. Exit                                       |'),nl,
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________| '),nl,nl,nl.
+
+congratulateWinner :-
+    nl,nl,
+    write(' _______________________________________________________________________ '),nl,
+    write('|                                                                       |'),nl,
+    write('|      Congratulations, you won against the computer                    |'),nl,
+    write('|                                                                       |'),nl,
+    write('|       Your Options:                                                   |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                         1. Player vs Player                           |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                         2. Player vs Computer                         |'),nl,
+    write('|                                                                       |'),nl,
+	write('|                         3. Computer vs Computer                       |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                         4. help                                       |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                         0. Exit                                       |'),nl,
+    write('|                                                                       |'),nl,
+    write('|_______________________________________________________________________|'),nl,nl,nl.
 
 sorryPlayer :-
     nl,nl,

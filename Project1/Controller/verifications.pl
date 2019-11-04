@@ -7,33 +7,33 @@
 % =================================================================================
 
 validPlay(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece) :-
-    isEmpty(Board, WhitePieces, BrownPieces, Row, Column, Player), % Checks if the position is empty 
-    validMove(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece), % Checks if the move is valid
-    isPieceAvailable(Player, Board, Piece, WhitePieces, BrownPieces). % Checks if the piece is available (2 equal pieces max per player)
+    !, isEmptyCell(Board, Row, Column ), % Checks if the position is empty 
+    !, validMove(Board, Row, Column, Piece), % Checks if the move is valid
+    !, isPieceAvailable(Player, Piece, WhitePieces, BrownPieces). % Checks if the piece is available (2 equal pieces max per player)
 
 % ----------------------------------- IS EMPTY ---------------------------------
 
 /* Check if Row and column don't have a piece, if true the game continues */
-isEmpty(Board, _WhitePieces, _BrownPieces, Row, Column, _Player) :-
+isEmptyCell(Board, Row, Column) :-
     getPieceFromBoard(Row, Column, Board, Piece),
     Piece == 0.
     
 /* If is not empty, player as to play again. An error message is displayed. */
-isEmpty(Board, WhitePieces, BrownPieces, Row, Column, P) :-
+isEmptyCell(_Board, Row, Column) :-
     notEmpty(Row, Column), % Displays message to user
-    play(P, Board, WhitePieces, BrownPieces).
+    fail.
 
 % ----------------------------------- PIECE AVAILABLE ---------------------------------
 
-isPieceAvailable(1, _Board, Piece, WhitePieces, _BrownPieces) :-
+isPieceAvailable(1, Piece, WhitePieces, _BrownPieces) :-
     searchPiece(Piece, WhitePieces).
 
-isPieceAvailable(2, _Board, Piece, _WhitePieces, BrownPieces) :-
+isPieceAvailable(2,  Piece, _WhitePieces, BrownPieces) :-
     searchPiece(Piece, BrownPieces).
 
-isPieceAvailable(Player, Board, _Piece, WhitePieces, BrownPieces) :-
+isPieceAvailable(_Player, _Piece, _WhitePieces, _BrownPieces) :-
     unavailablePiece,
-    play(Player, Board, WhitePieces, BrownPieces).
+    fail.
 
 searchPiece(Piece, Board) :-
     pieceRow(Piece, NumRow),
@@ -71,19 +71,23 @@ checkEnd(_Player, Board, Row, Column, _CongratulateNumber) :-
     getSquareSum(SquareNum, Board, SquareSum),
     SquareSum =\= 22.
 
-% if game end and the winner a person ou a Computer is a game Computer vs computer
-checkEnd(Player, _Board, _Row, _Column, 1) :-
-    congratulatePlayer(Player),
+checkEnd(Player, _Board, _Row, _Column, CongratulateMenu) :-
+    getCongratulateMenu(CongratulateMenu, Player),
     askMenuOption,
     read(Input),
     manageInput(Input).
 
-% if game end and the winner of the play Computer vs Person is the COmputer
-checkEnd(_Player, _Board, _Row, _Column, 2) :-
-    sorryPlayer, % if computer wins a person, congratulate Menu is different
-    askMenuOption,
-    read(Input),
-    manageInput(Input).
+% if game end and the winner is a person(play Person vs Person) ou a Computer it is a game Computer vs computer
+getCongratulateMenu(1, Player) :-
+    congratulatePlayer(Player).
+
+% if game end and the winner of the play Computer vs Person is the Computer
+getCongratulateMenu(2, _Player) :-
+    sorryPlayer. % if computer wins a person, congratulate Menu is different
+
+% if game end and the winner of the play Computer vs Person is the Person
+getCongratulateMenu(3, _Player) :
+    congratulateWinner. % if computer wins a person, congratulate Menu is different
 
 getRowSum([Row| _Rest], 1, Solution) :-
     sumRow(Row, 0, Solution).
@@ -153,7 +157,7 @@ getSquareValue(Row, Column, Board, Value) :-
 
 % ----------------------------------- VALID MOVE ---------------------------------
 
-validMove(_Player, Board, _WhitePieces, _BrownPieces, Row, Column, Piece) :-
+validMove( Board, Row, Column, Piece) :-
     Row1 is Row + 1,
     checkTop(Row1, Column, Board, Piece),
     Row2 is Row - 1,
@@ -166,9 +170,9 @@ validMove(_Player, Board, _WhitePieces, _BrownPieces, Row, Column, Piece) :-
     checkSquare(SquareNum, Piece, Board).
 
 /* If move isn't valid, repeat that play */
-validMove(Player, Board, WhitePieces, BrownPieces, _Row, _Column, _Piece) :-
+validMove( _Board, _Row, _Column, _Piece) :-
     wrongMove, % Displays message to player
-    play(Player, Board, WhitePieces, BrownPieces).
+    fail.
 
 checkTop(5, _Column, _Board, _Piece).
 checkTop(Row, Column, Board, Piece) :-
