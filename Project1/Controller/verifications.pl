@@ -77,7 +77,6 @@ checkEnd(Player, _Board, _Row, _Column, CongratulateMenu) :-
     read(Input),
     manageInput(Input).
 
-
 % if game end and the winner is a person(play Person vs Person) ou a Computer it is a game Computer vs computer
 getCongratulateMenu(1, Player) :-
     congratulatePlayer(Player).

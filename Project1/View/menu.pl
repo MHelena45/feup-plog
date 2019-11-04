@@ -15,9 +15,12 @@ manageInput(2) :-
     startPlayervsComputer.
 
 manageInput(3) :-
-    startComputervsComputer.
+    startComputersPlayer.
 
 manageInput(4) :-
+    startComputervsComputer.
+
+manageInput(5) :-
     help,
     write('Tap any button to go back to the main menu '),
     read(_Ans),
@@ -46,9 +49,11 @@ printMainMenu :-
     write('|                                                                       |'),nl,
     write('|                          2. Player vs Computer                        |'),nl,
     write('|                                                                       |'),nl,
-	write('|                          3. Computer vs Computer                      |'),nl,
+	write('|                          3. Computer vs Player                        |'),nl,
     write('|                                                                       |'),nl,
-    write('|                          4. help                                      |'),nl,
+    write('|                          4. Computer vs Computer                      |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                          5. help                                      |'),nl,
     write('|                                                                       |'),nl,
     write('|                          0. Exit                                      |'),nl,
     write('|                                                                       |'),nl,
@@ -72,15 +77,17 @@ congratulatePlayer(Player) :-
     write('|                                                                       |'),nl,
     write('|       Your Options:                                                   |'),nl,
     write('|                                                                       |'),nl,
-    write('|                         1. Player vs Player                           |'),nl,
+    write('|                          1. Player vs Player                          |'),nl,
     write('|                                                                       |'),nl,
-    write('|                         2. Player vs Computer                         |'),nl,
+    write('|                          2. Player vs Computer                        |'),nl,
     write('|                                                                       |'),nl,
-	write('|                         3. Computer vs Computer                       |'),nl,
+	write('|                          3. Computer vs Player                        |'),nl,
     write('|                                                                       |'),nl,
-    write('|                         4. help                                       |'),nl,
+    write('|                          4. Computer vs Computer                      |'),nl,
     write('|                                                                       |'),nl,
-    write('|                         0. Exit                                       |'),nl,
+    write('|                          5. help                                      |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                          0. Exit                                      |'),nl,
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________| '),nl,nl,nl.
 
@@ -92,15 +99,17 @@ congratulateWinner :-
     write('|                                                                       |'),nl,
     write('|       Your Options:                                                   |'),nl,
     write('|                                                                       |'),nl,
-    write('|                         1. Player vs Player                           |'),nl,
+    write('|                          1. Player vs Player                          |'),nl,
     write('|                                                                       |'),nl,
-    write('|                         2. Player vs Computer                         |'),nl,
+    write('|                          2. Player vs Computer                        |'),nl,
     write('|                                                                       |'),nl,
-	write('|                         3. Computer vs Computer                       |'),nl,
+	write('|                          3. Computer vs Player                        |'),nl,
     write('|                                                                       |'),nl,
-    write('|                         4. help                                       |'),nl,
+    write('|                          4. Computer vs Computer                      |'),nl,
     write('|                                                                       |'),nl,
-    write('|                         0. Exit                                       |'),nl,
+    write('|                          5. help                                      |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                          0. Exit                                      |'),nl,
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl,nl,nl.
 
@@ -112,15 +121,17 @@ sorryPlayer :-
     write('|                                                                       |'),nl,
     write('|       Your Options:                                                   |'),nl,
     write('|                                                                       |'),nl,
-    write('|                         1. Player vs Player                           |'),nl,
+    write('|                          1. Player vs Player                          |'),nl,
     write('|                                                                       |'),nl,
-    write('|                         2. Player vs Computer                         |'),nl,
+    write('|                          2. Player vs Computer                        |'),nl,
     write('|                                                                       |'),nl,
-	write('|                         3. Computer vs Computer                       |'),nl,
+	write('|                          3. Computer vs Player                        |'),nl,
     write('|                                                                       |'),nl,
-    write('|                         4. help                                       |'),nl,
+    write('|                          4. Computer vs Computer                      |'),nl,
     write('|                                                                       |'),nl,
-    write('|                         0. Exit                                       |'),nl,
+    write('|                          5. help                                      |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                          0. Exit                                      |'),nl,
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl,nl,nl.
 

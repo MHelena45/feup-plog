@@ -4,6 +4,7 @@
 :- include('../View/menu.pl').
 :- include('verifications.pl').
 :- include('computer.pl').
+:- use_module(library(system)).
 
 start :-
     mainMenu.
@@ -23,6 +24,15 @@ startPlayervsComputer :-
     emptyCells(Cells),
     bPieces(BP),  % Used to computer moves
     playPvsC(Board, WhitePieces, BrownPieces, Cells, BP). % Player 1 starts the game
+
+startComputersPlayer :-
+    board(Board), % Initialization of the board
+    whitePieces(WhitePieces), % Initialization of the white pieces board
+    brownPieces(BrownPieces), % Initialization of the brown pieces board
+    displayGame(Board, WhitePieces, BrownPieces), % Displaying the main game & the available pieces
+    emptyCells(Cells),
+    wPieces(WP),  % Used to computer moves
+    playCvsP(Board, WhitePieces, BrownPieces, Cells, WP). % Player 1 starts the game
 
 startComputervsComputer :-
     board(Board), % Initialization of the board
@@ -46,9 +56,17 @@ playPvsC(Board, WhitePieces, BrownPieces, Cells, BP) :-
     playComputer(2, NewBoard, NewWhitePieces, NewBrownPieces, NewBoard1, NewWhitePieces1, NewBrownPieces1, NewCells, Cells1, 2, BP, BP1),
     playPvsC(NewBoard1, NewWhitePieces1, NewBrownPieces1, Cells1, BP1).
 
+playCvsP(Board, WhitePieces, BrownPieces, Cells, BP) :-
+    playComputer(1, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces, Cells, NewCells, 2, BP, BP1),
+    playPerson(2, NewBoard, NewWhitePieces, NewBrownPieces, NewBoard1, NewWhitePieces1, NewBrownPieces1, Row, Column, 3),
+    select([Row, Column], NewCells, Cells1),
+    playCvsP(NewBoard1, NewWhitePieces1, NewBrownPieces1, Cells1, BP1).
+
 playCvsC(Board, WhitePieces, BrownPieces, Cells, WP, BP) :-
     playComputer(1, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces, Cells, NewCells,  1, WP, WP1),
+    sleep(1),
     playComputer(2, NewBoard, NewWhitePieces, NewBrownPieces, NewBoard1, NewWhitePieces1, NewBrownPieces1, NewCells, Cells1, 1, BP, BP2),
+    sleep(1),
     playCvsC(NewBoard1, NewWhitePieces1, NewBrownPieces1, Cells1, WP1, BP2).
 
 playPerson(Player, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces, Row, Column, CongratulateNumber) :-
