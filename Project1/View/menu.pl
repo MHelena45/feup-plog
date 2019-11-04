@@ -8,33 +8,47 @@ mainMenu :-
     read(Input),
     manageInput(Input).
 
+% =============================================================================
+% deals with the inputs of the player in anymenu
+% =============================================================================
+% choose play Person vs Person
 manageInput(1) :-
     start2Players.
 
+% choose play Person vs Computer
 manageInput(2) :-
     startPlayervsComputer.
 
+% choose play computer vs Person
 manageInput(3) :-
-    startComputersPlayer.
+    startComputervsPlayer.
 
+% choose play computer vs Computer
 manageInput(4) :-
     startComputervsComputer.
 
+% choose help menu
 manageInput(5) :-
-    help,
+    helpMenu,
     write('Tap any button to go back to the main menu '),
     read(_Ans),
     mainMenu.
 
+% choose exit
 manageInput(0) :-
     write('\nLeaving the game...\n\n'),
     break. %stops executation
 
+% deals with invalid option
 manageInput(_Other) :-
     write('\nInvalid Option! Options between 0 to 3.\n\n'),
     askMenuOption,
     read(Input),
     manageInput(Input).
+
+% ==============================================================================================
+%    Draws menus
+% ==============================================================================================
 
 printMainMenu :-
     clearEverything,
@@ -67,6 +81,7 @@ printMainMenu :-
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________| '),nl,nl,nl.
 
+% Menu in case of games (Player vs Player) and (Computer vs Computer) Only
 congratulatePlayer(Player) :-
     nl,nl,
     write(' _______________________________________________________________________ '),nl,
@@ -91,6 +106,7 @@ congratulatePlayer(Player) :-
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________| '),nl,nl,nl.
 
+% used in games Person vs Computer and Computer vs Person
 congratulateWinner :-
     nl,nl,
     write(' _______________________________________________________________________ '),nl,
@@ -113,11 +129,12 @@ congratulateWinner :-
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl,nl,nl.
 
+% used in games Person vs Computer and Computer vs Person
 sorryPlayer :-
     nl,nl,
     write(' _______________________________________________________________________ '),nl,
     write('|                                                                       |'),nl,
-    write('|                The Computer won this time                             |'),nl,
+    write('|                 The Computer won this time                            |'),nl,
     write('|                                                                       |'),nl,
     write('|       Your Options:                                                   |'),nl,
     write('|                                                                       |'),nl,
@@ -135,7 +152,7 @@ sorryPlayer :-
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl,nl,nl.
 
-help :-
+helpMenu :-
     clearEverything,
     nl,
     write(' _________________________________________________________________________'),nl,

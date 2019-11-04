@@ -9,52 +9,56 @@
 start :-
     mainMenu.
 
-start2Players :- 
+% ======================================================================================
+%   Starts acording to the option choose in main menu
+% ======================================================================================
+% inits the elements comuns to all types of game
+elements(Board, WhitePieces, BrownPieces)  :-
     board(Board), % Initialization of the board
-    whitePieces(WhitePieces), % Initialization of the white pieces board
-    brownPieces(BrownPieces), % Initialization of the brown pieces board
-    displayGame(Board, WhitePieces, BrownPieces), % Displaying the main game & the available pieces
+    whitePieces(WhitePieces), % Initialization of the white pieces board for display
+    brownPieces(BrownPieces), % Initialization of the brown pieces board for display
+    displayGame(Board, WhitePieces, BrownPieces). % Displaying the main game & the available pieces
+
+start2Players :- 
+    elements(Board, WhitePieces, BrownPieces),
     play(1, Board, WhitePieces, BrownPieces). % Player 1 starts the game
 
 startPlayervsComputer :-
-    board(Board), % Initialization of the board
-    whitePieces(WhitePieces), % Initialization of the white pieces board
-    brownPieces(BrownPieces), % Initialization of the brown pieces board
-    displayGame(Board, WhitePieces, BrownPieces), % Displaying the main game & the available pieces
-    emptyCells(Cells),
+    elements(Board, WhitePieces, BrownPieces),
+    emptyCells(Cells), % empty cells used to computer moves
     bPieces(BP),  % Used to computer moves
-    playPvsC(Board, WhitePieces, BrownPieces, Cells, BP). % Player 1 starts the game
+    playPvsC(Board, WhitePieces, BrownPieces, Cells, BP). % Player 1 starts the game against computer
 
-startComputersPlayer :-
-    board(Board), % Initialization of the board
-    whitePieces(WhitePieces), % Initialization of the white pieces board
-    brownPieces(BrownPieces), % Initialization of the brown pieces board
-    displayGame(Board, WhitePieces, BrownPieces), % Displaying the main game & the available pieces
-    emptyCells(Cells),
+startComputervsPlayer :-
+    elements(Board, WhitePieces, BrownPieces),   
+    emptyCells(Cells), % empty cells used to computer moves
     wPieces(WP),  % Used to computer moves
-    playCvsP(Board, WhitePieces, BrownPieces, Cells, WP). % Player 1 starts the game
+    playCvsP(Board, WhitePieces, BrownPieces, Cells, WP). % computer is Player 1 and starts the game
 
 startComputervsComputer :-
-    board(Board), % Initialization of the board
-    whitePieces(WhitePieces), % Initialization of the white pieces board
-    brownPieces(BrownPieces), % Initialization of the brown pieces board
-    emptyCells(Cells),
+    elements(Board, WhitePieces, BrownPieces),   
+    emptyCells(Cells), % empty cells used to computer moves
     wPieces(WP), % Used to computer moves
     bPieces(BP),
-    playCvsC(Board, WhitePieces, BrownPieces, Cells, WP, BP). % Player 1 starts the game
+    playCvsC(Board, WhitePieces, BrownPieces, Cells, WP, BP). % Player 1 starts the game (Computer against computer)
 
-playComputer(Player, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces,Cells, NewCells, CongratulateNumber, Pieces, NewPieces):-
+% ============================================================================================================
+%      Main loop of the 4 differnte kinds of game
+% ================================================================================================================
+
+playComputer(Player, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces, Cells, NewCells, CongratulateNumber, Pieces, NewPieces):-
     generatePlay(Player, Board, Row, Column, Piece, Cells, NewCells, Pieces, NewPieces), % only generates valid moves
     playPiece(Row, Column, Piece, Board, NewBoard),
-    removePiece(Piece, Player, WhitePieces, BrownPieces, NewWhitePieces, NewBrownPieces),  
+    removePiece(Piece, Player, WhitePieces, BrownPieces, NewWhitePieces, NewBrownPieces),  % used in display
     displayGame(NewBoard, NewWhitePieces, NewBrownPieces),
+    sleep(1),
     checkEnd(Player, NewBoard, Row, Column, CongratulateNumber). % type of Congratulation is different if compVScomp or personVSComp
 
 playPvsC(Board, WhitePieces, BrownPieces, Cells, BP) :-
     playPerson(1, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces, Row, Column, 3),
-    select([Row, Column], Cells, NewCells),
-    playComputer(2, NewBoard, NewWhitePieces, NewBrownPieces, NewBoard1, NewWhitePieces1, NewBrownPieces1, NewCells, Cells1, 2, BP, BP1),
-    playPvsC(NewBoard1, NewWhitePieces1, NewBrownPieces1, Cells1, BP1).
+    select([Row, Column], Cells, NewCells), %removes from the list of available pieces to play
+    playComputer(2, NewBoard, NewWhitePieces, NewBrownPieces, NewBoard1, NewWhitePieces1, NewBrownPieces1, NewCells, NewCells1, 2, BP, BP1),
+    playPvsC(NewBoard1, NewWhitePieces1, NewBrownPieces1, NewCells1, BP1).
 
 playCvsP(Board, WhitePieces, BrownPieces, Cells, BP) :-
     playComputer(1, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces, Cells, NewCells, 2, BP, BP1),
@@ -64,15 +68,13 @@ playCvsP(Board, WhitePieces, BrownPieces, Cells, BP) :-
 
 playCvsC(Board, WhitePieces, BrownPieces, Cells, WP, BP) :-
     playComputer(1, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces, Cells, NewCells,  1, WP, WP1),
-    sleep(1),
     playComputer(2, NewBoard, NewWhitePieces, NewBrownPieces, NewBoard1, NewWhitePieces1, NewBrownPieces1, NewCells, Cells1, 1, BP, BP2),
-    sleep(1),
     playCvsC(NewBoard1, NewWhitePieces1, NewBrownPieces1, Cells1, WP1, BP2).
 
 playPerson(Player, Board, WhitePieces, BrownPieces, NewBoard, NewWhitePieces, NewBrownPieces, Row, Column, CongratulateNumber) :-
-    repeat,
-    getPlay(Piece, Row, Column, Player),
-    validPlay(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece),
+    repeat, % if the colocation of the piece fails, we ask again the all play
+    getPlay(Piece, Row, Column, Player), % ask the play
+    validPlay(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece), % checks if it is valid, fails if not
     playPiece(Row, Column, Piece, Board, NewBoard),
     removePiece(Piece, Player, WhitePieces, BrownPieces, NewWhitePieces, NewBrownPieces),  
     displayGame(NewBoard, NewWhitePieces, NewBrownPieces),
@@ -84,7 +86,14 @@ play(Player, Board, WhitePieces, BrownPieces) :-
     changePlayer(Player, NewPlayer), % Changes current player
     play(NewPlayer, NewBoard, NewWhitePieces, NewBrownPieces).  % Changes current board
 
-% ----------------------------- GET PLAY ------------------------------
+% Changes the current player (in games Person vs Person)
+changePlayer(1, 2).
+changePlayer(2, 1).
+
+% ==============================================================================
+% ----------------------------- GET PLAY          ------------------------------
+% ==============================================================================
+
 % Gets the play from the player
 getPlay(Piece, Row, Column, Player) :-
     greetPlayer(Player),
@@ -93,22 +102,22 @@ getPlay(Piece, Row, Column, Player) :-
     getColumn(Column).
 
 getPiece(ColorPiece, Player) :-
-  %  repeat, % If the player inserts an invalid piece, ask the piece again
     askPiece(Piece),
     checkPiece(Piece),
     translate(Piece, Player, ColorPiece).
 
 getRow(Row) :-
-  %  repeat, % If the player inserts an invalid row, ask the row again
     askRow(Row),
     checkPosition(Row).
 
 getColumn(Column) :-
- %   repeat, % If the player inserts an invalid column, ask the column again
     askColumn(Column),
     checkPosition(Column).
 
-% --------------------------- BOARD UPDATES -----------------------------
+% ========================================================================
+% ---------------------------  BOARD UPDATES -----------------------------
+% ========================================================================
+% plays a Piece, get the new Board for Tabout Board
 playPiece(Row, Column, Piece, TabIn, TabOut) :-
    updateRow(Row, Column, Piece, TabIn, TabOut).
 
@@ -121,6 +130,7 @@ updateColumn(1, Piece, [_P | Rest], [Piece | Rest]).
 updateColumn(N, Piece, [P | Rest], [P| More]) :-
     N > 1, Next is N-1, updateColumn(Next, Piece, Rest, More).
 
+% removes Piece form the white Pieces and BrownPieces available to play
 removePiece(Piece, 1, WhitePieces, BrownPieces, NewWhitePieces, BrownPieces) :- 
     searchBoard(Piece, WhitePieces, NewWhitePieces).
 removePiece(Piece, 2, WhitePieces, BrownPieces, WhitePieces, NewBrownPieces) :- 
@@ -136,9 +146,12 @@ searchRow(Piece, [Piece| Rest], [0| Rest]).
 searchRow(Piece, [P| Rest], [P| More]) :-
     searchRow(Piece, Rest, More).
 
+% ======================================================================
 % --------------------------- TRANSLATIONS -----------------------------
-% White pieces
-translate(cone, 1, 11).
+% ======================================================================
+% the play only writes the form and it is translate to the correct number to save in the board
+% White pieces translate 
+translate(cone, 1, 11). % form, number of player and number of the correspondent piece
 translate(cube, 1, 51).
 translate(cylinder, 1, 71).
 translate(sphere, 1, 91).
@@ -148,7 +161,3 @@ translate(cone, 2, 12).
 translate(cube, 2, 52).
 translate(cylinder, 2, 72).
 translate(sphere, 2, 92).
-
-% Changes the current player
-changePlayer(1, 2).
-changePlayer(2, 1).

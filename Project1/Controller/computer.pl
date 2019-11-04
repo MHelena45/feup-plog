@@ -191,9 +191,9 @@ generatePlay(Player, Board, Row, Column, ColorPiece, WhitePieces, BrownPieces, _
 generatePlay(_Player, Board, Row, Column, Piece, Cells, NewCells, Pieces, NewPieces):-
     repeat,
     random_member([Row| Column], Cells),
-    select([Row | Column], Cells, NewCells), % removes from empty cells
     random_member(Piece, Pieces),
-    validMoveC(Board, Row, Column, Piece), 
+    validMoveC(Board, Row, Column, Piece), %fails if move not valid
+    select([Row | Column], Cells, NewCells),  % removes from empty cells
     select(Piece, Pieces, NewPieces).
 
 % ====================================================================================
