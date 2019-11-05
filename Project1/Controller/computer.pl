@@ -178,12 +178,55 @@ winPlay(Board, Row, Column, Piece) :- % returns the Row, Column and Piece of the
     winSquarePlay(Board, SquareNum, Piece),
     getEmptySquare(Board, Row, Column , SquareNum).
 
-generatePlay(Player, Board, Row, Column, ColorPiece, WhitePieces, BrownPieces, _Cells, _NewCells, Level):-
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                          Functions use to get a good Play
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+/**
+ * If there are two pieces in one row, column ou square playing there leaves a winning play for the other,
+ * so we want to avoid it, playing in empty or 1 piece rows
+ */
+getPossiblePiece(Piece, 0, Pieces) :-
+    random_member(Piece, Pieces).
+
+getPossiblePiece(Piece, 1, Pieces) :-
+    random_member(Piece, Pieces).
+
+getPossiblePiece(Piece, 5, Pieces) :-
+    random_member(Piece, Pieces).
+
+getPossiblePiece(Piece, 7, Pieces) :-
+    random_member(Piece, Pieces).
+
+getPossiblePiece(Piece, 9, Pieces) :-
+    random_member(Piece, Pieces).
+
+goodPlay(Board, Row, Column, Piece, Pieces) :-
+    getRowSumC(Board, Row, RowSum),
+    getPossiblePiece(Piece, RowSum, Pieces), 
+    getEmptyColumn(Board, Row, Column). % gets firts of the collumn without a piece
+
+goodPlay(Board, Row, Column, Piece, Pieces) :-
+    getColumnSumC(Board, Column, 0, ColSum),
+    getPossiblePiece(Piece, ColSum, Pieces),
+    getEmptyRow(Board, Row, Column).
+
+generatePlay(Player, Board, Row, Column, ColorPiece, _Cells, _NewCells, Pieces, NewPieces, Level):-
     Level =\= 1, % if Level one, only generates random plays
     winPlay(Board, Row, Column, Piece), % Only returns a valid Row and column position that is empty
     translate(Piece, Player, ColorPiece),
     validMoveC(Board, Row, Column, ColorPiece), % Checks if the move is valid
-    isPieceAvailable(ColorPiece, WhitePieces, BrownPieces). % Checks if the piece is available (2 equal pieces max per player)
+    select(ColorPiece, Pieces, NewPieces). % Checks if the piece is available (2 equal pieces max per player)
+
+/**
+ * Generates good plays, only done if user choose nivel 3 and there is not a winning play
+ */
+generatePlay(_Player, Board, Row, Column, Piece, Cells, NewCells, Pieces, NewPieces, 3) :-
+    goodPlay(Board, Row, Column, Piece, Pieces),
+    validMoveC(Board, Row, Column, Piece), % Checks if the move is valid
+    select([Row, Column], Cells, NewCells),  % removes from empty cells
+    select(Piece, Pieces, NewPieces). % if piece doesn't exist returns false
 
 /**
  * when there are not any winning play, we do a valid random play
@@ -191,6 +234,7 @@ generatePlay(Player, Board, Row, Column, ColorPiece, WhitePieces, BrownPieces, _
  */
 generatePlay(_Player, Board, Row, Column, Piece, Cells, NewCells, Pieces, NewPieces, _Level):-
     repeat,
+    write('Random\n'), sleep(1),
     random_member([Row| Column], Cells),
     random_member(Piece, Pieces),
     validMoveC(Board, Row, Column, Piece), %fails if move not valid

@@ -7,9 +7,11 @@
 % =================================================================================
 
 validPlay(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece) :-
-    !, isEmptyCell(Board, Row, Column ), % Checks if the position is empty 
-    !, validMove(Board, Row, Column, Piece), % Checks if the move is valid
-    !, isPieceAvailable(Player, Piece, WhitePieces, BrownPieces). % Checks if the piece is available (2 equal pieces max per player)
+    isEmptyCell(Board, Row, Column ), % Checks if the position is empty 
+    !, %red cut, used to prevent more than one error mensagem
+    validMove(Board, Row, Column, Piece), % Checks if the move is valid
+    !, %red cut, used to prevent more than one error mensagem
+    isPieceAvailable(Player, Piece, WhitePieces, BrownPieces). % Checks if the piece is available (2 equal pieces max per player)
 
 % ----------------------------------- IS EMPTY ---------------------------------
 
