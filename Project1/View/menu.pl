@@ -110,7 +110,7 @@ levelMenu :-
     write('|                            Quantik                                    |'),nl,
     write('|                                                                       |'),nl,
     write('|                                                                       |'),nl,
-    write('|      Choose level of difficulty:                                                    |'),nl,
+    write('|      Choose level of difficulty:                                      |'),nl,
     write('|                                                                       |'),nl,
     write('|                                                                       |'),nl,
     write('|           Press 1 - level 1                                           |'),nl,

@@ -212,34 +212,33 @@ goodPlay(Board, Row, Column, Piece, Pieces) :-
     getPossiblePiece(Piece, ColSum, Pieces),
     getEmptyRow(Board, Row, Column).
 
-generatePlay(Player, Board, Row, Column, ColorPiece, _Cells, _NewCells, Pieces, NewPieces, Level):-
+generatePlay(Player, Board, Row, Column, ColorPiece, _Cells, _NewCells, PiecesAvailable, Level):-
     Level =\= 1, % if Level one, only generates random plays
     winPlay(Board, Row, Column, Piece), % Only returns a valid Row and column position that is empty
     translate(Piece, Player, ColorPiece),
     validMoveC(Board, Row, Column, ColorPiece), % Checks if the move is valid
-    select(ColorPiece, Pieces, NewPieces). % Checks if the piece is available (2 equal pieces max per player)
+    member(Piece, PiecesAvailable). % if piece doesn't exist in the available ones, returns false (2 equal pieces max per player)
 
 /**
  * Generates good plays, only done if user choose nivel 3 and there is not a winning play
  */
-generatePlay(_Player, Board, Row, Column, Piece, Cells, NewCells, Pieces, NewPieces, 3) :-
-    goodPlay(Board, Row, Column, Piece, Pieces),
+generatePlay(_Player, Board, Row, Column, Piece, Cells, NewCells, PiecesAvailable, 3) :-
+    goodPlay(Board, Row, Column, Piece, PiecesAvailable),
     validMoveC(Board, Row, Column, Piece), % Checks if the move is valid
     select([Row, Column], Cells, NewCells),  % removes from empty cells
-    select(Piece, Pieces, NewPieces). % if piece doesn't exist returns false
+    member(Piece, PiecesAvailable). % if piece doesn't exist in the available ones, returns false
 
 /**
  * when there are not any winning play, we do a valid random play
  * The arg Pieces is the avalaible pieces of the Player playing and NewPieces, the Pieces except that is being play
  */
-generatePlay(_Player, Board, Row, Column, Piece, Cells, NewCells, Pieces, NewPieces, _Level):-
+generatePlay(_Player, Board, Row, Column, Piece, Cells, NewCells, PiecesAvailable, _Level):-
     repeat,
     write('Random\n'), sleep(1),
-    random_member([Row| Column], Cells),
-    random_member(Piece, Pieces),
+    random_member([Row| [Column| _]], Cells),
+    random_member(Piece, PiecesAvailable),
     validMoveC(Board, Row, Column, Piece), %fails if move not valid
-    select([Row | Column], Cells, NewCells),  % removes from empty cells
-    select(Piece, Pieces, NewPieces).
+    select([Row, Column], Cells, NewCells).  % removes from empty cells
 
 % ====================================================================================
 %  Verification of computer moves (if not valid fail but don't warn on the screen)

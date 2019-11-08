@@ -28,39 +28,14 @@ isEmptyCell(_Board, Row, Column) :-
 % ----------------------------------- PIECE AVAILABLE ---------------------------------
 
 isPieceAvailable(1, Piece, WhitePieces, _BrownPieces) :-
-    searchPiece(Piece, WhitePieces).
+    member(Piece, WhitePieces).
 
 isPieceAvailable(2,  Piece, _WhitePieces, BrownPieces) :-
-    searchPiece(Piece, BrownPieces).
+    member(Piece, BrownPieces).
 
 isPieceAvailable(_Player, _Piece, _WhitePieces, _BrownPieces) :-
     unavailablePiece,
     fail.
-
-searchPiece(Piece, Board) :-
-    pieceRow(Piece, NumRow),
-    searchPieceInRow(Piece, Board, NumRow).
-
-searchPieceInRow(Piece, [Row| _Rest], 1) :-
-    searchPieceInColumns(Piece, Row).
-searchPieceInRow(Piece, [_Row| Rest], NumRow) :- 
-    NumRow > 1, NumRow1 is NumRow - 1,
-    searchPieceInRow(Piece, Rest, NumRow1).
-
-searchPieceInColumns(Piece, [Piece| _More]). % Found piece
-searchPieceInColumns(Piece, [_Column| More]) :-
-    searchPieceInColumns(Piece, More).
-
-% Number of Row in Pieces Board for each piece
-pieceRow(11, 1). % White Cone
-pieceRow(51, 2). % White Cube
-pieceRow(71, 3). % White Cylinder
-pieceRow(91, 4). % White Sphere
-
-pieceRow(12, 1). % Brown Cone
-pieceRow(52, 2). % Brown Cube
-pieceRow(72, 3). % Brown Cylinder
-pieceRow(92, 4). % Brown Sphere
 
 % ----------------------------------- CHECK END ---------------------------------
 % sucess if game is not over
@@ -265,9 +240,12 @@ getOpposite(92, 91).
 
 % ----------------------------------- VALID POSITION ---------------------------------
 % Check if row and Column are valid (between 1 and 4 inclusive)
-checkPosition(Pos) :-
-    Pos < 5,
-    Pos > 0. 
+% wedid use an expression because give error when using chars.
+checkPosition(1).
+checkPosition(2).
+checkPosition(3).
+checkPosition(4).
+
 
 % ----------------------------------- VALID PIECE ---------------------------------
 % Accepted pieces

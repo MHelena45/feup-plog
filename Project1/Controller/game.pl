@@ -26,50 +26,65 @@ start2Players :-
 startPlayervsComputer(Level) :-
     elements(Board, WhitePieces, BrownPieces), % inits the elements comuns to all types of game
     emptyCells(EmptyCells), % empty cells used to computer moves
-    bPieces(BrownPiecesAvailable),  % Used to computer moves
-    playPvsC(Board, WhitePieces, BrownPieces, EmptyCells, BrownPiecesAvailable, Level). % Player 1 starts the game against computer
+    playPvsC(Board, WhitePieces, BrownPieces, EmptyCells, Level). % Player 1 starts the game against computer
 
 startComputervsPlayer(Level) :-
     elements(Board, WhitePieces, BrownPieces),    % inits the elements comuns to all types of game
     emptyCells(EmptyCells), % empty cells used to computer moves
-    wPieces(WhitePiecesAvailable),  % white pieces availabe, used to computer moves
-    playCvsP(Board, WhitePieces, BrownPieces, EmptyCells, WhitePiecesAvailable, Level). % computer is Player 1 and starts the game
+    playCvsP(Board, WhitePieces, BrownPieces, EmptyCells, Level). % computer is Player 1 and starts the game
 
 startComputervsComputer(Level) :-
     elements(Board, WhitePieces, BrownPieces),   % inits the elements comuns to all types of game
     emptyCells(EmptyCells), % empty cells used to computer moves
-    wPieces(WhitePiecesAvailable), % white pieces available, used to computer moves
-    bPieces(BrownPiecesAvailable), % brown pieces available, used to computer moves
-    playCvsC(Board, WhitePieces, BrownPieces, EmptyCells, WhitePiecesAvailable, BrownPiecesAvailable, Level). % Player 1 starts the game (Computer against computer)
+    playCvsC(Board, WhitePieces, BrownPieces, EmptyCells, Level). % Player 1 starts the game (Computer against computer)
 
 % ============================================================================================================
 %      Main loop of the 4 differnte kinds of game
 % ================================================================================================================
 
-playComputer(Player, Board, WhitePieces, BrownPieces, Board1, WhitePieces1,BrownPieces1, EmptyCells, EmptyCells1, CongratulateNumber, PiecesAvailable, PiecesAvailable1, Level):-
-    generatePlay(Player, Board, Row, Column, Piece, EmptyCells, EmptyCells1, PiecesAvailable, PiecesAvailable1, Level), % only generates valid moves
+% remove dups and 0's from the Pieces
+getPiecesAvailable(1, WhitePieces, _BrownPieces, PiecesAvailable) :-
+    remove_dups(WhitePieces, WhitePieces1), % removes dups and all 0 execpt one
+    select(0, WhitePieces1, PiecesAvailable). % remove last 0 remaining
+
+getPiecesAvailable(2, _WhitePieces, BrownPieces, PiecesAvailable) :-
+    remove_dups(BrownPieces, BrownPieces1), % removes all 0 execpt one
+    select(0, BrownPieces1, PiecesAvailable). % remove last 0 remaining
+
+% if there are no 0 just remove duplicated pieces
+getPiecesAvailable(1, WhitePieces, _BrownPieces, PiecesAvailable) :-
+    remove_dups(WhitePieces, WhitePieces1),
+    PiecesAvailable = WhitePieces1.
+
+getPiecesAvailable(2, _WhitePieces, BrownPieces, PiecesAvailable) :-
+    remove_dups(BrownPieces, BrownPieces1),
+    PiecesAvailable = BrownPieces1.
+
+playComputer(Player, Board, WhitePieces, BrownPieces, Board1, WhitePieces1, BrownPieces1, EmptyCells, EmptyCells1, CongratulateNumber, Level):-
+    getPiecesAvailable(Player, WhitePieces, BrownPieces, PiecesAvailable),
+    generatePlay(Player, Board, Row, Column, Piece, EmptyCells, EmptyCells1, PiecesAvailable, Level), % only generates valid moves
     playPiece(Row, Column, Piece, Board, Board1),
     removePiece(Piece, Player, WhitePieces, BrownPieces, WhitePieces1, BrownPieces1),  % used in display
     displayGame(Board1, WhitePieces1, BrownPieces1),
     checkEnd(Player, Board1, Row, Column, CongratulateNumber),  % type of Congratulation is different if compVScomp or personVSComp
     sleep(1).
 
-playPvsC(Board, WhitePieces, BrownPieces, EmptyCells, BrownPiecesAvailable, Level) :-
+playPvsC(Board, WhitePieces, BrownPieces, EmptyCells, Level) :-
     playPerson(1, Board, WhitePieces, BrownPieces, Board1, WhitePieces1, BrownPieces1, Row, Column, 3),
     select([Row, Column], EmptyCells, EmptyCells1), %removes from the list of available pieces to play
-    playComputer(2, Board1, WhitePieces1, BrownPieces1, Board2, WhitePieces2, BrownPieces2, EmptyCells1, EmptyCells2, 2, BrownPiecesAvailable, BrownPiecesAvailable1, Level),
-    playPvsC( Board2, WhitePieces2, BrownPieces2, EmptyCells2, BrownPiecesAvailable1, Level).
+    playComputer(2, Board1, WhitePieces1, BrownPieces1, Board2, WhitePieces2, BrownPieces2, EmptyCells1, EmptyCells2, 2, Level),
+    playPvsC( Board2, WhitePieces2, BrownPieces2, EmptyCells2, Level).
 
-playCvsP(Board, WhitePieces, BrownPieces, EmptyCells, BrownPiecesAvailable, Level) :-
-    playComputer(1, Board, WhitePieces, BrownPieces, Board1, WhitePieces1, BrownPieces1, EmptyCells, EmptyCells1, 2, BrownPiecesAvailable, BrownPiecesAvailable1, Level),
+playCvsP(Board, WhitePieces, BrownPieces, EmptyCells, Level) :-
+    playComputer(1, Board, WhitePieces, BrownPieces, Board1, WhitePieces1, BrownPieces1, EmptyCells, EmptyCells1, 2, Level),
     playPerson(2, Board1, WhitePieces1, BrownPieces1, Board2, WhitePieces2, BrownPieces2, Row, Column, 3),
     select([Row, Column], EmptyCells1, EmptyCells2),
-    playCvsP(Board2, WhitePieces2, BrownPieces2, EmptyCells2, BrownPiecesAvailable1, Level).
+    playCvsP(Board2, WhitePieces2, BrownPieces2, EmptyCells2, Level).
 
-playCvsC(Board, WhitePieces, BrownPieces, EmptyCells, WhitePiecesAvailable, BrownPiecesAvailable, Level) :-
-    playComputer(1, Board, WhitePieces, BrownPieces, Board1, WhitePieces1, BrownPieces1, EmptyCells, EmptyCells1,  1, WhitePiecesAvailable, WhitePiecesAvailable1, Level),
-    playComputer(2, Board1, WhitePieces1, BrownPieces1, Board2, WhitePieces2, BrownPieces2, EmptyCells1, EmptyCells2, 1, BrownPiecesAvailable, BrownPiecesAvailable1, Level),
-    playCvsC(Board2, WhitePieces2, BrownPieces2, EmptyCells2, WhitePiecesAvailable1, BrownPiecesAvailable1, Level).
+playCvsC(Board, WhitePieces, BrownPieces, EmptyCells, Level) :-
+    playComputer(1, Board, WhitePieces, BrownPieces, Board1, WhitePieces1, BrownPieces1, EmptyCells, EmptyCells1,  1, Level),
+    playComputer(2, Board1, WhitePieces1, BrownPieces1, Board2, WhitePieces2, BrownPieces2, EmptyCells1, EmptyCells2, 1, Level),
+    playCvsC(Board2, WhitePieces2, BrownPieces2, EmptyCells2, Level).
 
 playPerson(Player, Board, WhitePieces, BrownPieces, Board1, WhitePieces1, BrownPieces1, Row, Column, CongratulateNumber) :-
     repeat, % if the colocation of the piece fails, we ask again the all play
@@ -131,20 +146,13 @@ updateColumn(N, Piece, [P | Rest], [P| More]) :-
     N > 1, Next is N-1, updateColumn(Next, Piece, Rest, More).
 
 % removes Piece form the white Pieces and BrownPieces available to play
-removePiece(Piece, 1, WhitePieces, BrownPieces, NewWhitePieces, BrownPieces) :- 
-    searchBoard(Piece, WhitePieces, NewWhitePieces).
-removePiece(Piece, 2, WhitePieces, BrownPieces, WhitePieces, NewBrownPieces) :- 
-    searchBoard(Piece, BrownPieces, NewBrownPieces).
+removePiece(Piece, 1, WhitePieces, BrownPieces, WhitePieces1, BrownPieces1) :-
+    select(0, WhitePieces1, Piece, WhitePieces),
+    BrownPieces1 = BrownPieces.
 
-searchBoard(_Piece, [], _NewBoard).
-searchBoard(Piece, [Row| Rest], [NewRow| MoreRows]) :-
-    searchRow(Piece, Row, NewRow),
-    searchBoard(Piece, Rest, MoreRows).
-
-searchRow(_Piece, [], _NewRow).
-searchRow(Piece, [Piece| Rest], [0| Rest]).
-searchRow(Piece, [P| Rest], [P| More]) :-
-    searchRow(Piece, Rest, More).
+removePiece(Piece, 2, WhitePieces, BrownPieces, WhitePieces1, BrownPieces1) :-
+    select(0, BrownPieces1, Piece, BrownPieces),
+    WhitePieces1 = WhitePieces.
 
 % ======================================================================
 % --------------------------- TRANSLATIONS -----------------------------

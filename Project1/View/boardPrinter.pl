@@ -5,12 +5,16 @@ displayGame(Board, WhitePieces, BrownPieces) :-
     printHeaderLine,
     printBoardsContent(Board, WhitePieces, BrownPieces, 1).
 
-printBoardsContent([], [], [], _). 
-printBoardsContent([BoardLine|BoardRest], [WhiteLine|WhiteRest], [BrownLine|BrownRest], NumLine) :- 
-    printBoardsLine(BoardLine, WhiteLine, BrownLine, NumLine, 1), 
+printBoardsContent(_, _, _, 5). 
+printBoardsContent([BoardLine|BoardRest], WhitePieces, BrownPieces, NumLine) :-
+    nth0(0, WhitePieces, FirstWhiteElemOfLine, WhitePiecesRest),
+    nth0(0, WhitePiecesRest, SecondWhiteElemOfLine, WhitePiecesRest2),
+    nth0(0, BrownPieces, FirstBrownElemOfLine, BrownPiecesRest),    
+    nth0(0, BrownPiecesRest, SecondBownElemOfLine, BrownPiecesRest2),
+    printBoardsLine(BoardLine, [FirstWhiteElemOfLine, SecondWhiteElemOfLine], [FirstBrownElemOfLine , SecondBownElemOfLine], NumLine, 1), 
     printLineSeperators(NumLine),
     NumLine1 is NumLine + 1,
-    printBoardsContent(BoardRest, WhiteRest, BrownRest, NumLine1).
+    printBoardsContent(BoardRest, WhitePiecesRest2, BrownPiecesRest2, NumLine1).
 
 printBoardsLine(_, _, _, _, 11).
 printBoardsLine(BoardLine, WhiteLine, BrownLine, NumLine, ConsoleLine) :-
