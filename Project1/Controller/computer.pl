@@ -4,7 +4,7 @@
 % ======================================================================
 %     checks if exists a row, Column or square with one piece left
 % ======================================================================
-
+% if Sum is 13, the piece missing is the sphere
 getForm(Sum, Piece) :-
     Sum == 13,
     Piece = 'sphere'.
@@ -78,116 +78,230 @@ winSquarePlay(Board, SquareNum, Piece):-
 % ======================================================================
 %      Gets the empty column of the piece missing to do the win move
 % ======================================================================
-getEmptyColumn(Board, Row, 1) :-
-    isEmpty(Board, Row, 1). % Checks if the position is empty 
+getEmptyColumn(Row, 1, EmptyCells) :-
+    member([Row , 1], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member
 
-getEmptyColumn(Board, Row, 2) :-
-    isEmpty(Board, Row, 2). % Checks if the position is empty 
+getEmptyColumn(Row, 2, EmptyCells) :-
+    member([Row , 2], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member
 
-getEmptyColumn(Board, Row, 3) :-
-    isEmpty(Board, Row, 3). % Checks if the position is empty 
+getEmptyColumn(Row, 3, EmptyCells) :-
+    member([Row , 3], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member
 
-getEmptyColumn(Board, Row, 4) :-
-    isEmpty(Board, Row, 4). % Checks if the position is empty 
+getEmptyColumn(Row, 4, EmptyCells) :-
+    member([Row , 4], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member
 
 % ======================================================================
 %         Gets the empty row of the piece missing to do the win move
 % ======================================================================
-getEmptyRow(Board, 1, Column) :-
-    isEmpty(Board, 1, Column).  % Checks if the position is empty 
+getEmptyRow(1, Column, EmptyCells) :-
+    member([1, Column], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
-getEmptyRow(Board, 2, Column) :-
-    isEmpty(Board, 2, Column).  % Checks if the position is empty 
+getEmptyRow(2, Column, EmptyCells) :-
+    member([2, Column], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
-getEmptyRow(Board, 3, Column) :-
-    isEmpty(Board, 3, Column).  % Checks if the position is empty 
+getEmptyRow(3, Column, EmptyCells) :-
+    member([3, Column], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
-getEmptyRow(Board, 4, Column) :-
-    isEmpty(Board, 4, Column).  % Checks if the position is empty 
+getEmptyRow(4, Column, EmptyCells) :-
+    member([4, Column], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
 % ==================================================================================================
 %      Gets the empty row and Column (on the square given) of the piece missing to do the win move
 % ==================================================================================================
 % first Square
-getEmptySquare(Board, 1, 1, 1) :-
-    isEmpty(Board, 1, 1). % Checks if the position is empty 
+getEmptySquare(1, 1, 1, EmptyCells) :-
+    member([1, 1], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
-getEmptySquare(Board, 1, 2 , 1) :-
-    isEmpty(Board, 1, 2). % Checks if the position is empty 
+getEmptySquare(1, 2, 1, EmptyCells) :-
+    member([1, 2], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
-getEmptySquare(Board, 2, 1, 1) :-
-    isEmpty(Board, 2, 1). % Checks if the position is empty 
+getEmptySquare(2, 1, 1, EmptyCells) :-
+    member([2, 1], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
-getEmptySquare(Board, 2, 2, 1) :-
-    isEmpty(Board, 2, 2). % Checks if the position is empty 
+getEmptySquare(2, 2, 1, EmptyCells) :-
+    member([2, 2], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
 % second Square
-getEmptySquare(Board, 1, 3, 2) :-
-    isEmpty(Board, 1, 3). % Checks if the position is empty 
+getEmptySquare(1, 3, 2, EmptyCells) :-
+    member([1, 3], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
-getEmptySquare(Board, 1, 4, 2) :-
-    isEmpty(Board, 1, 4). % Checks if the position is empty 
+getEmptySquare(1, 4, 2, EmptyCells) :-
+    member([1, 4], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
-getEmptySquare(Board, 2, 3, 2) :-
-    isEmpty(Board, 2, 3). % Checks if the position is empty 
+getEmptySquare(2, 3, 2, EmptyCells) :-
+    member([2, 3], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
-getEmptySquare(Board, 2, 4, 2) :-
-    isEmpty(Board, 2, 4). % Checks if the position is empty 
+getEmptySquare(2, 4, 2, EmptyCells) :-
+    member([2, 4], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
 % third Square
-getEmptySquare(Board, 3, 1, 3) :-
-    isEmpty(Board, 3, 1). % Checks if the position is empty 
+getEmptySquare(3, 1, 3, EmptyCells) :-
+    member([3, 1], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
-getEmptySquare(Board, 3, 2, 3) :-
-    isEmpty(Board, 3, 2). % Checks if the position is empty 
+getEmptySquare(3, 2, 3, EmptyCells) :-
+    member([3, 2], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
-getEmptySquare(Board, 4, 1, 3) :-
-    isEmpty(Board, 4, 1). % Checks if the position is empty 
+getEmptySquare(4, 1, 3, EmptyCells) :-
+    member([4, 1], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
-getEmptySquare(Board, 4, 2, 3) :-
-    isEmpty(Board, 4, 2). % Checks if the position is empty 
+getEmptySquare(4, 2, 3, EmptyCells) :-
+    member([4, 2], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
 % 4 Square
-getEmptySquare(Board, 3, 3, 4) :-
-    isEmpty(Board, 3, 3). % Checks if the position is empty 
+getEmptySquare(3, 3, 4, EmptyCells) :-
+    member([3, 3], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
-getEmptySquare(Board, 3, 4, 4) :-
-    isEmpty(Board, 3, 4). % Checks if the position is empty 
+getEmptySquare(3, 4, 4, EmptyCells) :-
+    member([3, 4], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
-getEmptySquare(Board, 4, 3, 4) :-
-    isEmpty(Board, 4, 3). % Checks if the position is empty 
+getEmptySquare(4, 3, 4, EmptyCells) :-
+    member([4, 3], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
-getEmptySquare(Board, 4, 4, 4) :-
-    isEmpty(Board, 4, 4). % Checks if the position is empty 
+getEmptySquare(4, 4, 4, EmptyCells) :-
+    member([4, 4], EmptyCells). % Checks if the position is empty, if it's member of the empty cells it is member 
 
 % ======================================================================
 %                  generates a winner play if exists
 % ======================================================================
 % winning row
-winPlay(Board, Row, Column, Piece) :- % returns the Row, Column and Piece of the winning play
+winPlay(Board, Row, Column, Piece, EmptyCells) :- % returns the Row, Column and Piece of the winning play
     winRowPlay(Board, Row, Piece),
-    getEmptyColumn(Board, Row, Column).
+    getEmptyColumn(Row, Column, EmptyCells).
 
 % winning row
-winPlay(Board, Row, Column, Piece) :- % returns the Row, Column and Piece of the winning play
+winPlay(Board, Row, Column, Piece, EmptyCells) :- % returns the Row, Column and Piece of the winning play
     winColumnPlay(Board, Column, Piece),
-    getEmptyRow(Board, Row, Column).
+    getEmptyRow(Row, Column, EmptyCells).
 
 % winning square
-winPlay(Board, Row, Column, Piece) :- % returns the Row, Column and Piece of the winning play
+winPlay(Board, Row, Column, Piece, Cells) :- % returns the Row, Column and Piece of the winning play
     winSquarePlay(Board, SquareNum, Piece),
-    getEmptySquare(Board, Row, Column , SquareNum).
+    getEmptySquare( Row, Column , SquareNum, Cells).
 
+% ======================================================================
+%          fucntion use to generates a play for us to win in the next play
+% ======================================================================
+
+% check all the collumns
+isTherePieceMineinAnyCollum(1, Column, Piece1, Piece2, Board, PieceWeWantToPlay) :-
+    isTherePieceMineinCollum(1,Column, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinAnyCollum(2, Column, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMineinCollum(2, Column, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinAnyCollum(3, Column, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMineinCollum(3, Column, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinAnyCollum( 4, Column, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMineinCollum(4, Column, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinCollum(Row, Column, Piece1, Piece2, Board, Piece2) :-
+    check(Row, Column, Board, Piece1).
+
+isTherePieceMineinCollum(Row, Column, Piece1, Piece2, Board, Piece1) :-
+    check(Row, Column, Board, Piece2).
+
+check(Row, Column, Board, Piece) :-
+    getPieceFromBoard(Row, Column, Board, PieceinTheBoard),
+    Piece == PieceinTheBoard.
+
+isPossible(RowSum, cylinder, sphere) :-
+    RowSum == 6.
+
+isPossible(RowSum, cube, sphere) :-
+    RowSum == 8.
+
+isPossible(RowSum, cylinder, cube) :-
+    RowSum == 10.
+
+isPossible(RowSum, sphere, cone) :-
+    RowSum == 12.
+
+isPossible(RowSum, cylinder, cone) :-
+    RowSum == 14.
+
+isPossible(RowSum, cube, cone) :-
+    RowSum == 16.
+
+% ======================================================================
+%           generates a play for us to win in the next play
+% ======================================================================
+/**
+ * If there are two diferent pieces, and only two pieces in the row and one of our pieces in in one empty column of that row
+ * we want to play the other piece in the other row, then the winning play will be ours in the next move.
+ * The other player can't play in the move remaining because we have a piece in that column
+ */
+wininNextMoveWithaRow(Player, Board, Row, ColumnOfThePlay, PieceWeWantToPlay, EmptyCells) :-
+    getRowSumC(Board, Row, RowSum),
+    isPossible(RowSum, Piece1Name, Piece2Name), % checks if there are 2 and only 2 pieces, that are differente
+    translate(Piece1Name, Player, Piece1),
+    translate(Piece2Name, Player, Piece2),
+    getEmptyRow(Row, Column, EmptyCells),
+    isTherePieceMineinAnyCollum(_, Column, Piece1, Piece2, Board, PieceWeWantToPlay), % the row were the Piece is doesn't mather
+    select([Row, Column] , EmptyCells, NewEmptyCells),
+    getEmptyRow(Row, ColumnOfThePlay, NewEmptyCells).
+
+wininNextMovePlay(Player, Board, Row, ColumnOfThePlay, PieceWeWantToPlay, EmptyCells ) :-
+    wininNextMoveWithaRow(Player, Board, Row, ColumnOfThePlay, PieceWeWantToPlay, EmptyCells).
+    
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                          Functions use to get a good Play
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% doesn't have to worry with passing the NewCells because the game is going to end after this play
+generatePlay(Player, Board, Row, Column, ColorPiece, EmptyCells, _NewCells, PiecesAvailable, Level):-
+    Level =\= 1, % if Level one, only generates random plays
+    winPlay(Board, Row, Column, Piece, EmptyCells), % Only returns a valid Row and column position that is empty
+    translate(Piece, Player, ColorPiece),
+    member(ColorPiece, PiecesAvailable), % if piece doesn't exist in the available ones, returns false (2 equal pieces max per player)
+    validMove(Board, Row, Column, ColorPiece, 1). % Checks if the move is valid, last arg is 2 because we do't want error mensage
+
+generatePlay(Player, Board, Row, Column, PieceWeWantToPlay, EmptyCells, NewCells, PiecesAvailable, 3):-
+    wininNextMovePlay(Player, Board, Row, Column, PieceWeWantToPlay, EmptyCells),
+    member(PieceWeWantToPlay, PiecesAvailable),
+    validMove(Board, Row, Column, PieceWeWantToPlay, 1), % Checks if the move is valid, last arg is 2 because we do't want error mensage
+    select([Row, Column], EmptyCells, NewCells), 
+    write('DoneWinMovePlay'), sleep(1).  % removes from empty cells
+
 /**
+ * when there are not any winning play, we do a valid random play
+ * The arg Pieces is the avalaible pieces of the Player playing and NewPieces, the Pieces except that is being play
+ */
+generatePlay(_Player, Board, Row, Column, Piece, EmptyCells, NewCells, PiecesAvailable, _Level):-
+    repeat,
+    write('Random\n'), sleep(1),
+    random_member([Row| [Column| _]], EmptyCells),
+    random_member(Piece, PiecesAvailable),
+    validMove(Board, Row, Column, Piece, 1), %fails if move not valid
+    select([Row, Column], EmptyCells, NewCells).  % removes from empty cells
+
+
+/**
+ * Generates good plays, only done if user choose nivel 3 and there is not a winning play
+
+generatePlay(_Player, Board, Row, Column, Piece, Cells, NewCells, PiecesAvailable, 3) :-
+    goodPlay(Board, Row, Column, Piece, PiecesAvailable),
+    validMove(Board, Row, Column, Piece, 1), % Checks if the move is valid
+    member(Piece, PiecesAvailable), % if piece doesn't exist in the available ones, returns false
+    select([Row, Column], Cells, NewCells).  % removes from empty cells
+
+goodPlay(Board, Row, Column, Piece, Pieces) :-
+    getRowSumC(Board, Row, RowSum),
+    getPossiblePiece(Piece, RowSum, Pieces), 
+    getEmptyColumn(Board, Row, Column). % gets firts of the collumn without a piece
+
+goodPlay(Board, Row, Column, Piece, Pieces) :-
+    getColumnSumC(Board, Column, 0, ColSum),
+    getPossiblePiece(Piece, ColSum, Pieces),
+    getEmptyRow(Board, Row, Column).
+
+*/
+ /*
  * If there are two pieces in one row, column ou square playing there leaves a winning play for the other,
  * so we want to avoid it, playing in empty or 1 piece rows
- */
-getPossiblePiece(Piece, 0, Pieces) :-
+ *//*
+getPossiblePiece(Piece, 0, Pieces) :- % if there is no piece there we can play anything
     random_member(Piece, Pieces).
 
 getPossiblePiece(Piece, 1, Pieces) :-
@@ -201,69 +315,4 @@ getPossiblePiece(Piece, 7, Pieces) :-
 
 getPossiblePiece(Piece, 9, Pieces) :-
     random_member(Piece, Pieces).
-
-goodPlay(Board, Row, Column, Piece, Pieces) :-
-    getRowSumC(Board, Row, RowSum),
-    getPossiblePiece(Piece, RowSum, Pieces), 
-    getEmptyColumn(Board, Row, Column). % gets firts of the collumn without a piece
-
-goodPlay(Board, Row, Column, Piece, Pieces) :-
-    getColumnSumC(Board, Column, 0, ColSum),
-    getPossiblePiece(Piece, ColSum, Pieces),
-    getEmptyRow(Board, Row, Column).
-
-generatePlay(Player, Board, Row, Column, ColorPiece, _Cells, _NewCells, PiecesAvailable, Level):-
-    Level =\= 1, % if Level one, only generates random plays
-    winPlay(Board, Row, Column, Piece), % Only returns a valid Row and column position that is empty
-    translate(Piece, Player, ColorPiece),
-    validMoveC(Board, Row, Column, ColorPiece), % Checks if the move is valid
-    member(Piece, PiecesAvailable). % if piece doesn't exist in the available ones, returns false (2 equal pieces max per player)
-
-/**
- * Generates good plays, only done if user choose nivel 3 and there is not a winning play
- */
-generatePlay(_Player, Board, Row, Column, Piece, Cells, NewCells, PiecesAvailable, 3) :-
-    goodPlay(Board, Row, Column, Piece, PiecesAvailable),
-    validMoveC(Board, Row, Column, Piece), % Checks if the move is valid
-    select([Row, Column], Cells, NewCells),  % removes from empty cells
-    member(Piece, PiecesAvailable). % if piece doesn't exist in the available ones, returns false
-
-/**
- * when there are not any winning play, we do a valid random play
- * The arg Pieces is the avalaible pieces of the Player playing and NewPieces, the Pieces except that is being play
- */
-generatePlay(_Player, Board, Row, Column, Piece, Cells, NewCells, PiecesAvailable, _Level):-
-    repeat,
-    write('Random\n'), sleep(1),
-    random_member([Row| [Column| _]], Cells),
-    random_member(Piece, PiecesAvailable),
-    validMoveC(Board, Row, Column, Piece), %fails if move not valid
-    select([Row, Column], Cells, NewCells).  % removes from empty cells
-
-% ====================================================================================
-%  Verification of computer moves (if not valid fail but don't warn on the screen)
-% ======================================================================================
-/* Check if Row and column don't have a piece for computer play , if true the game continues */
-isEmpty(Board, Row, Column) :-
-    getPieceFromBoard(Row, Column, Board, Piece),
-    Piece == 0.
-
-/* Check if the random movimen done by the computer is correct */
-validMoveC(Board, Row, Column, Piece) :-
-    Row1 is Row + 1,
-    checkTop(Row1, Column, Board, Piece),
-    Row2 is Row - 1,
-    checkDown(Row2, Column, Board, Piece), 
-    Column1 is Column + 1,
-    checkLeft(Row, Column1, Board, Piece),
-    Column2 is Column - 1,
-    checkRigth(Row, Column2, Board, Piece),
-    getSquareNum(Row, Column, SquareNum),
-    checkSquare(SquareNum, Piece, Board).
-
-/* Checks if Piece is available for computer moves */
-isPieceAvailable(Piece, WhitePieces, _BrownPieces) :-
-    searchPiece(Piece, WhitePieces).
-
-isPieceAvailable( Piece, _WhitePieces, BrownPieces) :-
-    searchPiece(Piece, BrownPieces).
+*/

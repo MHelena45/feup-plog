@@ -8,8 +8,8 @@
 
 validPlay(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece) :-
     isEmptyCell(Board, Row, Column ), % Checks if the position is empty 
-    !, %red cut, used to prevent more than one error mensagem
-    validMove(Board, Row, Column, Piece), % Checks if the move is valid
+    !, %red cut, used to prevent more than one error mensagem, wen the correct error mensage already appear
+    validMove(Board, Row, Column, Piece, 0), % Checks if the move is valid
     !, %red cut, used to prevent more than one error mensagem
     isPieceAvailable(Player, Piece, WhitePieces, BrownPieces). % Checks if the piece is available (2 equal pieces max per player)
 
@@ -32,7 +32,7 @@ isPieceAvailable(1, Piece, WhitePieces, _BrownPieces) :-
 
 isPieceAvailable(2,  Piece, _WhitePieces, BrownPieces) :-
     member(Piece, BrownPieces).
-
+% if the piece isn't available a error mensage is display
 isPieceAvailable(_Player, _Piece, _WhitePieces, _BrownPieces) :-
     unavailablePiece,
     fail.
@@ -134,7 +134,7 @@ getSquareValue(Row, Column, Board, Value) :-
 
 % ----------------------------------- VALID MOVE ---------------------------------
 
-validMove( Board, Row, Column, Piece) :-
+validMove( Board, Row, Column, Piece, _isaComputerMove ) :-
     Row1 is Row + 1,
     checkTop(Row1, Column, Board, Piece),
     Row2 is Row - 1,
@@ -146,8 +146,8 @@ validMove( Board, Row, Column, Piece) :-
     getSquareNum(Row, Column, SquareNum),
     checkSquare(SquareNum, Piece, Board).
 
-/* If move isn't valid, repeat that play */
-validMove( _Board, _Row, _Column, _Piece) :-
+/* If move isn't valid, displays error mensage and repeat that play */
+validMove( _Board, _Row, _Column, _Piece, 0) :- % only use 0 in the end if we want to get error mensage when move isn't valid
     wrongMove, % Displays message to player
     fail.
 

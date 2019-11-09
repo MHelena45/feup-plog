@@ -4,7 +4,7 @@
 :- include('../View/menu.pl').
 :- include('verifications.pl').
 :- include('computer.pl').
-:- use_module(library(system)).
+:- use_module(library(system)). % used for sleep
 
 start :-
     mainMenu.
@@ -41,24 +41,6 @@ startComputervsComputer(Level) :-
 % ============================================================================================================
 %      Main loop of the 4 differnte kinds of game
 % ================================================================================================================
-
-% remove dups and 0's from the Pieces
-getPiecesAvailable(1, WhitePieces, _BrownPieces, PiecesAvailable) :-
-    remove_dups(WhitePieces, WhitePieces1), % removes dups and all 0 execpt one
-    select(0, WhitePieces1, PiecesAvailable). % remove last 0 remaining
-
-getPiecesAvailable(2, _WhitePieces, BrownPieces, PiecesAvailable) :-
-    remove_dups(BrownPieces, BrownPieces1), % removes all 0 execpt one
-    select(0, BrownPieces1, PiecesAvailable). % remove last 0 remaining
-
-% if there are no 0 just remove duplicated pieces
-getPiecesAvailable(1, WhitePieces, _BrownPieces, PiecesAvailable) :-
-    remove_dups(WhitePieces, WhitePieces1),
-    PiecesAvailable = WhitePieces1.
-
-getPiecesAvailable(2, _WhitePieces, BrownPieces, PiecesAvailable) :-
-    remove_dups(BrownPieces, BrownPieces1),
-    PiecesAvailable = BrownPieces1.
 
 playComputer(Player, Board, WhitePieces, BrownPieces, Board1, WhitePieces1, BrownPieces1, EmptyCells, EmptyCells1, CongratulateNumber, Level):-
     getPiecesAvailable(Player, WhitePieces, BrownPieces, PiecesAvailable),
@@ -169,3 +151,24 @@ translate(cone, 2, 12).
 translate(cube, 2, 52).
 translate(cylinder, 2, 72).
 translate(sphere, 2, 92).
+
+% ======================================================================
+% ----------------------- Get Pieces Available -------------------------
+% ======================================================================
+% remove dups and 0's from the Pieces
+getPiecesAvailable(1, WhitePieces, _BrownPieces, PiecesAvailable) :-
+    remove_dups(WhitePieces, WhitePieces1), % removes dups and all 0 execpt one
+    select(0, WhitePieces1, PiecesAvailable). % remove last 0 remaining
+
+getPiecesAvailable(2, _WhitePieces, BrownPieces, PiecesAvailable) :-
+    remove_dups(BrownPieces, BrownPieces1), % removes all 0 execpt one
+    select(0, BrownPieces1, PiecesAvailable). % remove last 0 remaining
+
+% if there are no 0 just remove duplicated pieces
+getPiecesAvailable(1, WhitePieces, _BrownPieces, PiecesAvailable) :-
+    remove_dups(WhitePieces, WhitePieces1),
+    PiecesAvailable = WhitePieces1.
+
+getPiecesAvailable(2, _WhitePieces, BrownPieces, PiecesAvailable) :-
+    remove_dups(BrownPieces, BrownPieces1),
+    PiecesAvailable = BrownPieces1.
