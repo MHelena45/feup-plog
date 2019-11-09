@@ -178,54 +178,146 @@ winPlay(Board, Row, Column, Piece, Cells) :- % returns the Row, Column and Piece
     winSquarePlay(Board, SquareNum, Piece),
     getEmptySquare( Row, Column , SquareNum, Cells).
 
-% ======================================================================
-%          fucntion use to generates a play for us to win in the next play
-% ======================================================================
+% ============================================================================
+%         fucntions used to generate a play for us to win in the next play
+% ============================================================================
 
-% check all the collumns
-isTherePieceMineinAnyCollum(1, Column, Piece1, Piece2, Board, PieceWeWantToPlay) :-
-    isTherePieceMineinCollum(1,Column, Piece1, Piece2, Board, PieceWeWantToPlay).
+% check all the columns
+isTherePieceMineinTheColumn(1, Column, Piece1, Piece2, Board, PieceWeWantToPlay) :-
+    isTherePieceMine(1,Column, Piece1, Piece2, Board, PieceWeWantToPlay).
 
-isTherePieceMineinAnyCollum(2, Column, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
-    isTherePieceMineinCollum(2, Column, Piece1, Piece2, Board, PieceWeWantToPlay).
+isTherePieceMineinTheColumn(2, Column, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(2, Column, Piece1, Piece2, Board, PieceWeWantToPlay).
 
-isTherePieceMineinAnyCollum(3, Column, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
-    isTherePieceMineinCollum(3, Column, Piece1, Piece2, Board, PieceWeWantToPlay).
+isTherePieceMineinTheColumn(3, Column, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(3, Column, Piece1, Piece2, Board, PieceWeWantToPlay).
 
-isTherePieceMineinAnyCollum( 4, Column, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
-    isTherePieceMineinCollum(4, Column, Piece1, Piece2, Board, PieceWeWantToPlay).
+isTherePieceMineinTheColumn( 4, Column, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(4, Column, Piece1, Piece2, Board, PieceWeWantToPlay).
 
-isTherePieceMineinCollum(Row, Column, Piece1, Piece2, Board, Piece2) :-
+% check all the Rows
+isTherePieceMineinTheRow(Row, 1, Piece1, Piece2, Board, PieceWeWantToPlay) :-
+    isTherePieceMine(Row, 1, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinTheRow(Row, 2, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(Row, 2, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinTheRow(Row, 3, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(Row, 3, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinTheRow(Row, 4, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(Row, 4, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+% check the 4 positions of the square given by number
+% First square
+isTherePieceMineinTheSquare(1, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(1, 1, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinTheSquare(1, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(1, 2, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinTheSquare(1, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(2, 1, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinTheSquare(1, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(2, 2, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+% second square
+isTherePieceMineinTheSquare(2, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(1, 3, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinTheSquare(1, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(1, 4, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinTheSquare(1, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(2, 3, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinTheSquare(1, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(2, 4, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+% third square
+isTherePieceMineinTheSquare(3, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(3, 1, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinTheSquare(3, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine( 3, 2, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinTheSquare(3, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(4, 1, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinTheSquare(3, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(4, 2, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+% four square
+isTherePieceMineinTheSquare(4, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(3, 3, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinTheSquare(4, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(3, 4, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinTheSquare(4, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(4, 3, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+isTherePieceMineinTheSquare(4, Piece1, Piece2, Board, PieceWeWantToPlay ) :-
+    isTherePieceMine(4, 4, Piece1, Piece2, Board, PieceWeWantToPlay).
+
+% Function used to check if the poistion has one of two wanted pieces 
+isTherePieceMine(Row, Column, Piece1, Piece2, Board, Piece2) :- % The piece we find is the one we don't want to play
     check(Row, Column, Board, Piece1).
 
-isTherePieceMineinCollum(Row, Column, Piece1, Piece2, Board, Piece1) :-
+isTherePieceMine(Row, Column, Piece1, Piece2, Board, Piece1) :-
     check(Row, Column, Board, Piece2).
 
 check(Row, Column, Board, Piece) :-
     getPieceFromBoard(Row, Column, Board, PieceinTheBoard),
     Piece == PieceinTheBoard.
 
-isPossible(RowSum, cylinder, sphere) :-
-    RowSum == 6.
+% Check if there is 2 (and only 2) diferent pieces
+isPossible(Sum, cylinder, sphere) :-
+    Sum == 6.
 
-isPossible(RowSum, cube, sphere) :-
-    RowSum == 8.
+isPossible(Sum, cube, sphere) :-
+    Sum == 8.
 
-isPossible(RowSum, cylinder, cube) :-
-    RowSum == 10.
+isPossible(Sum, cylinder, cube) :-
+    Sum == 10.
 
-isPossible(RowSum, sphere, cone) :-
-    RowSum == 12.
+isPossible(Sum, sphere, cone) :-
+    Sum == 12.
 
-isPossible(RowSum, cylinder, cone) :-
-    RowSum == 14.
+isPossible(Sum, cylinder, cone) :-
+    Sum == 14.
 
-isPossible(RowSum, cube, cone) :-
-    RowSum == 16.
+isPossible(Sum, cube, cone) :-
+    Sum == 16.
+
+checkAndget2PiecesMissing(Sum, Player, Piece1, Piece2) :-
+    isPossible(Sum, Piece1Name, Piece2Name), % checks if there are 2 and only 2 pieces, that are differente
+    translate(Piece1Name, Player, Piece1),
+    translate(Piece2Name, Player, Piece2).
+
+isTherePiceMineinColumnSquare(_SquareNum, Column, Piece1, Piece2, Board, PieceWeWantToFind) :-
+   isTherePieceMineinTheColumn(_, Column, Piece1, Piece2, Board, PieceWeWantToFind). % the row were the Piece is doesn't mather
+
+isTherePiceMineinColumnSquare(SquareNum, _Column, Piece1, Piece2, Board, PieceWeWantToFind) :-
+    isTherePieceMineinTheSquare(SquareNum, Piece1, Piece2, Board, PieceWeWantToFind).
+
+isTherePiceMineinRowSquare(_SquareNum, Row, Piece1, Piece2, Board, PieceWeWantToFind) :-
+   isTherePieceMineinTheRow(Row, _, Piece1, Piece2, Board, PieceWeWantToFind). % the row were the Piece is doesn't mather
+
+isTherePiceMineinRowSquare(SquareNum, _Row, Piece1, Piece2, Board, PieceWeWantToFind) :-
+    isTherePieceMineinTheSquare(SquareNum, Piece1, Piece2, Board, PieceWeWantToFind).
+
+isTherePiceMineinRowOrColumn(_Row, Column, Piece1, Piece2, Board, PieceWeWantToFind) :-
+   isTherePieceMineinTheColumn(_, Column, Piece1, Piece2, Board, PieceWeWantToFind). % the row were the Piece is doesn't mather
+
+isTherePiceMineinRowOrColumn(Row, _Column, Piece1, Piece2, Board, PieceWeWantToFind) :-
+   isTherePieceMineinTheRow(Row, _, Piece1, Piece2, Board, PieceWeWantToFind). % the row were the Piece is doesn't mather
 
 % ======================================================================
 %           generates a play for us to win in the next play
 % ======================================================================
+
 /**
  * If there are two diferent pieces, and only two pieces in the row and one of our pieces in in one empty column of that row
  * we want to play the other piece in the other row, then the winning play will be ours in the next move.
@@ -233,86 +325,120 @@ isPossible(RowSum, cube, cone) :-
  */
 wininNextMoveWithaRow(Player, Board, Row, ColumnOfThePlay, PieceWeWantToPlay, EmptyCells) :-
     getRowSumC(Board, Row, RowSum),
-    isPossible(RowSum, Piece1Name, Piece2Name), % checks if there are 2 and only 2 pieces, that are differente
-    translate(Piece1Name, Player, Piece1),
-    translate(Piece2Name, Player, Piece2),
+    checkAndget2PiecesMissing(RowSum, Player, Piece1, Piece2),
     getEmptyRow(Row, Column, EmptyCells),
-    isTherePieceMineinAnyCollum(_, Column, Piece1, Piece2, Board, PieceWeWantToPlay), % the row were the Piece is doesn't mather
+    getSquareNum(Row, Column, SquareNum),
+    isTherePiceMineinColumnSquare(SquareNum, Column, Piece1, Piece2, Board, PieceWeWantToPlay),
     select([Row, Column] , EmptyCells, NewEmptyCells),
     getEmptyRow(Row, ColumnOfThePlay, NewEmptyCells).
 
+wininNextMoveWithaColumn(Player, Board, RowOfThePlay, Column, PieceWeWantToPlay, EmptyCells) :-
+    getColumnSumC(Board, Column, 0, ColSum),
+    checkAndget2PiecesMissing(ColSum, Player, Piece1, Piece2),
+    getEmptyColumn(Row, Column, EmptyCells),
+    getSquareNum(Row, Column, SquareNum),
+    isTherePiceMineinRowSquare(SquareNum, Row, Piece1, Piece2, Board, PieceWeWantToPlay),
+    select([Row, Column] , EmptyCells, NewEmptyCells),
+    getEmptyColumn(RowOfThePlay, Column, NewEmptyCells).
+
+wininNextMoveWithaSquare(Player, Board, RowOfThePlay, ColumnOfThePlay, PieceWeWantToPlay, EmptyCells) :-
+    getSquareSumC(SquareNum, Board, SquareSum),
+    checkAndget2PiecesMissing(SquareSum, Player, Piece1, Piece2),
+    getEmptySquare(Row, Column , SquareNum, EmptyCells),
+    isTherePiceMineinRowOrColumn(Row, Column, Piece1, Piece2, Board, PieceWeWantToPlay),
+    select([Row, Column] , EmptyCells, NewEmptyCells),
+    getEmptySquare(RowOfThePlay, ColumnOfThePlay, SquareNum, NewEmptyCells).
+
 wininNextMovePlay(Player, Board, Row, ColumnOfThePlay, PieceWeWantToPlay, EmptyCells ) :-
     wininNextMoveWithaRow(Player, Board, Row, ColumnOfThePlay, PieceWeWantToPlay, EmptyCells).
+
+wininNextMovePlay(Player, Board, Row, ColumnOfThePlay, PieceWeWantToPlay, EmptyCells ) :-
+    wininNextMoveWithaColumn(Player, Board, Row, ColumnOfThePlay, PieceWeWantToPlay, EmptyCells).
+
+wininNextMovePlay(Player, Board, Row, ColumnOfThePlay, PieceWeWantToPlay, EmptyCells ) :-
+    wininNextMoveWithaSquare(Player, Board, Row, ColumnOfThePlay, PieceWeWantToPlay, EmptyCells).
     
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                          Functions use to get a good Play
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% doesn't have to worry with passing the NewCells because the game is going to end after this play
-generatePlay(Player, Board, Row, Column, ColorPiece, EmptyCells, _NewCells, PiecesAvailable, Level):-
+% doesn't have to worry with passing the EmptyCells because the game is going to end after this play
+generatePlay(Player, Board, Row, Column, ColorPiece, EmptyCells, _NewEmptyCells, PiecesAvailable, Level):-
     Level =\= 1, % if Level one, only generates random plays
     winPlay(Board, Row, Column, Piece, EmptyCells), % Only returns a valid Row and column position that is empty
     translate(Piece, Player, ColorPiece),
     member(ColorPiece, PiecesAvailable), % if piece doesn't exist in the available ones, returns false (2 equal pieces max per player)
     validMove(Board, Row, Column, ColorPiece, 1). % Checks if the move is valid, last arg is 2 because we do't want error mensage
 
-generatePlay(Player, Board, Row, Column, PieceWeWantToPlay, EmptyCells, NewCells, PiecesAvailable, 3):-
+generatePlay(Player, Board, Row, Column, PieceWeWantToPlay, EmptyCells, NewEmptyCells, PiecesAvailable, 3):-
     wininNextMovePlay(Player, Board, Row, Column, PieceWeWantToPlay, EmptyCells),
     member(PieceWeWantToPlay, PiecesAvailable),
     validMove(Board, Row, Column, PieceWeWantToPlay, 1), % Checks if the move is valid, last arg is 2 because we do't want error mensage
-    select([Row, Column], EmptyCells, NewCells), 
-    write('DoneWinMovePlay'), sleep(1).  % removes from empty cells
+    select([Row, Column], EmptyCells, NewEmptyCells).  % removes from empty cells
 
 /**
  * when there are not any winning play, we do a valid random play
  * The arg Pieces is the avalaible pieces of the Player playing and NewPieces, the Pieces except that is being play
  */
-generatePlay(_Player, Board, Row, Column, Piece, EmptyCells, NewCells, PiecesAvailable, _Level):-
+generatePlay(_Player, Board, Row, Column, Piece, EmptyCells, NewEmptyCells, PiecesAvailable, _Level):-
     repeat,
-    write('Random\n'), sleep(1),
     random_member([Row| [Column| _]], EmptyCells),
     random_member(Piece, PiecesAvailable),
     validMove(Board, Row, Column, Piece, 1), %fails if move not valid
-    select([Row, Column], EmptyCells, NewCells).  % removes from empty cells
+    select([Row, Column], EmptyCells, NewEmptyCells).  % removes from empty cells
 
 
 /**
- * Generates good plays, only done if user choose nivel 3 and there is not a winning play
-
-generatePlay(_Player, Board, Row, Column, Piece, Cells, NewCells, PiecesAvailable, 3) :-
+ * Try not to repeat pieces
+ */
+ /*
+generatePlay(_Player, Board, Row, Column, Piece, EmptyCells, NewEmptyCells, PiecesAvailable, 3) :-
     goodPlay(Board, Row, Column, Piece, PiecesAvailable),
     validMove(Board, Row, Column, Piece, 1), % Checks if the move is valid
     member(Piece, PiecesAvailable), % if piece doesn't exist in the available ones, returns false
-    select([Row, Column], Cells, NewCells).  % removes from empty cells
+    select([Row, Column], Cells, NewEmptyCells).  % removes from empty cells
 
 goodPlay(Board, Row, Column, Piece, Pieces) :-
     getRowSumC(Board, Row, RowSum),
     getPossiblePiece(Piece, RowSum, Pieces), 
-    getEmptyColumn(Board, Row, Column). % gets firts of the collumn without a piece
-
-goodPlay(Board, Row, Column, Piece, Pieces) :-
     getColumnSumC(Board, Column, 0, ColSum),
     getPossiblePiece(Piece, ColSum, Pieces),
-    getEmptyRow(Board, Row, Column).
 
-*/
- /*
- * If there are two pieces in one row, column ou square playing there leaves a winning play for the other,
- * so we want to avoid it, playing in empty or 1 piece rows
- *//*
+
 getPossiblePiece(Piece, 0, Pieces) :- % if there is no piece there we can play anything
     random_member(Piece, Pieces).
 
 getPossiblePiece(Piece, 1, Pieces) :-
-    random_member(Piece, Pieces).
+    select(11, Pieces, NewPieces,
+    random_member(NewPiece, Pieces).
+
+getPossiblePiece(Piece, 1, Pieces) :-
+    select(12, Pieces, NewPieces,
+    random_member(NewPiece, Pieces).
 
 getPossiblePiece(Piece, 5, Pieces) :-
-    random_member(Piece, Pieces).
+    select(51, Pieces, NewPieces,
+    random_member(NewPiece, Pieces).
 
-getPossiblePiece(Piece, 7, Pieces) :-
-    random_member(Piece, Pieces).
+getPossiblePiece(Piece, 5, Pieces) :-
+    select(52, Pieces, NewPieces,
+    random_member(NewPiece, Pieces).
 
 getPossiblePiece(Piece, 9, Pieces) :-
-    random_member(Piece, Pieces).
+    select(91, Pieces, NewPieces,
+    random_member(NewPiece, Pieces).
+
+getPossiblePiece(Piece, 9, Pieces) :-
+    select(92, Pieces, NewPieces,
+    random_member(NewPiece, Pieces).
+
+getPossiblePiece(Piece, 7, Pieces) :-
+    select(11, Pieces, NewPieces,
+    random_member(NewPiece, Pieces).
+
+getPossiblePiece(Piece, 7, Pieces) :-
+    select(12, Pieces, NewPieces,
+    random_member(NewPiece, Pieces).
+
 */

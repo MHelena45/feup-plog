@@ -94,6 +94,7 @@ changePlayer(2, 1).
 % Gets the play from the player
 getPlay(Piece, Row, Column, Player) :-
     greetPlayer(Player),
+    repeat,
     getPiece(Piece, Player),
     getRow(Row),
     getColumn(Column).

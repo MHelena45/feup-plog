@@ -12,14 +12,14 @@ board([
 whitePieces([
     11, 11,   % cone
     51, 51,   % cube
-    71, 71,   % cyliner
+    71, 71,   % cylinder
     91, 91    % sphere
 ]).
 
 brownPieces([
     12, 12,   %cone
     52, 52,   %cube
-    72, 72,   %cyliner
+    72, 72,   %cylinder
     92, 92    %sphere
 ]).
 
