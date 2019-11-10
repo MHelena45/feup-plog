@@ -364,36 +364,38 @@ wininNextMovePlay(Player, Board, Row, ColumnOfThePlay, PieceWeWantToPlay, EmptyC
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % doesn't have to worry with passing the EmptyCells because the game is going to end after this play
-generatePlay(Player, Board, Row, Column, ColorPiece, EmptyCells, _NewEmptyCells, PiecesAvailable, Level):-
+choose_move(Board, Level, Move, Player, EmptyCells, _NewEmptyCells, PiecesAvailable) :-
     Level =\= 1, % if Level one, only generates random plays
     winPlay(Board, Row, Column, Piece, EmptyCells), % Only returns a valid Row and column position that is empty
     translate(Piece, Player, ColorPiece),
     member(ColorPiece, PiecesAvailable), % if piece doesn't exist in the available ones, returns false (2 equal pieces max per player)
-    validMove(Board, Row, Column, ColorPiece, 1). % Checks if the move is valid, last arg is 2 because we do't want error mensage
+    validMove(Board, Row, Column, ColorPiece, 1), % Checks if the move is valid, last arg is 2 because we do't want error mensage
+    Move = [Row, Column, ColorPiece].
 
-generatePlay(Player, Board, Row, Column, PieceWeWantToPlay, EmptyCells, NewEmptyCells, PiecesAvailable, 3):-
+choose_move(Board, 3, Move, Player, EmptyCells, NewEmptyCells, PiecesAvailable) :-
     wininNextMovePlay(Player, Board, Row, Column, PieceWeWantToPlay, EmptyCells),
     member(PieceWeWantToPlay, PiecesAvailable),
     validMove(Board, Row, Column, PieceWeWantToPlay, 1), % Checks if the move is valid, last arg is 2 because we do't want error mensage
-    select([Row, Column], EmptyCells, NewEmptyCells).  % removes from empty cells
+    select([Row, Column], EmptyCells, NewEmptyCells),  % removes from empty cells
+    Move = [Row, Column, PieceWeWantToPlay].
 
 /**
  * when there are not any winning play, we do a valid random play
  * The arg Pieces is the avalaible pieces of the Player playing and NewPieces, the Pieces except that is being play
  */
-generatePlay(_Player, Board, Row, Column, Piece, EmptyCells, NewEmptyCells, PiecesAvailable, _Level):-
+choose_move(Board, _Level, Move, _Player, EmptyCells, NewEmptyCells, PiecesAvailable) :-
     repeat,
     random_member([Row| [Column| _]], EmptyCells),
     random_member(Piece, PiecesAvailable),
     validMove(Board, Row, Column, Piece, 1), %fails if move not valid
-    select([Row, Column], EmptyCells, NewEmptyCells).  % removes from empty cells
-
+    select([Row, Column], EmptyCells, NewEmptyCells),  % removes from empty cells
+    Move = [Row, Column, Piece].
 
 /**
  * Try not to repeat pieces
  */
  /*
-generatePlay(_Player, Board, Row, Column, Piece, EmptyCells, NewEmptyCells, PiecesAvailable, 3) :-
+choose_move(Board, Level, Move, Player, EmptyCells, _NewEmptyCells, PiecesAvailable) :-
     goodPlay(Board, Row, Column, Piece, PiecesAvailable),
     validMove(Board, Row, Column, Piece, 1), % Checks if the move is valid
     member(Piece, PiecesAvailable), % if piece doesn't exist in the available ones, returns false

@@ -6,7 +6,7 @@
 :- include('computer.pl').
 :- use_module(library(system)). % used for sleep
 
-start :-
+play :-
     mainMenu.
 
 % ======================================================================================
@@ -42,13 +42,17 @@ startComputervsComputer(Level) :-
 %      Main loop of the 4 differnte kinds of game
 % ================================================================================================================
 
-playComputer(Player, Board, WhitePieces, BrownPieces, Board1, WhitePieces1, BrownPieces1, EmptyCells, EmptyCells1, CongratulateNumber, Level):-
+
+playComputer(Player, Board, WhitePieces, BrownPieces, NewBoard, WhitePieces1, BrownPieces1, EmptyCells, NewEmptyCells, CongratulateNumber, Level):-
     getPiecesAvailable(Player, WhitePieces, BrownPieces, PiecesAvailable),
-    generatePlay(Player, Board, Row, Column, Piece, EmptyCells, EmptyCells1, PiecesAvailable, Level), % only generates valid moves
-    playPiece(Row, Column, Piece, Board, Board1),
+    choose_move(Board, Level, Move, Player, EmptyCells, NewEmptyCells, PiecesAvailable), % only generates valid moves
+    move(Move, Board, NewBoard),
+    nth0(2, Move, Piece),
     removePiece(Piece, Player, WhitePieces, BrownPieces, WhitePieces1, BrownPieces1),  % used in display
-    displayGame(Board1, WhitePieces1, BrownPieces1),
-    checkEnd(Player, Board1, Row, Column, CongratulateNumber),  % type of Congratulation is different if compVScomp or personVSComp
+    displayGame(NewBoard, WhitePieces1, BrownPieces1),
+    nth0(0, Move, Row),
+    nth0(1, Move, Column),
+    checkEnd(Player, NewBoard, Row, Column, CongratulateNumber),  % type of Congratulation is different if compVScomp or personVSComp
     sleep(1).
 
 playPvsC(Board, WhitePieces, BrownPieces, EmptyCells, Level) :-
@@ -72,7 +76,7 @@ playPerson(Player, Board, WhitePieces, BrownPieces, Board1, WhitePieces1, BrownP
     repeat, % if the colocation of the piece fails, we ask again the all play
     getPlay(Piece, Row, Column, Player), % ask the play
     validPlay(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece), % checks if it is valid, fails if not
-    playPiece(Row, Column, Piece, Board, Board1),
+    move([Row, Column, Piece], Board, Board1),
     removePiece(Piece, Player, WhitePieces, BrownPieces, WhitePieces1, BrownPieces1),  
     displayGame(Board1, WhitePieces1, BrownPieces1),
     checkEnd(Player, Board1, Row, Column, CongratulateNumber).
@@ -116,8 +120,11 @@ getColumn(Column) :-
 % ---------------------------  BOARD UPDATES -----------------------------
 % ========================================================================
 % plays a Piece, get the new Board for Tabout Board
-playPiece(Row, Column, Piece, TabIn, TabOut) :-
-   updateRow(Row, Column, Piece, TabIn, TabOut).
+move(Move, Board, NewBoard) :-
+    nth0(0, Move, Row),
+    nth0(1, Move, Column),
+    nth0(2, Move, Piece),
+    updateRow(Row, Column, Piece, Board, NewBoard).
 
 updateRow(1, Column, Piece, [Row| More], [NewRow| More]):-
     updateColumn(Column, Piece, Row, NewRow).
