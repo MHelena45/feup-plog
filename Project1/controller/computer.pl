@@ -17,7 +17,11 @@ get_move(2, List_Of_Moves, Player, Board, Move) :-
     calculate_values(List_Of_Moves, Player, Board, Result), % result = List of [Move|Value]
     get_best_move(Result, Move).
 
-calculate_values(List_Of_Moves, Player, Board, Result) :-
+calculate_values([], _Player, _Board, []).
+calculate_values([Move|Rest], Player, Board, [[Move| Value]| More]) :-
+    move(Move, Board, New_Board),
+    value(New_Board, Player, Value),
+    calculate_values(Rest, Player, Board, More).
 
 get_best_move(Result, Move).
 
