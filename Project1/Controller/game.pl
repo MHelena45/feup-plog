@@ -73,7 +73,6 @@ playCvsC(Board, WhitePieces, BrownPieces, EmptyCells, Level) :-
     playCvsC(Board2, WhitePieces2, BrownPieces2, EmptyCells2, Level).
 
 playPerson(Player, Board, WhitePieces, BrownPieces, Board1, WhitePieces1, BrownPieces1, Row, Column, CongratulateNumber) :-
-    repeat, % if the colocation of the piece fails, we ask again the all play
     getPlay(Piece, Row, Column, Player), % ask the play
     validPlay(Player, Board, WhitePieces, BrownPieces, Row, Column, Piece), % checks if it is valid, fails if not
     move([Row, Column, Piece], Board, Board1),
@@ -98,7 +97,7 @@ changePlayer(2, 1).
 % Gets the play from the player
 getPlay(Piece, Row, Column, Player) :-
     greetPlayer(Player),
-    repeat,
+    repeat, % if the colocation of the piece fails, we ask again the all play
     getPiece(Piece, Player),
     getRow(Row),
     getColumn(Column).

@@ -384,12 +384,32 @@ choose_move(Board, 3, Move, Player, EmptyCells, NewEmptyCells, PiecesAvailable) 
  * The arg Pieces is the avalaible pieces of the Player playing and NewPieces, the Pieces except that is being play
  */
 choose_move(Board, _Level, Move, _Player, EmptyCells, NewEmptyCells, PiecesAvailable) :-
-    repeat,
-    random_member([Row| [Column| _]], EmptyCells),
-    random_member(Piece, PiecesAvailable),
+    valid_moves(Board, EmptyCells, PiecesAvailable, ListOfMoves),
+    random_member(Move, ListOfMoves),
+    nth0(0, Move, Row),
+    nth0(1, Move, Column),
+    select([Row, Column], EmptyCells, NewEmptyCells).  % removes from empty cells
+
+valid_moves(Board, EmptyCells, PiecesAvailable, ListOfMoves) :-
+    getAllValidMoves(Board, EmptyCells, PiecesAvailable, [], ListOfMoves). % inicialy the List of moves is empty
+
+getAllValidMoves(_, [], _, ListOfMoves, ListOfMoves).
+getAllValidMoves(Board, [CellChecking | OtherEmptyCells], PiecesAvailable, ListOfMoves, NewListOfMoves1) :-
+    getValidMovesOfCell(Board, CellChecking, PiecesAvailable, ListOfMoves, NewListOfMoves),
+    getAllValidMoves(Board, OtherEmptyCells, PiecesAvailable, NewListOfMoves, NewListOfMoves1).
+
+% check Valid moves for all Pieces available for a given emptyCell
+getValidMovesOfCell( _Board, _EmptyCellChecking, [], ListOfMoves, ListOfMoves).    
+getValidMovesOfCell(Board, EmptyCellChecking, [Piece | OtherPiecesAvailable], ListOfMoves, NewListOfMoves) :-
+    checkCellForm(Board, EmptyCellChecking, Piece, ListOfMoves, ListOfMoves1 ),
+    getValidMovesOfCell(Board, EmptyCellChecking, OtherPiecesAvailable, ListOfMoves1, NewListOfMoves).
+
+getValidMovesOfCell(Board, EmptyCells, [ _Piece | OtherPiecesAvailable], ListOfMoves, NewListOfMoves) :-
+    getValidMovesOfCell(Board, EmptyCells, OtherPiecesAvailable, ListOfMoves, NewListOfMoves).
+
+checkCellForm(Board, [Row, Column], Piece, ListOfMoves, NewListOfMoves ) :-
     validMove(Board, Row, Column, Piece, 1), %fails if move not valid
-    select([Row, Column], EmptyCells, NewEmptyCells),  % removes from empty cells
-    Move = [Row, Column, Piece].
+    select([Row, Column, Piece], NewListOfMoves, ListOfMoves).
 
 /**
  * Try not to repeat pieces
