@@ -30,13 +30,13 @@ manage_option(4, 4, Level) :-
     get_level(Level).
 
 % Help menu
-manage_option(5) :-
+manage_option(5, _, _) :-
     print_help_menu,
     get_interaction,
     print_main_menu.
 
 % Exit
-manage_option(0) :-
+manage_option(0, _ , _) :-
     exiting_message,
     break. % Stops executation
 

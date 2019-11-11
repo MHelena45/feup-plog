@@ -31,7 +31,7 @@ calc_value(Board, Player, Move, White_Pieces, Brown_Pieces, Value) :-
 
 % If Board is in a win state -> value = 10.
 value(Board, Player, Move, White_Pieces, Brown_Pieces, -10) :-
-    not(game_over(0, Board, Player, Move, White_Pieces, Brown_Pieces)).
+    not(game_over(0, Board, Player, Move, White_Pieces, Brown_Pieces, _Mode)).
 
 % If There is a winning play for the other player -> value = -10.
 value(Board, Player, _Move, White_Pieces, Brown_Pieces, 10) :- 

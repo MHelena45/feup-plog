@@ -1,8 +1,10 @@
 % Greets the player letting him/her know the color of his/hers pieces
 greet_player(0).
+
 greet_player(3) :-
     write('\nComputer 1 turn to play.\n'),
     sleep(1).
+    
 greet_player(4) :- 
     write('\nComputer 2 turn to play.\n'),
     sleep(1).

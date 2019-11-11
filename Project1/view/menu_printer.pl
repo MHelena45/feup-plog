@@ -26,6 +26,11 @@ print_congratulations(Player) :-
     print_congratulations_message(Player), 
     print_footer.
 
+print_congratulations :-
+    print_game_name,
+    print_congratulations_message, 
+    print_footer.
+
 print_sorry :-
     print_game_name,
     print_sorry_message,
@@ -92,6 +97,13 @@ print_sorry_message :-
     write('|=======================================================================|'),nl,
     write('|                                                                       |'),nl,
     write('|                    The Computer won this time!!                       |'),nl,
+    write('|                                                                       |'),nl,
+    write('|_______________________________________________________________________|'),nl.
+
+print_congratulations_message :-  
+    write('|=======================================================================|'),nl,
+    write('|                                                                       |'),nl,
+    write('|           Congratulations, you win against the computer!              |'),nl,
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl.
 
