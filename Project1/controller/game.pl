@@ -16,7 +16,7 @@ play :-
 % ======================================================================================
 start_game_mode(Mode, Difficulty_Level) :-
     init_boards(Board, White_Pieces, Brown_Pieces), % Initialization of data structures
-    display_game(Board, White_Pieces, Brown_Pieces), % Displaying the main game & the available pieces
+    display_game(Board, 0, White_Pieces, Brown_Pieces), % Displaying the main game & the available pieces
     get_initial_player(Mode, Player),
     play(Player, Mode, Difficulty_Level, Board, White_Pieces, Brown_Pieces). % Player 1 starts the game
     
