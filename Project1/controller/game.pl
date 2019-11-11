@@ -56,6 +56,7 @@ play_move(4, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_Whit
 
 % Player plays
 play_person(Player, Mode, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
+    check_moves_available(Player, Board, White_Pieces, Brown_Pieces),
     repeat, % if the colocation of the piece fails, we ask again the all play
     get_move(Move, Player), % Asks the move from player
     move(1, Move, Board, White_Pieces, Brown_Pieces, Player, New_Board, New_White_Pieces, New_Brown_Pieces),
@@ -157,6 +158,18 @@ search_row(_Piece, [], _New_Row).
 search_row(Piece, [Piece| Rest], [0| Rest]).
 search_row(Piece, [P| Rest], [P| More]) :-
     search_row(Piece, Rest, More).
+
+% ========================================================================
+% ----------------------  CHECK MOVES AVAILABLE  -------------------------
+% Checks if there are any more moves available for the player
+% ========================================================================
+check_moves_available(Player, Board, White_Pieces, Brown_Pieces) :-
+    setof(Move, valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), _List_Of_Moves).
+
+check_moves_available(_New_Player, _New_Board, _New_White_Pieces, _New_Brown_Pieces) :-
+    no_more_moves_message,
+    get_interaction,
+    main_menu.
 
 % ======================================================================
 % --------------------------- TRANSLATIONS -----------------------------

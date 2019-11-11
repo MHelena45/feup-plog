@@ -68,3 +68,6 @@ invalid_option_message:-
 
 invalid_level_message :-
     write('\nInvalid Level Number! Level must be 1, 2 or 3.\nWhat\'s the level of difficulty?\n').
+
+no_more_moves_message :-
+    write('\nNo more moves available. It\'s a draw!\n').

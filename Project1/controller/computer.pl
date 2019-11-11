@@ -10,6 +10,11 @@ valid_moves(1, Board, White_Pieces, Brown_Pieces, Player, List_Of_Moves) :-
 valid_moves(2, Board, White_Pieces, Brown_Pieces, Player, List_Of_Moves) :-
     setof([Value|Move], (valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), calc_value(Board, Player, Move,White_Pieces, Brown_Pieces, Value)), List_Of_Moves).
 
+valid_moves(_Level, _Board, _White_Pieces, _Brown_Pieces, _Player, _List_Of_Moves) :-
+    no_more_moves_message,
+    get_interaction,
+    main_menu.
+
 % Level 1 - Selects a random move
 get_move(1, List_Of_Moves, _Player, _Board, Move) :-
     random_member(Move, List_Of_Moves).
