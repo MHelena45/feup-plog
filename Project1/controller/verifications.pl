@@ -69,7 +69,7 @@ piece_row(92, 4). % Brown Sphere
 
 % ----------------------------------- GAME OVER ---------------------------------
 % Sucsess if game is not over
-game_over(_Show_Message, Board, _Winner, [Row|[Column|_Piece]], _White_Pieces, _Brown_Pieces) :-
+game_over(_Show_Message, Board, _Winner, [Row|[Column|_Piece]], _White_Pieces, _Brown_Pieces, _Mode) :-
     get_row_sum(Board, Row, Row_Sum),
     Row_Sum =\= 22,
     get_column_sum(Board, Column, 0, Col_Sum),
@@ -78,20 +78,26 @@ game_over(_Show_Message, Board, _Winner, [Row|[Column|_Piece]], _White_Pieces, _
     get_square_sum(Square_Num, Board, Square_Sum),
     Square_Sum =\= 22.
 
-game_over(1, Board, Winner, _Move, White_Pieces, Brown_Pieces) :-
+game_over(1, Board, Winner, _Move, White_Pieces, Brown_Pieces, Mode) :-
     display_game(Board, 0, White_Pieces, Brown_Pieces),
-    congratulate_winner(Winner),
+    congratulate_winner(Winner, Mode),
     get_interaction,
     play.
 
-congratulate_winner(1) :-
-    print_congratulations(1).
-congratulate_winner(2) :-
-    print_congratulations(2).
-congratulate_winner(3) :-
-    print_sorry.
-congratulate_winner(4) :-
-    print_sorry.
+congratulate_winner(Player, 1) :- % Winner is Player in a game Person vs Person
+    print_congratulations(Player).
+
+congratulate_winner(Player, 4) :-  % Winner is Player in a game Computer vs Computer
+    print_congratulations(Player).
+
+congratulate_winner(2, 2) :- % player 2 is the winner in mode 2
+    print_sorry.             % the computer win the person
+
+congratulate_winner(1, 3) :- % player 1 is the winner in mode 2
+    print_sorry.             % the computer win the person
+
+congratulate_winner(_, _) :-  % The person won the computer
+    print_congratulations.
 
 get_row_sum([Row| _Rest], 1, Solution) :-
     sum_row(Row, 0, Solution).

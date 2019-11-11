@@ -44,10 +44,10 @@ play(Player, Mode, Difficulty_Level, Board, White_Pieces, Brown_Pieces) :-
     display_game(New_Board, New_Player, New_White_Pieces, New_Brown_Pieces),
     play(New_Player, Mode, Difficulty_Level, New_Board, New_White_Pieces, New_Brown_Pieces).  % Changes current board
 
-play_move(1, _Mode, _Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
-    play_person(1, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces).
-play_move(2, _Mode, _Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
-    play_person(2, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces).
+play_move(1, Mode, _Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
+    play_person(1, Mode, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces).
+play_move(2, Mode, _Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
+    play_person(2, Mode, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces).
 
 play_move(3, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
     play_computer(3, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces).
@@ -55,11 +55,11 @@ play_move(4, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_Whit
     play_computer(4, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces).
 
 % Player plays
-play_person(Player, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
+play_person(Player, Mode, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
     repeat, % if the colocation of the piece fails, we ask again the all play
     get_move(Move, Player), % Asks the move from player
     move(1, Move, Board, White_Pieces, Brown_Pieces, Player, New_Board, New_White_Pieces, New_Brown_Pieces),
-    game_over(1, New_Board, Player, Move, New_White_Pieces, New_Brown_Pieces).
+    game_over(1, New_Board, Player, Move, New_White_Pieces, New_Brown_Pieces, Mode).
 
 % Computer plays
 play_computer(Computer_Player, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
@@ -67,7 +67,7 @@ play_computer(Computer_Player, Mode, Level, Board, White_Pieces, Brown_Pieces, N
     choose_move(Board, White_Pieces, Brown_Pieces, Level, Move, Player), % Only generates valid moves
     move_piece(Move, Board, New_Board),
     remove_piece(Move, Player, White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces), 
-    game_over(1, New_Board, Computer_Player, Move, New_White_Pieces, New_Brown_Pieces).
+    game_over(1, New_Board, Computer_Player, Move, New_White_Pieces, New_Brown_Pieces, Mode).
 
 % ===================================================================================
 %                              CHANGE PLAYER
@@ -75,7 +75,7 @@ play_computer(Computer_Player, Mode, Level, Board, White_Pieces, Brown_Pieces, N
 % ===================================================================================
 
 % Mode 1: Player vs Player
-change_player(1, 1, 2). 
+change_player(1, 1, 2).   % change_player(Mode, Player, New_Player).
 change_player(1, 2, 1). 
 % Mode 2: Player vs Computer
 change_player(2, 1, 3).
