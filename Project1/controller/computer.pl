@@ -19,6 +19,10 @@ get_move(1, List_Of_Moves, _Player, _Board, Move) :-
 get_move(2, List_Of_Moves, Player, Board, Move) :-
     get_best_move(List_Of_Moves, Move).
 
+get_best_move(List_Of_Moves, Move) :-
+    List_Of_Moves is [[0|Move]|_Rest],
+    random_member([_Value|Move] , List_Of_Moves).
+
 get_best_move([[_Value|Move]|_Rest], Move).
 
 calc_value(Board, Player, Move, Value) :-
@@ -27,9 +31,18 @@ calc_value(Board, Player, Move, Value) :-
 
 % TODO: get conditions that have a certain value, eg:
 % If Board is in a win state -> value = 10.
-% If There is a Row, Column or Square with 3 diferent pieces -> value = -10.
 value(Board, Player, Move, 10) :-
     not(game_over(0, Board, Player, Move)).
+
+% If There is a winning play for the other play -> value = -10.
+value(Board, Player, _Move, -10) :- 
+    change_player(1, Player, New_Player),
+    setof(Move, (valid_move(0, Move, New_Player, Board, White_Pieces, Brown_Pieces), game_over(0, Board, New_Player, Move)), List_Of_Moves).
+
+value(Board, Player, _Move, 8) :-
+    setof(Move, (valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), game_over(0, Board, Player, Move)), List_Of_Moves).
+
+value(_ , _ , _ , 0).
 
 not(X) :- X, !, fail.
 not(X).
