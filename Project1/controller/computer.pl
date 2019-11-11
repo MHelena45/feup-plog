@@ -36,11 +36,11 @@ value(Board, Player, Move, White_Pieces, Brown_Pieces, -10) :-
 % If There is a winning play for the other player -> value = -10.
 value(Board, Player, _Move, White_Pieces, Brown_Pieces, 10) :- 
     change_player(1, Player, New_Player),
-    setof(Move, (valid_move(0, Move, New_Player, Board, White_Pieces, Brown_Pieces), not(game_over(0, Board, New_Player, Move, White_Pieces, Brown_Pieces))), _List_Of_Moves).
+    setof(Move, (valid_move(0, Move, New_Player, Board, White_Pieces, Brown_Pieces), not(game_over(0, Board, New_Player, Move, White_Pieces, Brown_Pieces, _Mode))), _List_Of_Moves).
 
 % if we can win in the next play with a play we can't make
 value(Board, Player, _Move, White_Pieces, Brown_Pieces, -8) :-
-    setof(Move, (valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), not(game_over(0, Board, Player, Move, White_Pieces, Brown_Pieces))), _List_Of_Moves).
+    setof(Move, (valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), not(game_over(0, Board, Player, Move, White_Pieces, Brown_Pieces, _Mode))), _List_Of_Moves).
 
 % if we can win in two moves ad the other can win between
 % value(Board, Player, _Move, 7). % TODO
