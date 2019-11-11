@@ -65,7 +65,7 @@ play_person(Player, Mode, Board, White_Pieces, Brown_Pieces, New_Board, New_Whit
 % Computer plays
 play_computer(Computer_Player, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
     get_num_player(Mode, Computer_Player, Player),
-    choose_move(Board, White_Pieces, Brown_Pieces, Level, Move, Player), % Only generates valid moves
+    choose_move(Board, White_Pieces, Brown_Pieces, Level, Move, Player, 0), % Only generates valid moves
     move_piece(Move, Board, New_Board),
     remove_piece(Move, Player, White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces), 
     game_over(1, New_Board, Computer_Player, Move, New_White_Pieces, New_Brown_Pieces, Mode).
@@ -149,12 +149,12 @@ remove_piece([_Row,_Column,Piece], 1, White_Pieces, Brown_Pieces, New_White_Piec
 remove_piece([_Row,_Column,Piece], 2, White_Pieces, Brown_Pieces, White_Pieces, New_Brown_Pieces) :-
     search_board(Piece, Brown_Pieces, New_Brown_Pieces).
 
-search_board(_Piece, [], _New_Board).
+search_board(_Piece, [], []).
 search_board(Piece, [Row| Rest], [New_Row| More_Rows]) :-
     search_row(Piece, Row, New_Row),
     search_board(Piece, Rest, More_Rows).
 
-search_row(_Piece, [], _New_Row).
+search_row(_Piece, [], []).
 search_row(Piece, [Piece| Rest], [0| Rest]).
 search_row(Piece, [P| Rest], [P| More]) :-
     search_row(Piece, Rest, More).
