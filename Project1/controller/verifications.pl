@@ -6,13 +6,13 @@
 %       Deal with invalid moves
 % =================================================================================
 
-valid_move(0, [Row|[Column|Piece]], Player, Board, White_Pieces, Brown_Pieces) :-
+valid_move(0, [Row,Column,Piece], Player, Board, White_Pieces, Brown_Pieces) :-
     check_position(Row), check_position(Column), valid_piece(Piece),
     is_cell_empty(Board, Row, Column, 0), % Checks if the position is empty 
     valid_play(Board, Row, Column, Piece, 0), % Checks if the move is valid
     is_piece_available(Player, Piece, White_Pieces, Brown_Pieces, 0). % Checks if the piece is available (2 equal pieces max per player)
 
-valid_move(1, [Row|[Column|Piece]], Player, Board, White_Pieces, Brown_Pieces) :-
+valid_move(1, [Row,Column,Piece], Player, Board, White_Pieces, Brown_Pieces) :-
     is_cell_empty(Board, Row, Column, 1), % Checks if the position is empty 
     !, %red cut, used to prevent more than one error message
     valid_play(Board, Row, Column, Piece, 1), % Checks if the move is valid
