@@ -59,7 +59,7 @@ play_person(Player, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Piec
     move(Move, Board, New_Board),
     remove_piece(Move, Player, White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces),  
     game_over(1, New_Board, Player, Move, White_Pieces, Brown_Pieces),
-    change_player(Mode, Computer_Player, Next_Player),
+    change_player(1, Player, Next_Player),
     display_game(New_Board, Next_Player, New_White_Pieces, New_Brown_Pieces).
 
 % Computer plays
@@ -69,7 +69,7 @@ play_computer(Computer_Player, Mode, Level, Board, White_Pieces, Brown_Pieces, N
     move(Move, Board, New_Board),
     remove_piece(Move, Player, White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces), 
     game_over(1, New_Board, Computer_Player, Move, White_Pieces, Brown_Pieces),
-    change_player(Mode, Computer_Player, Next_Player). 
+    change_player(Mode, Computer_Player, Next_Player),
     display_game(New_Board, Next_Player, New_White_Pieces, New_Brown_Pieces),
     sleep(1). 
 

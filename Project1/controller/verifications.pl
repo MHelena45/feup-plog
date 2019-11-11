@@ -78,7 +78,7 @@ game_over(_Show_Message, Board, _Winner, [Row|[Column|_Piece]], _White_Pieces, _
     get_square_sum(Square_Num, Board, Square_Sum),
     Square_Sum =\= 22.
 
-game_over(1, _Board, Winner, _Move, White_Pieces, Brown_Pieces) :-
+game_over(1, Board, Winner, _Move, White_Pieces, Brown_Pieces) :-
     display_game(Board, 0, White_Pieces, Brown_Pieces),
     congratulate_winner(Winner),
     get_interaction,

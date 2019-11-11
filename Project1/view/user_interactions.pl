@@ -1,4 +1,5 @@
 % Greets the player letting him/her know the color of his/hers pieces
+greet_player(0).
 greet_player(P):-
     write('\nPlayer '),
     write(P),
