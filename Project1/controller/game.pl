@@ -16,7 +16,7 @@ play :-
 % ======================================================================================
 start_game_mode(Mode, Difficulty_Level) :-
     init_boards(Board, White_Pieces, Brown_Pieces), % Initialization of data structures
-    display_game(Board, 0, White_Pieces, Brown_Pieces), % Displaying the main game & the available pieces
+    display_game(Board, 1, White_Pieces, Brown_Pieces), % Displaying the main game & the available pieces
     get_initial_player(Mode, Player),
     play(Player, Mode, Difficulty_Level, Board, White_Pieces, Brown_Pieces). % Player 1 starts the game
     
@@ -58,8 +58,9 @@ play_person(Player, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Piec
     valid_move(1, Move, Player, Board, White_Pieces, Brown_Pieces), % checks if it is valid, fails if not
     move(Move, Board, New_Board),
     remove_piece(Move, Player, White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces),  
-    display_game(New_Board, Player, New_White_Pieces, New_Brown_Pieces),
-    game_over(1, New_Board, Player, Move).
+    game_over(1, New_Board, Player, Move, White_Pieces, Brown_Pieces),
+    change_player(Mode, Computer_Player, Next_Player),
+    display_game(New_Board, Next_Player, New_White_Pieces, New_Brown_Pieces).
 
 % Computer plays
 play_computer(Computer_Player, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
@@ -67,8 +68,9 @@ play_computer(Computer_Player, Mode, Level, Board, White_Pieces, Brown_Pieces, N
     choose_move(Board, White_Pieces, Brown_Pieces, Level, Move, Player), % Only generates valid moves
     move(Move, Board, New_Board),
     remove_piece(Move, Player, White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces), 
-    display_game(New_Board, Player, New_White_Pieces, New_Brown_Pieces),
-    game_over(1, New_Board, Computer_Player, Move), 
+    game_over(1, New_Board, Computer_Player, Move, White_Pieces, Brown_Pieces),
+    change_player(Mode, Computer_Player, Next_Player). 
+    display_game(New_Board, Next_Player, New_White_Pieces, New_Brown_Pieces),
     sleep(1). 
 
 % ===================================================================================

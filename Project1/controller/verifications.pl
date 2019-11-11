@@ -13,7 +13,6 @@ valid_move(0, [Row|[Column|Piece]], Player, Board, White_Pieces, Brown_Pieces) :
     is_piece_available(Player, Piece, White_Pieces, Brown_Pieces, 0). % Checks if the piece is available (2 equal pieces max per player)
 
 valid_move(1, [Row|[Column|Piece]], Player, Board, White_Pieces, Brown_Pieces) :-
-    check_position(Row), check_position(Column), valid_piece(Piece),
     is_cell_empty(Board, Row, Column, 1), % Checks if the position is empty 
     !, %red cut, used to prevent more than one error message
     valid_play(Board, Row, Column, Piece, 1), % Checks if the move is valid
@@ -70,7 +69,7 @@ piece_row(92, 4). % Brown Sphere
 
 % ----------------------------------- GAME OVER ---------------------------------
 % Sucsess if game is not over
-game_over(_Show_Message, Board, _Winner, [Row|[Column|_Piece]]) :-
+game_over(_Show_Message, Board, _Winner, [Row|[Column|_Piece]], _White_Pieces, _Brown_Pieces) :-
     get_row_sum(Board, Row, Row_Sum),
     Row_Sum =\= 22,
     get_column_sum(Board, Column, 0, Col_Sum),
@@ -79,7 +78,8 @@ game_over(_Show_Message, Board, _Winner, [Row|[Column|_Piece]]) :-
     get_square_sum(Square_Num, Board, Square_Sum),
     Square_Sum =\= 22.
 
-game_over(1, _Board, Winner, _Move) :-
+game_over(1, _Board, Winner, _Move, White_Pieces, Brown_Pieces) :-
+    display_game(Board, 0, White_Pieces, Brown_Pieces),
     congratulate_winner(Winner),
     get_interaction,
     play.
