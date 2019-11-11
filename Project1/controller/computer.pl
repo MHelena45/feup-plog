@@ -29,18 +29,21 @@ calc_value(Board, Player, Move, Value) :-
     move(Move, Board, New_Board),
     value(New_Board, Player, Move, Value).
 
-% TODO: get conditions that have a certain value, eg:
 % If Board is in a win state -> value = 10.
 value(Board, Player, Move, 10) :-
     not(game_over(0, Board, Player, Move)).
 
-% If There is a winning play for the other play -> value = -10.
+% If There is a winning play for the other player -> value = -10.
 value(Board, Player, _Move, -10) :- 
     change_player(1, Player, New_Player),
     setof(Move, (valid_move(0, Move, New_Player, Board, White_Pieces, Brown_Pieces), game_over(0, Board, New_Player, Move)), List_Of_Moves).
 
+% if we can win in the next play with a play we can't make
 value(Board, Player, _Move, 8) :-
     setof(Move, (valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), game_over(0, Board, Player, Move)), List_Of_Moves).
+
+% if we can win in two moves ad the other can win between
+% value(Board, Player, _Move, 7). % TODO
 
 value(_ , _ , _ , 0).
 
