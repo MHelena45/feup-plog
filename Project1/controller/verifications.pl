@@ -6,33 +6,40 @@
 %       Deal with invalid moves
 % =================================================================================
 
-valid_move([Row|[Column|Piece]], Player, Board, White_Pieces, Brown_Pieces) :-
-    is_cell_empty(Board, Row, Column), % Checks if the position is empty 
+valid_move(0, [Row|[Column|Piece]], Player, Board, White_Pieces, Brown_Pieces) :-
+    check_position(Row), check_position(Column), valid_piece(Piece),
+    is_cell_empty(Board, Row, Column, 0), % Checks if the position is empty 
+    valid_play(Board, Row, Column, Piece, 0), % Checks if the move is valid
+    is_piece_available(Player, Piece, White_Pieces, Brown_Pieces, 0). % Checks if the piece is available (2 equal pieces max per player)
+
+valid_move(1, [Row|[Column|Piece]], Player, Board, White_Pieces, Brown_Pieces) :-
+    check_position(Row), check_position(Column), valid_piece(Piece),
+    is_cell_empty(Board, Row, Column, 1), % Checks if the position is empty 
     !, %red cut, used to prevent more than one error message
-    valid_play(Board, Row, Column, Piece), % Checks if the move is valid
+    valid_play(Board, Row, Column, Piece, 1), % Checks if the move is valid
     !, %red cut, used to prevent more than one error message
-    is_piece_available(Player, Piece, White_Pieces, Brown_Pieces). % Checks if the piece is available (2 equal pieces max per player)
+    is_piece_available(Player, Piece, White_Pieces, Brown_Pieces, 1). % Checks if the piece is available (2 equal pieces max per player)
 
 % ----------------------------------- IS EMPTY ---------------------------------
 
 /* Check if given cell does not have a piece, if true the game continues */
-is_cell_empty(Board, Row, Column) :-
+is_cell_empty(Board, Row, Column, _Show_Error_Message) :-
     get_piece_from_board(Row, Column, Board, Piece),
     Piece == 0.
     
 /* If is not empty, player as to play again. An error message is displayed. */
-is_cell_empty(_Board, Row, Column) :-
+is_cell_empty(_Board, Row, Column, 1) :-
     not_empty_message(Row, Column), % Displays message to user
     fail.
 
 % ----------------------------------- PIECE AVAILABLE ---------------------------------
-is_piece_available(1, Piece, White_Pieces, _Brown_Pieces) :-
+is_piece_available(1, Piece, White_Pieces, _Brown_Pieces, _Show_Error_Message) :-
     search_piece(Piece, White_Pieces).
 
-is_piece_available(2, Piece, _White_Pieces, Brown_Pieces) :-
+is_piece_available(2, Piece, _White_Pieces, Brown_Pieces, _Show_Error_Message) :-
     search_piece(Piece, Brown_Pieces).
 
-is_piece_available(_Player, _Piece, _White_Pieces, _Brown_Pieces) :-
+is_piece_available(_Player, _Piece, _White_Pieces, _Brown_Pieces, 1) :-
     unavailable_piece_message,
     fail.
 
@@ -154,7 +161,7 @@ get_square_value(Row, Column, Board, Value) :-
 
 % ----------------------------------- VALID MOVE ---------------------------------
 
-valid_play( Board, Row, Column, Piece) :-
+valid_play( Board, Row, Column, Piece, _Show_Error_Message) :-
     Row1 is Row + 1,
     check_top(Row1, Column, Board, Piece),
     Row2 is Row - 1,
@@ -166,7 +173,7 @@ valid_play( Board, Row, Column, Piece) :-
     get_square_num(Row, Column, Square_Num),
     check_square(Square_Num, Piece, Board).
 
-valid_play(_Board, _Row, _Column, _Piece) :-
+valid_play(_Board, _Row, _Column, _Piece, 1) :-
     wrong_move_message,
     fail.
 
@@ -265,12 +272,23 @@ check_position(2).
 check_position(3).
 check_position(4).
 
-% ----------------------------------- VALID PIECE ---------------------------------
+% ----------------------------------- CHECK PIECE ---------------------------------
 % Accepted pieces
 check_piece(cone).
 check_piece(sphere).
 check_piece(cylinder).
 check_piece(cube).
+
+% ----------------------------------- VALID Piece ---------------------------------
+% Checks if piece is valid in data struct representation
+valid_piece(11).
+valid_piece(51).
+valid_piece(71).
+valid_piece(91).
+valid_piece(12).
+valid_piece(52).
+valid_piece(72).
+valid_piece(92).
 
 % =================================
 %           Get Piece

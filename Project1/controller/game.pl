@@ -37,36 +37,37 @@ get_initial_player(4, 3). % Mode 4: Computer vs Computer - Computer starts
 
  % Given the player, it plays the piece on the given position
 play(Player, Mode, Difficulty_Level, Board, White_Pieces, Brown_Pieces) :-
-    play_move(Player, Difficulty_Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces),  
+    play_move(Player, Mode, Difficulty_Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces),  
     change_player(Mode, Player, New_Player), % Changes current player based on mode
     play(New_Player, Mode, Difficulty_Level, New_Board, New_White_Pieces, New_Brown_Pieces).  % Changes current board
 
-play_move(1, _Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
+play_move(1, _Mode, _Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
     play_person(1, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces).
-play_move(2, _Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
+play_move(2, _Mode, _Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
     play_person(2, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces).
 
-play_move(3, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
-    play_computer(3, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces).
-play_move(4, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
-    play_computer(4, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces).
+play_move(3, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
+    play_computer(3, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces).
+play_move(4, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
+    play_computer(4, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces).
 
 % Player plays
 play_person(Player, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
+    repeat, % if the colocation of the piece fails, we ask again the all play
     get_move(Move, Player), % Asks the move from player
-    valid_move(Move, Player, Board, White_Pieces, Brown_Pieces), % checks if it is valid, fails if not
+    valid_move(1, Move, Player, Board, White_Pieces, Brown_Pieces), % checks if it is valid, fails if not
     move(Move, Board, New_Board),
     remove_piece(Move, Player, White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces),  
-    display_game(New_Board, New_White_Pieces, New_Brown_Pieces),
+    display_game(New_Board, Player, New_White_Pieces, New_Brown_Pieces),
     game_over(New_Board, Player, Move).
 
 % Computer plays
-play_computer(Computer_Player, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
-    get_num_player(Computer_Player, Player),
+play_computer(Computer_Player, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
+    get_num_player(Mode, Computer_Player, Player),
     choose_move(Board, White_Pieces, Brown_Pieces, Level, Move, Player), % Only generates valid moves
     move(Move, Board, New_Board),
     remove_piece(Move, Player, White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces), 
-    display_game(New_Board, New_White_Pieces, New_Brown_Pieces),
+    display_game(New_Board, Player, New_White_Pieces, New_Brown_Pieces),
     game_over(New_Board, Computer_Player, Move), 
     sleep(1). 
 
@@ -94,8 +95,6 @@ change_player(4, 4, 3).
 
 % Gets the move from the player
 get_move([Row|[Column|Piece]], Player) :-
-    greet_player(Player),
-    repeat, % if the colocation of the piece fails, we ask again the all play
     get_piece(Piece, Player),
     get_row(Row),
     get_column(Column).
@@ -118,8 +117,10 @@ get_column(Column) :-
 % To know if computer is player 1 or player 2. Necessary to check valid moves 
 % and play pieces
 % ===================================================================================
-get_num_player(3, 1).
-get_num_player(4, 2).
+get_num_player(2, 3, 2).
+get_num_player(3, 3, 1).
+get_num_player(4, 3, 1).
+get_num_player(4, 4, 2).
 
 % ========================================================================
 % ---------------------------  BOARD UPDATES -----------------------------

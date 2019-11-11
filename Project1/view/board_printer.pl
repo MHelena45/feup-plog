@@ -1,9 +1,10 @@
 :- include('pieces_printer.pl').
 
-display_game(Board, White_Pieces, Brown_Pieces) :-
+display_game(Board, Player, White_Pieces, Brown_Pieces) :-
     clear_screen,
     print_header_line,
-    print_boards_content(Board, White_Pieces, Brown_Pieces, 1).
+    print_boards_content(Board, White_Pieces, Brown_Pieces, 1),
+    greet_player(Player).
 
 print_boards_content([], [], [], _). 
 print_boards_content([Board_Line|Board_Rest], [White_Line|White_Rest], [Brown_Line|Brown_Rest], Num_Line) :-
