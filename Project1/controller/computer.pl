@@ -9,7 +9,7 @@ valid_moves(1, Board, White_Pieces, Brown_Pieces, Player, List_Of_Moves) :-
     setof(Move, valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), List_Of_Moves).
 
 valid_moves(2, Board, White_Pieces, Brown_Pieces, Player, List_Of_Moves) :-
-    setof([Move|Value], valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), value(Board, Player, Value), List_Of_Moves).
+    setof([Move|Value], valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), calc_value(Board, Player, Move, Value), List_Of_Moves).
 
 % Level 1 - Selects a random move
 get_move(1, List_Of_Moves, _Player, _Board, Move) :-
@@ -17,10 +17,15 @@ get_move(1, List_Of_Moves, _Player, _Board, Move) :-
 
 % Level 2 - Selects best move based on value 
 get_move(2, List_Of_Moves, Player, Board, Move) :-
-    get_best_move(Result, Move).
+    get_best_move(List_Of_Moves, Move).
 
-get_best_move(Result, Move).
-% TODO: best way to get the highest value in result
+get_best_move(List_Of_Moves, Move) :-
+    
+
+
+calc_value(Board, Player, Move, Value) :-
+    move(Move, Board, New_Board),
+    value(New_Board, Player, Value).
 
 % TODO: get conditions that have a certain value, eg:
 % If Board is in a win state -> value = 10.
