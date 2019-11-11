@@ -15,8 +15,8 @@ print_boards_content([Board_Line|Board_Rest], [White_Line|White_Rest], [Brown_Li
 
 print_boards_line(_Board_Line, _White_Line, _Brown_Line, _Num_Line, 11).
 print_boards_line(Board_Line, White_Line, Brown_Line, Num_Line, Console_Line) :-
-    print_line(Board_Line, Num_Line, 1, Console_Line),
     print_line(White_Line, Num_Line, 1, Console_Line),
+    print_line(Board_Line, Num_Line, 1, Console_Line),
     print_line(Brown_Line, Num_Line, 1, Console_Line),
     nl,
     Console_Line1 is Console_Line + 1,
@@ -47,21 +47,25 @@ print_cell(Cell, _, Num_Col, Console_Line) :-
 
 % Special prints
 print_header_line :-   
-    write('\n             1                  2                   3                   4          '),
-    write('                   WHITE PIECES                                 BROWN PIECES            \n'),
+    write('\n                 WHITE PIECES                '),
+    write('             1                  2                   3                   4          '),
+    write('                   BROWN PIECES            \n'),
     print_line_seperators(0).
 
 print_line_seperators(0) :-
-    write('__XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'),
-    write('    XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX    XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n').
+    write('  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  '),
+    write('  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'),
+    write('    XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n').
 
-print_line_seperators(1) :-       
-    write('__X___________________|___________________X___________________|___________________X'),
-    write('    X___________________|___________________X    X___________________|___________________X\n').
+print_line_seperators(1) :-      
+    write('  X___________________|___________________X  '), 
+    write('  X___________________|___________________X___________________|___________________X'),
+    write('    X___________________|___________________X\n').
 
 print_line_seperators(2) :-       
-    write('__XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'),
-    write('    X___________________|___________________X    X___________________|___________________X\n').
+    write('  X___________________|___________________X  '),
+    write('  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'),
+    write('    X___________________|___________________X\n').
 
 print_line_seperators(3) :- print_line_seperators(1).
 print_line_seperators(4) :- print_line_seperators(0).

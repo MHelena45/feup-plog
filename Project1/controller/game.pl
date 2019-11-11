@@ -59,7 +59,7 @@ play_person(Player, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Piec
     move(Move, Board, New_Board),
     remove_piece(Move, Player, White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces),  
     display_game(New_Board, Player, New_White_Pieces, New_Brown_Pieces),
-    game_over(New_Board, Player, Move).
+    game_over(1, New_Board, Player, Move).
 
 % Computer plays
 play_computer(Computer_Player, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
@@ -68,7 +68,7 @@ play_computer(Computer_Player, Mode, Level, Board, White_Pieces, Brown_Pieces, N
     move(Move, Board, New_Board),
     remove_piece(Move, Player, White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces), 
     display_game(New_Board, Player, New_White_Pieces, New_Brown_Pieces),
-    game_over(New_Board, Computer_Player, Move), 
+    game_over(1, New_Board, Computer_Player, Move), 
     sleep(1). 
 
 % ===================================================================================

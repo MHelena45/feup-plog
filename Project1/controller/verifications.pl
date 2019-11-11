@@ -70,7 +70,7 @@ piece_row(92, 4). % Brown Sphere
 
 % ----------------------------------- GAME OVER ---------------------------------
 % Sucsess if game is not over
-game_over(Board, _Winner, [Row|[Column|_Piece]]) :-
+game_over(_Show_Message, Board, _Winner, [Row|[Column|_Piece]]) :-
     get_row_sum(Board, Row, Row_Sum),
     Row_Sum =\= 22,
     get_column_sum(Board, Column, 0, Col_Sum),
@@ -79,7 +79,7 @@ game_over(Board, _Winner, [Row|[Column|_Piece]]) :-
     get_square_sum(Square_Num, Board, Square_Sum),
     Square_Sum =\= 22.
 
-game_over(_Board, Winner, _Move) :-
+game_over(1, _Board, Winner, _Move) :-
     congratulate_winner(Winner),
     get_interaction,
     play.

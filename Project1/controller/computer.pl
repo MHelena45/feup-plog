@@ -9,7 +9,7 @@ valid_moves(1, Board, White_Pieces, Brown_Pieces, Player, List_Of_Moves) :-
     setof(Move, valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), List_Of_Moves).
 
 valid_moves(2, Board, White_Pieces, Brown_Pieces, Player, List_Of_Moves) :-
-    setof([Move|Value], valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), calc_value(Board, Player, Move, Value), List_Of_Moves).
+    setof([Value|Move], (valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), calc_value(Board, Player, Move, Value)), List_Of_Moves).
 
 % Level 1 - Selects a random move
 get_move(1, List_Of_Moves, _Player, _Board, Move) :-
@@ -19,15 +19,17 @@ get_move(1, List_Of_Moves, _Player, _Board, Move) :-
 get_move(2, List_Of_Moves, Player, Board, Move) :-
     get_best_move(List_Of_Moves, Move).
 
-get_best_move(List_Of_Moves, Move) :-
-    
-
+get_best_move([[_Value|Move]|_Rest], Move).
 
 calc_value(Board, Player, Move, Value) :-
     move(Move, Board, New_Board),
-    value(New_Board, Player, Value).
+    value(New_Board, Player, Move, Value).
 
 % TODO: get conditions that have a certain value, eg:
 % If Board is in a win state -> value = 10.
 % If There is a Row, Column or Square with 3 diferent pieces -> value = -10.
-value(Board, Player, Value).
+value(Board, Player, Move, 10) :-
+    not(game_over(0, Board, Player, Move)).
+
+not(X) :- X, !, fail.
+not(X).

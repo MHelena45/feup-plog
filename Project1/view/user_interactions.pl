@@ -3,7 +3,8 @@ greet_player(P):-
     write('\nPlayer '),
     write(P),
     write(', it\'s your turn!\nYour pieces are colored '),
-    write_color(P).
+    write_color(P),
+    nl.
     
 ask_piece(Piece) :-
     write('.\nWhat piece do you want to play?\n '),
