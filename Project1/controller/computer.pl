@@ -66,8 +66,9 @@ value(3, Board, Player, _Move, White_Pieces, Brown_Pieces, Value) :-
     
 % only in level two are plays that can have no value
 % because level 1 doesn't evaluate the plays and level 3 evaluates all plays in the condition above
-value(2, _Board, _Player, _Move, _White_Pieces, _Brown_Pieces, 0) :-
+value(2, Board, Player, _Move, White_Pieces, Brown_Pieces, 0) :-
     % checks if the play doesn't give the opposite the win
+    change_player(1, Player, New_Player),
     not(setof(Move, (valid_move(0, Move, New_Player, Board, White_Pieces, Brown_Pieces),
         move_piece(Move, Board, New_Board),
         not(game_over(0, New_Board, _New_Player, Move, _White_Pieces, _Brown_Pieces, _Mode))), _List_Of_Moves)).

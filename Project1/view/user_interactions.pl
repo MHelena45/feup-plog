@@ -33,14 +33,17 @@ write_color(2):-                                        % Player 2 has white Pie
     write('brown').  
 
 ask_menu_option(Option) :-
+    repeat,
     write('> What is your option ? '),
     read(Option).
 
 ask_level(Level) :-
+    repeat,
     write('Level: '),
     read(Level).
 
 get_interaction :-
+    repeat,
     write('Tap any button to go back to the main menu.'),
     read(_Ans).
 
