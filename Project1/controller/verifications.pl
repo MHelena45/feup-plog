@@ -33,10 +33,10 @@ is_cell_empty(_Board, Row, Column, 1) :-
 
 % ----------------------------------- PIECE AVAILABLE ---------------------------------
 is_piece_available(1, Piece, White_Pieces, _Brown_Pieces, _Show_Error_Message) :-
-    search_piece(Piece, White_Pieces).
+    member(Piece, White_Pieces).
 
 is_piece_available(2, Piece, _White_Pieces, Brown_Pieces, _Show_Error_Message) :-
-    search_piece(Piece, Brown_Pieces).
+    member(Piece, Brown_Pieces).
 
 is_piece_available(_Player, _Piece, _White_Pieces, _Brown_Pieces, 1) :-
     unavailable_piece_message,

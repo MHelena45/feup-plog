@@ -143,21 +143,11 @@ update_column(N, Piece, [P | Rest], [P| More]) :-
     N > 1, Next is N-1, update_column(Next, Piece, Rest, More).
 
 % Removes Piece form the white Pieces and BrownPieces available to play
-remove_piece([_Row,_Column,Piece], 1, White_Pieces, Brown_Pieces, New_White_Pieces, Brown_Pieces) :-
-    search_board(Piece, White_Pieces, New_White_Pieces).
+remove_piece([_Row,_Column, Piece], 1, White_Pieces, Brown_Pieces, New_White_Pieces, Brown_Pieces) :-
+    select(0, New_White_Pieces, Piece, White_Pieces).
 
 remove_piece([_Row,_Column,Piece], 2, White_Pieces, Brown_Pieces, White_Pieces, New_Brown_Pieces) :-
-    search_board(Piece, Brown_Pieces, New_Brown_Pieces).
-
-search_board(_Piece, [], []).
-search_board(Piece, [Row| Rest], [New_Row| More_Rows]) :-
-    search_row(Piece, Row, New_Row),
-    search_board(Piece, Rest, More_Rows).
-
-search_row(_Piece, [], []).
-search_row(Piece, [Piece| Rest], [0| Rest]).
-search_row(Piece, [P| Rest], [P| More]) :-
-    search_row(Piece, Rest, More).
+    select(0, New_Brown_Pieces, Piece, Brown_Pieces).
 
 % ========================================================================
 % ----------------------  CHECK MOVES AVAILABLE  -------------------------

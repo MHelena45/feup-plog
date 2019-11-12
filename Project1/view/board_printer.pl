@@ -8,11 +8,15 @@ display_game(Board, Player, White_Pieces, Brown_Pieces) :-
     greet_player(Player).
 
 print_boards_content([], [], [], _). 
-print_boards_content([Board_Line|Board_Rest], [White_Line|White_Rest], [Brown_Line|Brown_Rest], Num_Line) :-
-    print_boards_line(Board_Line, White_Line, Brown_Line, Num_Line, 1), 
+print_boards_content([Board_Line|Board_Rest], White_Pieces, Brown_Pieces, Num_Line) :-
+    nth0(0, White_Pieces, FirstWhiteElemOfLine, White_Pieces_Rest),
+    nth0(0, White_Pieces_Rest, SecondWhiteElemOfLine, White_Pieces_Rest1),
+    nth0(0, Brown_Pieces, FirstBrownElemOfLine, Brown_Pieces_Rest),    
+    nth0(0, Brown_Pieces_Rest, SecondBownElemOfLine, Brown_Pieces_Rest1),
+    print_boards_line(Board_Line, [FirstWhiteElemOfLine, SecondWhiteElemOfLine], [FirstBrownElemOfLine , SecondBownElemOfLine], Num_Line, 1), 
     print_line_seperators(Num_Line),
     Num_Line1 is Num_Line + 1,
-    print_boards_content(Board_Rest, White_Rest, Brown_Rest, Num_Line1).
+    print_boards_content(Board_Rest,  White_Pieces_Rest1, Brown_Pieces_Rest1, Num_Line1).
 
 print_boards_line(_Board_Line, _White_Line, _Brown_Line, _Num_Line, 11).
 print_boards_line(Board_Line, White_Line, Brown_Line, Num_Line, Console_Line) :-
