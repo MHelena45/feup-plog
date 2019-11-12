@@ -42,16 +42,16 @@ value(_Level, Board, Player, _Move, White_Pieces, Brown_Pieces, 10) :-
     setof(Move, (valid_move(0, Move, New_Player, Board, White_Pieces, Brown_Pieces),
         move_piece(Move, Board, New_Board),
         not(game_over(0, New_Board, _New_Player, Move, _White_Pieces, _Brown_Pieces, _Mode))), _List_Of_Moves).
-/* NOT WORKING
+
 % if we can win in the next play with a move that the adversersay can't make
 value(_Level, Board, Player, _Move, White_Pieces, Brown_Pieces, -65) :-
-    change_player(1, Player, New_Player),
-    setof(Move, (valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), 
-        move_piece(Move, Board, New_Board),
-        not(valid_move(0, Move1, New_Player, New_Board, White_Pieces, Brown_Pieces)),
-        not(game_over(0, New_Board, _Player, Move1, _White_Pieces, _Brown_Pieces, _Mode))), _List_Of_Moves),
-        write('Here').
-*/
+    change_player(1, Player, New_Player),   % gets the number of the other Player
+    setof([Row, Column, Piece], (valid_move(0, [Row, Column, Piece], Player, Board, White_Pieces, Brown_Pieces),
+        get_opposite(Other_Piece, Piece),
+        not(valid_move(0, [Row, Column, Other_Piece], New_Player, Board, White_Pieces, Brown_Pieces)),
+        move_piece([Row, Column, Piece], Board, New_Board),  
+        not(game_over(0, New_Board, _Player, [Row, Column, Piece], _White_Pieces, _Brown_Pieces, _Mode))), _List_Of_Moves).
+
 % ------ THIRD LEVEL PLAYS ------
 /* if the play reduces the number of plays of the other Player, the piece
     is a row, column ou square where the plays hasn't already play */
@@ -72,6 +72,10 @@ not(_X).
 % ======================================================================
 % ----------------------- Get Pieces Available -------------------------
 % ======================================================================
+/**
+ * getPiecesAvailable is used to get only the Pieces we can play, no pieces equal to 0 and no duplicate pieces.
+ * This functions were created to improve the efficiency of the computer plays
+ */
 % remove dups and 0's from the Pieces
 getPiecesAvailable( White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces) :-
     remove_dups(White_Pieces, White_Pieces1), % removes dups and all 0 execpt one
