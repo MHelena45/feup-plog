@@ -5,7 +5,6 @@
 :- include('../View/user_interactions.pl').
 :- include('../View/menu_printer.pl').
 :- include('../Model/data_structs.pl').
-:- use_module(library(system)). % used for sleep
 :- use_module(library(random)).
 :- use_module(library(lists)).
 
@@ -89,7 +88,7 @@ change_player(4, 3, 4).
 change_player(4, 4, 3).
 
 % ==============================================================================
-% ----------------------------- GET MOVE          ------------------------------
+% -----------------------------    GET MOVE       ------------------------------
 % ==============================================================================
 
 % Gets the move from the player

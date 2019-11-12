@@ -2,12 +2,10 @@
 greet_player(0).
 
 greet_player(3) :-
-    write('\nComputer 1 turn to play.\n'),
-    sleep(1).
+    write('\nComputer 1 turn to play.\n').
     
 greet_player(4) :- 
-    write('\nComputer 2 turn to play.\n'),
-    sleep(1).
+    write('\nComputer 2 turn to play.\n').
 
 greet_player(Player) :-
     write('\nPlayer '),
