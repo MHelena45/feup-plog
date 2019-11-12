@@ -1,10 +1,10 @@
-% Greets the player letting him/her know the color of his/hers pieces
+% used when the game ends and we only want to display the board
 greet_player(0).
-
-greet_player(3) :-
+% Greets the player letting him/her know the color of his/hers pieces
+greet_player(3) :-                              % Computer is player 3 internally when player 1 outwardly
     write('\nComputer 1 turn to play.\n').
     
-greet_player(4) :- 
+greet_player(4) :-                              % Computer is player 4 internally when player 2 outwardly
     write('\nComputer 2 turn to play.\n').
 
 greet_player(Player) :-
@@ -16,20 +16,20 @@ greet_player(Player) :-
     
 ask_piece(Piece) :-
     write('.\nWhat piece do you want to play?\n '),
-    read(Piece).
+    read(Piece).                                         % Gets piece that is going to be checked latter
 
 ask_row(Row) :-
     write('In which row?\n'),
-    read(Row).
+    read(Row).                                          % Gets Row that is going to be checked latter
 
 ask_column(Column) :-
     write('In which column?\n'),
-    read(Column).
+    read(Column).                                       % Gets Column that is going to be checked latter
     
-write_color(1):-
+write_color(1):-                                        % Player 1 has white Pieces
     write('white').
 
-write_color(2):-
+write_color(2):-                                        % Player 2 has white Pieces
     write('brown').  
 
 ask_menu_option(Option) :-
@@ -47,7 +47,9 @@ get_interaction :-
 exiting_message :-
     write('\nLeaving the game...\n\n').
 
-% Error messages
+% ===========================================================
+%                        Error messages
+% ===========================================================
 wrong_move_message :-
     write('Can not do that move. Play again.\n').
 

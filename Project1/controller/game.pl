@@ -5,6 +5,7 @@
 :- include('../View/user_interactions.pl').
 :- include('../View/menu_printer.pl').
 :- include('../Model/data_structs.pl').
+:- use_module(library(system)).
 :- use_module(library(random)).
 :- use_module(library(lists)).
 
@@ -168,7 +169,7 @@ check_moves_available(Player, Board, White_Pieces, Brown_Pieces) :-
 check_moves_available(_New_Player, _New_Board, _New_White_Pieces, _New_Brown_Pieces) :-
     no_more_moves_message,
     get_interaction,
-    main_menu.
+    play.
 
 % ======================================================================
 % --------------------------- TRANSLATIONS -----------------------------

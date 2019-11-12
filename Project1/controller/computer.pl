@@ -5,7 +5,8 @@ choose_move(Board, White_Pieces, Brown_Pieces, Level, Move, Player, _Show_Error_
     get_move(Level, List_Of_Moves, Move).
 
 valid_moves(1, Board, White_Pieces, Brown_Pieces, Player, List_Of_Moves) :-
-    setof(Move, valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), List_Of_Moves).
+    setof(Move, valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), List_Of_Moves),
+    sleep(1).
 
 % return in List_of_Moves only best plays at the moment
 valid_moves(Level, Board, White_Pieces, Brown_Pieces, Player, List_Of_Moves ) :-
@@ -27,6 +28,7 @@ calc_value(Level, Board, Player, Move, White_Pieces, Brown_Pieces, Value) :-
     remove_piece(Move, Player, White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces),
     value(Level, New_Board, Player, Move, New_White_Pieces, New_Brown_Pieces, Value).
 
+% ------ SECOND LEVEL PLAYS ------
 % If Board is in a win state -> value = -10.
 value(_Level, Board, _Player, Move, _White_Pieces, _Brown_Pieces, -66) :-
     not(game_over(0, Board, _Player, Move, _White_Pieces, _Brown_Pieces, _Mode)).
@@ -40,16 +42,18 @@ value(_Level, Board, Player, _Move, White_Pieces, Brown_Pieces, 10) :-
 value(_Level, Board, Player, _Move, White_Pieces, Brown_Pieces, -65) :-
     setof(Move, (valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), not(game_over(0, Board, _Player, Move, _White_Pieces, _Brown_Pieces, _Mode))), _List_Of_Moves).
 
-% ------ SECOND LEVEL OF PLAYS ------
-/* if the play reduzes the number of plays of the other Player, the piece
- is a row, column ou square where the plays hasn´'t already play */
+% ------ THIRD LEVEL PLAYS ------
+/* if the play reduces the number of plays of the other Player, the piece
+    is a row, column ou square where the plays hasn't already play */
 value(3, Board, Player, _Move, White_Pieces, Brown_Pieces, Value) :-
     change_player(1, Player, New_Player),
     setof(Move, valid_move(0, Move, New_Player, Board, White_Pieces, Brown_Pieces), List_Of_Moves),
-    length(List_Of_Moves, Length),  % if the number of plays is reduce the value is greater
+    length(List_Of_Moves, Length),  % if the number of plays of the other player is reduce then the value is greater to us
     Value is -64 + Length.
     
-value(_Level, _Board, _Player, _Move, _White_Pieces, _Brown_Pieces, 0).
+% only in level two are plays that can have no value
+% because level 1 doesn't evaluate the plays and level 3 evaluates all plays in the condition above
+value(2, _Board, _Player, _Move, _White_Pieces, _Brown_Pieces, 0).
 
 not(X) :- X, !, fail.
 not(_X).
