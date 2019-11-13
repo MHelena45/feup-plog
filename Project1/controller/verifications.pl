@@ -8,54 +8,42 @@
 
 valid_move(0, [Row,Column,Piece], Player, Board, White_Pieces, Brown_Pieces) :-
     check_position(Row), check_position(Column), valid_piece(Piece),
-    is_cell_empty(Board, Row, Column, 0), % Checks if the position is empty 
-    valid_play(Board, Row, Column, Piece, 0), % Checks if the move is valid
-    is_piece_available(Player, Piece, White_Pieces, Brown_Pieces, 0). % Checks if the piece is available (2 equal pieces max per player)
+    is_cell_empty(0, Board, Row, Column), % Checks if the position is empty 
+    valid_play(0, Board, Row, Column, Piece), % Checks if the move is valid
+    is_piece_available(0, Player, Piece, White_Pieces, Brown_Pieces). % Checks if the piece is available (2 equal pieces max per player)
 
 valid_move(1, [Row,Column,Piece], Player, Board, White_Pieces, Brown_Pieces) :-
-    is_cell_empty(Board, Row, Column, 1), % Checks if the position is empty 
+    is_cell_empty(1, Board, Row, Column, 1), % Checks if the position is empty 
     !, %red cut, used to prevent more than one error message
-    valid_play(Board, Row, Column, Piece, 1), % Checks if the move is valid
+    valid_play(1, Board, Row, Column, Piece), % Checks if the move is valid
     !, %red cut, used to prevent more than one error message
-    is_piece_available(Player, Piece, White_Pieces, Brown_Pieces, 1). % Checks if the piece is available (2 equal pieces max per player)
+    is_piece_available(1, Player, Piece, White_Pieces, Brown_Pieces). % Checks if the piece is available (2 equal pieces max per player)
 
-% ----------------------------------- IS EMPTY ---------------------------------
+% ------------------------------- IS CELL EMPTY ---------------------------------
 
 /* Check if given cell does not have a piece, if true the game continues */
-is_cell_empty(Board, Row, Column, _Show_Error_Message) :-
+is_cell_empty(_Show_Error_Message, Board, Row, Column) :-
     get_piece_from_board(Row, Column, Board, Piece),
     Piece == 0.
     
 /* If is not empty, player as to play again. An error message is displayed. */
-is_cell_empty(_Board, Row, Column, 1) :-
+is_cell_empty(1, _Board, Row, Column) :-
     not_empty_message(Row, Column), % Displays message to user
     fail.
 
 % ----------------------------------- PIECE AVAILABLE ---------------------------------
-is_piece_available(1, Piece, White_Pieces, _Brown_Pieces, _Show_Error_Message) :-
+% Player 1
+is_piece_available( _Show_Error_Message, 1, Piece, White_Pieces, _Brown_Pieces) :-
     member(Piece, White_Pieces).
 
-is_piece_available(2, Piece, _White_Pieces, Brown_Pieces, _Show_Error_Message) :-
+% Player 2
+is_piece_available( _Show_Error_Message, 2, Piece, _White_Pieces, Brown_Pieces, _Show_Error_Message) :-
     member(Piece, Brown_Pieces).
 
-is_piece_available(_Player, _Piece, _White_Pieces, _Brown_Pieces, 1) :-
+% Error mensages
+is_piece_available(1, _Player, _Piece, _White_Pieces, _Brown_Pieces) :-
     unavailable_piece_message,
     fail.
-
-search_piece(Piece, Board) :-
-    piece_row(Piece, Num_Row),
-    search_piece_in_row(Piece, Board, Num_Row).
-
-search_piece_in_row(Piece, [Row| _Rest], 1) :-
-    search_piece_in_columns(Piece, Row).
-
-search_piece_in_row(Piece, [_Row| Rest], Num_Row) :- 
-    Num_Row > 1, Num_Row1 is Num_Row - 1,
-    search_piece_in_row(Piece, Rest, Num_Row1).
-
-search_piece_in_columns(Piece, [Piece| _More]). % Found piece
-search_piece_in_columns(Piece, [_Column| More]) :-
-    search_piece_in_columns(Piece, More).
 
 % Number of Row in Pieces Board for each piece
 piece_row(11, 1). % White Cone
@@ -84,6 +72,9 @@ game_over(1, Board, Winner, _Move, White_Pieces, Brown_Pieces, Mode) :-
     get_interaction,
     play.
 
+% =========================================================================================
+%                               Gets the rigth end menu
+% =========================================================================================
 congratulate_winner(Player, 1) :- % Winner is Player in a game Person vs Person
     print_congratulations(Player).
 
@@ -168,7 +159,7 @@ get_square_value(Row, Column, Board, Value) :-
 
 % ----------------------------------- VALID MOVE ---------------------------------
 
-valid_play( Board, Row, Column, Piece, _Show_Error_Message) :-
+valid_play(_Show_Error_Message, Board, Row, Column, Piece) :-
     Row1 is Row + 1,
     check_top(Row1, Column, Board, Piece),
     Row2 is Row - 1,
@@ -180,7 +171,7 @@ valid_play( Board, Row, Column, Piece, _Show_Error_Message) :-
     get_square_num(Row, Column, Square_Num),
     check_square(Square_Num, Piece, Board).
 
-valid_play(_Board, _Row, _Column, _Piece, 1) :-
+valid_play(1, _Board, _Row, _Column, _Piece) :-
     wrong_move_message,
     fail.
 

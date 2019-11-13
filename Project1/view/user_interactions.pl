@@ -16,7 +16,7 @@ greet_player(Player) :-
     
 ask_piece(Piece) :-
     write('.\nWhat piece do you want to play?\n '),
-    read(Piece).                                         % Gets piece that is going to be checked latter
+    read(Piece) .                                         % Gets piece that is going to be checked latter
 
 ask_row(Row) :-
     write('In which row?\n'),
@@ -74,3 +74,6 @@ invalid_level_message :-
 
 no_more_moves_message :-
     write('\nNo more moves available. It\'s a draw!\n').
+
+read(_, _, _, _) :- fail.
+read(_, _, _) :- fail.
