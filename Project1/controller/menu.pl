@@ -8,7 +8,7 @@ main_menu(Mode, Difficulty_Level) :-
     manage_option(Option, Mode, Difficulty_Level).
 
 % =============================================================================
-% Deals with the inputs of the player in anymenu
+%   Deals with the inputs of the player in any menu
 % =============================================================================
 
 % Person vs Person

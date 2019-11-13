@@ -75,5 +75,11 @@ invalid_level_message :-
 no_more_moves_message :-
     write('\nNo more moves available. It\'s a draw!\n').
 
-read(_, _, _, _) :- fail.
-read(_, _, _) :- fail.
+invalid_move :-
+    write('Invalid Row\n').
+
+invalid_column :-
+    write('Invalid Column.\n').
+
+piece_not_valid :-
+    write('Piece not found.\n').

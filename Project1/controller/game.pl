@@ -9,6 +9,7 @@
 :- use_module(library(random)).
 :- use_module(library(lists)).
 
+/*     Begins everything */
 play :-
     main_menu(Mode, Difficulty_Level),
     start_game_mode(Mode, Difficulty_Level).
@@ -44,17 +45,21 @@ play(Player, Mode, Difficulty_Level, Board, White_Pieces, Brown_Pieces) :-
     display_game(New_Board, New_Player, New_White_Pieces, New_Brown_Pieces),
     play(New_Player, Mode, Difficulty_Level, New_Board, New_White_Pieces, New_Brown_Pieces).  % Changes current board
 
+% move of Player 1
 play_move(1, Mode, _Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
     play_person(1, Mode, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces).
+% move of player 2
 play_move(2, Mode, _Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
     play_person(2, Mode, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces).
 
+% move of computer 1
 play_move(3, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
     play_computer(3, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces).
+% move of computer 2
 play_move(4, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
     play_computer(4, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces).
 
-% Player plays
+% Person Player plays
 play_person(Player, Mode, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
     check_moves_available(Player, Board, White_Pieces, Brown_Pieces),
     repeat, % if the colocation of the piece fails, we ask again the all play
@@ -66,9 +71,9 @@ play_person(Player, Mode, Board, White_Pieces, Brown_Pieces, New_Board, New_Whit
 play_computer(Computer_Player, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces) :-
     get_num_player(Mode, Computer_Player, Player),
     choose_move(Board, White_Pieces, Brown_Pieces, Level, Move, Player, 0), % Only generates valid moves
-    move_piece(Move, Board, New_Board),
-    remove_piece(Move, Player, White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces), 
-    game_over(1, New_Board, Computer_Player, Move, New_White_Pieces, New_Brown_Pieces, Mode).
+    move_piece(Move, Board, New_Board),         % change the board
+    remove_piece(Move, Player, White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces),  % remove piece play from the available ones
+    game_over(1, New_Board, Computer_Player, Move, New_White_Pieces, New_Brown_Pieces, Mode). % check end
 
 % ===================================================================================
 %                              CHANGE PLAYER
@@ -95,21 +100,35 @@ change_player(4, 4, 3).
 % Gets the move from the player
 get_move([Row,Column,Piece], Player) :-
     get_piece(Piece, Player),
+    !,                              % Avoids showing wrong error mensagens
     get_row(Row),
-    get_column(Column).
+    !,                              % Avoids showing wrong error mensagens
+    get_column(Column),
+    !.                              % Avoids showing wrong error mensagens
 
 get_piece(Color_Piece, Player) :-
     ask_piece(Piece),
-    check_piece(Piece),
     translate(Piece, Player, Color_Piece).
+
+get_piece(Color_Piece, Player) :-
+    piece_not_valid,
+    get_piece(Color_Piece, Player).
 
 get_row(Row) :-
     ask_row(Row),
     check_position(Row).
 
+get_row(Row) :-
+    invalid_move,
+    get_row(Row).
+
 get_column(Column) :-
     ask_column(Column),
     check_position(Column).
+
+get_column(Column) :-
+    invalid_column,
+    get_column(Column).
 
 % ===================================================================================
 %                              GET NUM PLAYER

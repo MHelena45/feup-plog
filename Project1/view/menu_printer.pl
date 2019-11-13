@@ -125,4 +125,5 @@ print_help_menu :-
     write('| board.An example of a square being formed by the 4 positions(1,1),      |'),nl,
     write('| (1,2), (2,1) and (2,2).                                                 |'),nl,
     write('|                                                                         |'),nl,
+    write('| - Don\'t forget to end senteces with a dot (.) .                        |'),nl,
     write('|_________________________________________________________________________| '),nl,nl,nl.

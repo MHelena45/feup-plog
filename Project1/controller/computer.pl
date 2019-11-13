@@ -30,6 +30,9 @@ calc_value(Level, Board, Player, Move, White_Pieces, Brown_Pieces, Value) :-
     remove_piece(Move, Player, White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces),
     value(Level, New_Board, Player, Move, New_White_Pieces, New_Brown_Pieces, Value).
 
+% ======================================================================================================
+%                Evaluates Boards with Value between 0 (less value) and -66 (most value)
+% ======================================================================================================
 % ------ SECOND LEVEL PLAYS ------
 % If Board is in a win state -> value = -66.
 value(_Level, Board, _Player, Move, _White_Pieces, _Brown_Pieces, -66) :-
@@ -85,7 +88,7 @@ not(_X).
  * This functions were created to improve the efficiency of the computer plays
  */
 % remove dups and 0's from the Pieces
-getPiecesAvailable( White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces) :-
+getPiecesAvailable(White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces) :-
     remove_dups(White_Pieces, White_Pieces1), % removes dups and all 0 execpt one
     select(0, White_Pieces1, New_White_Pieces), % remove last 0 remaining
     remove_dups( Brown_Pieces,  Brown_Pieces1), % removes dups and all 0 execpt one

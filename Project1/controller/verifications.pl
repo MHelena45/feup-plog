@@ -13,7 +13,7 @@ valid_move(0, [Row,Column,Piece], Player, Board, White_Pieces, Brown_Pieces) :-
     is_piece_available(0, Player, Piece, White_Pieces, Brown_Pieces). % Checks if the piece is available (2 equal pieces max per player)
 
 valid_move(1, [Row,Column,Piece], Player, Board, White_Pieces, Brown_Pieces) :-
-    is_cell_empty(1, Board, Row, Column, 1), % Checks if the position is empty 
+    is_cell_empty(1, Board, Row, Column), % Checks if the position is empty 
     !, %red cut, used to prevent more than one error message
     valid_play(1, Board, Row, Column, Piece), % Checks if the move is valid
     !, %red cut, used to prevent more than one error message
@@ -37,7 +37,7 @@ is_piece_available( _Show_Error_Message, 1, Piece, White_Pieces, _Brown_Pieces) 
     member(Piece, White_Pieces).
 
 % Player 2
-is_piece_available( _Show_Error_Message, 2, Piece, _White_Pieces, Brown_Pieces, _Show_Error_Message) :-
+is_piece_available( _Show_Error_Message, 2, Piece, _White_Pieces, Brown_Pieces) :-
     member(Piece, Brown_Pieces).
 
 % Error mensages
@@ -269,13 +269,6 @@ check_position(1).
 check_position(2).
 check_position(3).
 check_position(4).
-
-% ----------------------------------- CHECK PIECE ---------------------------------
-% Accepted pieces
-check_piece(cone).
-check_piece(sphere).
-check_piece(cylinder).
-check_piece(cube).
 
 % ----------------------------------- VALID Piece ---------------------------------
 % Checks if piece is valid in data struct representation
