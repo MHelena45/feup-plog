@@ -1,13 +1,11 @@
-% used when the game ends and we only want to display the board
+% used when the game ends and we only want to display the board (because no who is going to play next )
 greet_player(0).
 % Greets the player letting him/her know the color of his/hers pieces
 greet_player(3) :-                              % Computer is player 3 internally when player 1 outwardly
     write('\nComputer 1 turn to play.\n').
-    
 greet_player(4) :-                              % Computer is player 4 internally when player 2 outwardly
     write('\nComputer 2 turn to play.\n').
-
-greet_player(Player) :-
+greet_player(Player) :-                         % Player con be 1 or 2
     write('\nPlayer '),
     write(Player),
     write(', it\'s your turn!\nYour pieces are colored '),
@@ -15,17 +13,22 @@ greet_player(Player) :-
     nl.
     
 ask_piece(Piece) :-
-    write('.\nWhat piece do you want to play?\n '),
-    read(Piece) .                                         % Gets piece that is going to be checked latter
+    write('.\nWhat piece do you want to play (cone, cylinder, sphere or cube)?\n'),
+    read(Piece),                                         % Gets piece that is going to be checked latter
+    skip_line.
 
 ask_row(Row) :-
     write('In which row?\n'),
-    read(Row).                                          % Gets Row that is going to be checked latter
+    get_code(Row_Code),                                         % Gets Row that is going to be checked latter
+    Row is Row_Code - 48,
+    skip_line.                                         
 
 ask_column(Column) :-
     write('In which column?\n'),
-    read(Column).                                       % Gets Column that is going to be checked latter
-    
+    get_code(Column_Code),                                       % Gets Column that is going to be checked latter
+    Column is Column_Code - 48,
+    skip_line.
+
 write_color(1):-                                        % Player 1 has white Pieces
     write('white').
 
@@ -35,17 +38,22 @@ write_color(2):-                                        % Player 2 has white Pie
 ask_menu_option(Option) :-
     repeat,
     write('> What is your option ? '),
-    read(Option).
+    get_char(Option),
+    skip_line.
 
 ask_level(Level) :-
     repeat,
     write('Level: '),
-    read(Level).
+    get_code(Level_Code),
+    Level is Level_Code - 48,
+    skip_line.
 
+% used to leave help menu and in in case of a tie to go back to main
 get_interaction :-
     repeat,
-    write('Tap any button to go back to the main menu.'),
-    read(_Ans).
+    write('Tap any key and Enter to go back to the main menu.'),
+    get_char(_Ans),
+    skip_line.
 
 exiting_message :-
     write('\nLeaving the game...\n\n').
