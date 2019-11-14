@@ -56,6 +56,6 @@ get_level(_Level) :-        % if level introduce isn't valid (=!= (1 || 2 || 3))
     fail.                     % fails and repeats process again
 
 % Levels can be 1, 2 or 3
-valid_level('1').
-valid_level('2').
-valid_level('3').
+valid_level(1).
+valid_level(2).
+valid_level(3).

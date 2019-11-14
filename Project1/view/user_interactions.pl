@@ -14,8 +14,41 @@ greet_player(Player) :-                         % Player con be 1 or 2
     
 ask_piece(Piece) :-
     write('.\nWhat piece do you want to play (cone, cylinder, sphere or cube)?\n'),
-    read(Piece),                                         % Gets piece that is going to be checked latter
+    % Gets piece that is going to be checked latter
+    get_char(Char1_Piece),
+    get_char(Char2_Piece),
+    get_char(Char3_Piece),
+    get_char(Char4_Piece),  
+    validate_Piece(Char1_Piece, Char2_Piece,Char3_Piece, Char4_Piece, Piece),                                  
     skip_line.
+
+validate_Piece(Char1_Piece, Char2_Piece,Char3_Piece, Char4_Piece, Piece) :-
+    Char1_Piece == 'c',
+    Char2_Piece == 'o',
+    Char3_Piece == 'n',
+    Char4_Piece == 'e',
+    Piece = 'cone'.
+
+validate_Piece(Char1_Piece, Char2_Piece,Char3_Piece, Char4_Piece, Piece) :-
+    Char1_Piece == 'c',
+    Char2_Piece == 'u',
+    Char3_Piece == 'b',
+    Char4_Piece == 'e',
+    Piece = 'cube'.
+
+validate_Piece(Char1_Piece, Char2_Piece,Char3_Piece, Char4_Piece, Piece) :-
+    Char1_Piece == 'c',
+    Char2_Piece == 'y',
+    Char3_Piece == 'l',
+    Char4_Piece == 'i',
+    Piece = 'cylinder'.
+
+validate_Piece(Char1_Piece, Char2_Piece,Char3_Piece, Char4_Piece, Piece) :-
+    Char1_Piece == 's',
+    Char2_Piece == 'p',
+    Char3_Piece == 'h',
+    Char4_Piece == 'e',
+    Piece = 'sphere'.
 
 ask_row(Row) :-
     write('In which row?\n'),
@@ -84,10 +117,10 @@ no_more_moves_message :-
     write('\nNo more moves available. It\'s a draw!\n').
 
 invalid_move :-
-    write('Invalid Row\n').
+    write('Invalid Row. ').
 
 invalid_column :-
-    write('Invalid Column.\n').
+    write('Invalid Column. ').
 
 piece_not_valid :-
-    write('Piece not found.\n').
+    write('Piece not found.').
