@@ -9,46 +9,17 @@ greet_player(Player) :-                         % Player con be 1 or 2
     write('\nPlayer '),
     write(Player),
     write(', it\'s your turn!\nYour pieces are colored '),
-    write_color(Player),
+    write_color(Player), write('.'),
     nl.
     
-ask_piece(Piece) :-
-    write('.\nWhat piece do you want to play (cone, cylinder, sphere or cube)?\n'),
+ask_piece(Char1_Piece, Char2_Piece, Char3_Piece, Char4_Piece) :-
+    write('\nWhat piece do you want to play (cone, cylinder, sphere or cube)?\n'),
     % Gets piece that is going to be checked latter
     get_char(Char1_Piece),
     get_char(Char2_Piece),
     get_char(Char3_Piece),
-    get_char(Char4_Piece),  
-    validate_Piece(Char1_Piece, Char2_Piece,Char3_Piece, Char4_Piece, Piece),                                  
+    get_char(Char4_Piece),                            
     skip_line.
-
-validate_Piece(Char1_Piece, Char2_Piece,Char3_Piece, Char4_Piece, Piece) :-
-    Char1_Piece == 'c',
-    Char2_Piece == 'o',
-    Char3_Piece == 'n',
-    Char4_Piece == 'e',
-    Piece = 'cone'.
-
-validate_Piece(Char1_Piece, Char2_Piece,Char3_Piece, Char4_Piece, Piece) :-
-    Char1_Piece == 'c',
-    Char2_Piece == 'u',
-    Char3_Piece == 'b',
-    Char4_Piece == 'e',
-    Piece = 'cube'.
-
-validate_Piece(Char1_Piece, Char2_Piece,Char3_Piece, Char4_Piece, Piece) :-
-    Char1_Piece == 'c',
-    Char2_Piece == 'y',
-    Char3_Piece == 'l',
-    Char4_Piece == 'i',
-    Piece = 'cylinder'.
-
-validate_Piece(Char1_Piece, Char2_Piece,Char3_Piece, Char4_Piece, Piece) :-
-    Char1_Piece == 's',
-    Char2_Piece == 'p',
-    Char3_Piece == 'h',
-    Char4_Piece == 'e',
-    Piece = 'sphere'.
 
 ask_row(Row) :-
     write('In which row?\n'),
