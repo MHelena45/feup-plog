@@ -93,8 +93,7 @@ congratulate_winner(Player, 1, Score1, Score2) :- % Winner is Player in a game P
     print_congratulations(Player, Score1, Score2).
 
 congratulate_winner(Player, 4, Score1, Score2) :-  % Winner is Player in a game Computer vs Computer
-    New_Player is Player - 2,
-    print_congratulations(New_Player, Score1, Score2).
+    print_congratulations(Player, Score1, Score2).
 
 congratulate_winner(2, 2, Score1, Score2) :- % player 2 is the winner in mode 2
     print_sorry(Score1, Score2).             % the computer wins the person

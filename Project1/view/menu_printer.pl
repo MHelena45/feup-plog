@@ -85,17 +85,20 @@ print_difficulty_options :-
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________| '),nl,nl,nl.
 
+print_score(Score1, Score2) :-
+    write('|                          Score: '),
+    write(Score1),
+    write(' - '), 
+    write(Score2),
+    write('                                 |'),nl,
+
 print_congratulations_message(Player, Score1, Score2) :-
     write('|=======================================================================|'),nl,
     write('|                                                                       |'),nl,
     write('|                    Congratulations, player '), write(Player),
     write('                          |'),nl,
     write('|                                                                       |'),nl,
-    write('|                          Score: '),
-    write(Score1),
-    write(' - '), 
-    write(Score2),
-    write('                                 |'),nl,
+    print_score (Score1, Score2),
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl.
 
@@ -104,11 +107,7 @@ print_sorry_message(Score1, Score2) :-
     write('|                                                                       |'),nl,
     write('|                    The Computer won this time!!                       |'),nl,
     write('|                                                                       |'),nl,
-    write('|                          Score: '),
-    write(Score1),
-    write(' - '), 
-    write(Score2),
-    write('                                 |'),nl,
+    print_score (Score1, Score2),
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl.
 
@@ -117,11 +116,7 @@ print_congratulations_message(Score1, Score2) :-
     write('|                                                                       |'),nl,
     write('|           Congratulations, you win against the computer!              |'),nl,
     write('|                                                                       |'),nl,
-    write('|                          Score: '),
-    write(Score1),
-    write(' - '), 
-    write(Score2),
-    write('                                 |'),nl,
+    print_score (Score1, Score2),
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl.
 
