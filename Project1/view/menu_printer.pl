@@ -95,7 +95,7 @@ print_score(Score1, Score2) :-
     write(Score1),
     write(' - '), 
     write(Score2),
-    write('                                 |'),nl,
+    write('                                 |'),nl.
 
 print_congratulations_message(Player, Score1, Score2) :-
     write('|=======================================================================|'),nl,
@@ -103,33 +103,35 @@ print_congratulations_message(Player, Score1, Score2) :-
     write('|                    Congratulations, player '), write(Player),
     write('                          |'),nl,
     write('|                                                                       |'),nl,
-    print_score (Score1, Score2),
+    print_score(Score1, Score2),
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl.
 
-print_sorry_message(Score1, Score2) :-  
+print_congratulations_message(Score1, Score2) :-  
     write('|=======================================================================|'),nl,
     write('|                                                                       |'),nl,
     write('|           Congratulations, you win against the computer!              |'),nl,
     write('|                                                                       |'),nl,
-    print_score (Score1, Score2),
+    print_score(Score1, Score2),
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl.
 
 print_computer_congratulations_message(Player, Score1, Score2) :-
     write('|=======================================================================|'),nl,
     write('|                                                                       |'),nl,
-    write('|                           Computer '), write(Player),              
-    write(' wins!!                           |'),nl,
+    write('|                        Computer '), write(Player),              
+    write(' wins!!                              |'),nl,
+    write('|                                                                       |'),nl,
+    print_score(Score1, Score2),
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl.
 
-print_sorry_message :-  
+print_sorry_message(Score1, Score2) :-  
     write('|=======================================================================|'),nl,
     write('|                                                                       |'),nl,
     write('|                    The Computer won this time!!                       |'),nl,
     write('|                                                                       |'),nl,
-    print_score (Score1, Score2),
+    print_score(Score1, Score2),
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl.
 

@@ -70,7 +70,7 @@ game_over(1, Board, Winner, _Move, White_Pieces, Brown_Pieces, Mode, Difficulty_
     display_game(Board, 0, White_Pieces, Brown_Pieces),
     get_num_player(Mode, Winner, Player),
     addScore(Player, Score1, Score2, New_Score1, New_Score2),
-    congratulate_winner(Winner, Mode, New_Score1, New_Score2),
+    congratulate_winner(Player, Mode, New_Score1, New_Score2),
     get_interaction(Ans),
     playAgain(Ans, Mode, Difficulty_Level, New_Score1, New_Score2).
 
@@ -90,14 +90,10 @@ playAgain(_Ans, Mode, Difficulty_Level, Score1, Score2) :-
 %                               Gets the rigth end menu
 % =========================================================================================
 
-
-congratulate_winner(Computer_Player, 4, Score1, Score2) :-  % Winner is Player in a game Computer vs Computer
+congratulate_winner(Player, 4, Score1, Score2) :-   % Winner is Player in a game Computer vs Computer
     print_computer_congratulations(Player, Score1, Score2).
 
-congratulate_winner(Player, 1, Score1, Score2) :- % Winner is Player in a game Person vs Person
-    print_congratulations(Player, Score1, Score2).
-
-congratulate_winner(Player, 4, Score1, Score2) :-  % Winner is Player in a game Computer vs Computer
+congratulate_winner(Player, 1, Score1, Score2) :-   % Winner is Player in a game Person vs Person
     print_congratulations(Player, Score1, Score2).
 
 congratulate_winner(2, 2, Score1, Score2) :- % player 2 is the winner in mode 2
