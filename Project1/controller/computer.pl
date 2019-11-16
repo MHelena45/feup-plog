@@ -1,4 +1,4 @@
-choose_move(Board, White_Pieces, Brown_Pieces, Level, Move, Player, _Show_Error_Message) :-
+choose_move(Board, White_Pieces, Brown_Pieces, Level, Move, Player) :-
     valid_moves(Level, Board, White_Pieces, Brown_Pieces, Player, List_Of_Moves),
     get_move(Level, List_Of_Moves, Move).
 
