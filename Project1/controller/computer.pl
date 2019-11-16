@@ -18,7 +18,7 @@ valid_moves(Level, Board, White_Pieces, Brown_Pieces, Player, List_Of_Moves ) :-
 % if there are no more moves available is a tie
 valid_moves(_Level, _Board, _White_Pieces, _Brown_Pieces, _Player, _List_Of_Moves, 1) :-
     no_more_moves_message,
-    get_interaction,
+    get_interaction(_Ans),
     play.
 
 get_move(_Level, List_Of_Moves, Move) :-  % List_Of_Moves only with more value plays (all with equal value)
@@ -35,14 +35,14 @@ calc_value(Level, Board, Player, Move, White_Pieces, Brown_Pieces, Value) :-    
 % ------ SECOND LEVEL PLAYS ------
 % If Board is in a win state -> value = -66.
 value(_Level, Board, _Player, Move, _White_Pieces, _Brown_Pieces, -66) :-
-    not(game_over(0, Board, _Player, Move, _White_Pieces, _Brown_Pieces, _Mode)).
+    not(game_over(0, Board, _Player, Move, _White_Pieces, _Brown_Pieces, _Mode, _Difficulty_Level, _Score1, _Score2)).
 
 % If There is a winning play for the other player -> value = 10.
 value(_Level, Board, Player, _Move, White_Pieces, Brown_Pieces, 10) :- 
     change_player(1, Player, New_Player),
     setof(Move, (valid_move(0, Move, New_Player, Board, White_Pieces, Brown_Pieces),
         move_piece(Move, Board, New_Board),
-        not(game_over(0, New_Board, _New_Player, Move, _White_Pieces, _Brown_Pieces, _Mode))), _List_Of_Moves). 
+        not(game_over(0, New_Board, _New_Player, Move, _White_Pieces, _Brown_Pieces, _Mode, _Difficulty_Level, _Score1, _Score2))), _List_Of_Moves). 
 
 % if we can win in the next play with a move that the adversersay can't make
 value(_Level, Board, Player, _Move, White_Pieces, Brown_Pieces, -65) :-
@@ -51,7 +51,7 @@ value(_Level, Board, Player, _Move, White_Pieces, Brown_Pieces, -65) :-
         get_opposite(Other_Piece, Piece),
         not(valid_move(0, [Row, Column, Other_Piece], New_Player, Board, White_Pieces, Brown_Pieces)),
         move_piece([Row, Column, Piece], Board, New_Board),  
-        not(game_over(0, New_Board, _Player, [Row, Column, Piece], _White_Pieces, _Brown_Pieces, _Mode))), _List_Of_Moves).
+        not(game_over(0, New_Board, _Player, [Row, Column, Piece], _White_Pieces, _Brown_Pieces, _Mode, _Difficulty_Level, _Score1, _Score2))), _List_Of_Moves).
 
 % only in level two are plays that can have no value
 % because level 1 doesn't evaluate the plays and level 3 evaluates all plays in the condition down
@@ -60,7 +60,7 @@ value(2, Board, Player, _Move, White_Pieces, Brown_Pieces, 0) :-
     change_player(1, Player, New_Player),
     not(setof(Move, (valid_move(0, Move, New_Player, Board, White_Pieces, Brown_Pieces),
         move_piece(Move, Board, New_Board),
-        not(game_over(0, New_Board, _New_Player, Move, _White_Pieces, _Brown_Pieces, _Mode))), _List_Of_Moves)).
+        not(game_over(0, New_Board, _New_Player, Move, _White_Pieces, _Brown_Pieces, _Mode, _Difficulty_Level, _Score1, _Score2))), _List_Of_Moves)).
 
 % ------ THIRD LEVEL PLAYS ------
 /* if the play reduces the number of plays of the other Player, the piece
@@ -70,7 +70,7 @@ value(3, Board, Player, _Move, White_Pieces, Brown_Pieces, Value) :-
     % checks if the play doesn't give the opposite the win
     not(setof(Move, (valid_move(0, Move, New_Player, Board, White_Pieces, Brown_Pieces),
         move_piece(Move, Board, New_Board),
-        not(game_over(0, New_Board, _New_Player, Move, _White_Pieces, _Brown_Pieces, _Mode))), _List_Of_Moves)),
+        not(game_over(0, New_Board, _New_Player, Move, _White_Pieces, _Brown_Pieces, _Mode, _Difficulty_Level, _Score1, _Score2))), _List_Of_Moves)),
     % checks the valid_moves of the other player
     setof(Move, valid_move(0, Move, New_Player, Board, White_Pieces, Brown_Pieces), List_Of_Moves),
     length(List_Of_Moves, Length),  % if the number of plays of the other player is reduce then the value is greater to us

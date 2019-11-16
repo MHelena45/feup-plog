@@ -57,7 +57,7 @@ piece_row(92, 4). % Brown Sphere
 
 % ----------------------------------- GAME OVER ---------------------------------
 % Sucsess if game is not over
-game_over(_Show_Message, Board, _Winner, [Row|[Column|_Piece]], _White_Pieces, _Brown_Pieces, _Mode) :-
+game_over(_Show_Message, Board, _Winner, [Row|[Column|_Piece]], _White_Pieces, _Brown_Pieces, _Mode, _Difficulty_Level, _Score1, _Score2) :-
     get_row_sum(Board, Row, Row_Sum),
     Row_Sum =\= 22,
     get_column_sum(Board, Column, 0, Col_Sum),
@@ -66,30 +66,44 @@ game_over(_Show_Message, Board, _Winner, [Row|[Column|_Piece]], _White_Pieces, _
     get_square_sum(Square_Num, Board, Square_Sum),
     Square_Sum =\= 22.
 
-game_over(1, Board, Winner, _Move, White_Pieces, Brown_Pieces, Mode) :-
+game_over(1, Board, Winner, _Move, White_Pieces, Brown_Pieces, Mode, Difficulty_Level, Score1, Score2) :-
     display_game(Board, 0, White_Pieces, Brown_Pieces),
-    congratulate_winner(Winner, Mode),
-    get_interaction,
+    get_num_player(Mode, Winner, Player),
+    addScore(Player, Score1, Score2, New_Score1, New_Score2),
+    congratulate_winner(Winner, Mode, New_Score1, New_Score2),
+    get_interaction(Ans),
+    playAgain(Ans, Mode, Difficulty_Level, New_Score1, New_Score2).
+
+addScore(1, Score1, Score2, New_Score1, Score2) :-
+    New_Score1 is Score1 + 1.
+
+addScore(2, Score1, Score2, Score1, New_Score2) :-
+    New_Score2 is Score2 + 1.
+
+playAgain(0, _Mode, _Difficulty_Level, _Score1, _Score2) :-
     play.
+
+playAgain(_Ans, Mode, Difficulty_Level, Score1, Score2) :-
+    start_game_mode(Mode, Difficulty_Level, Score1, Score2).
 
 % =========================================================================================
 %                               Gets the rigth end menu
 % =========================================================================================
-congratulate_winner(Player, 1) :- % Winner is Player in a game Person vs Person
-    print_congratulations(Player).
+congratulate_winner(Player, 1, Score1, Score2) :- % Winner is Player in a game Person vs Person
+    print_congratulations(Player, Score1, Score2).
 
-congratulate_winner(Player, 4) :-  % Winner is Player in a game Computer vs Computer
+congratulate_winner(Player, 4, Score1, Score2) :-  % Winner is Player in a game Computer vs Computer
     New_Player is Player - 2,
-    print_congratulations(New_Player).
+    print_congratulations(New_Player, Score1, Score2).
 
-congratulate_winner(2, 2) :- % player 2 is the winner in mode 2
-    print_sorry.             % the computer wins the person
+congratulate_winner(2, 2, Score1, Score2) :- % player 2 is the winner in mode 2
+    print_sorry(Score1, Score2).             % the computer wins the person
 
-congratulate_winner(1, 3) :- % player 1 is the winner in mode 2
-    print_sorry.             % the computer wins the person
+congratulate_winner(1, 3, Score1, Score2) :- % player 1 is the winner in mode 2
+    print_sorry(Score1, Score2).             % the computer wins the person
 
-congratulate_winner(_, _) :-  % The person won the computer
-    print_congratulations.
+congratulate_winner(_, _, Score1, Score2) :-  % The person won the computer
+    print_congratulations(Score1, Score2).
 
 get_row_sum([Row| _Rest], 1, Solution) :-
     sum_row(Row, 0, Solution).
