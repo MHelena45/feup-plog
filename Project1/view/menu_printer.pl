@@ -31,6 +31,11 @@ print_congratulations :-
     print_congratulations_message, 
     print_footer.
 
+print_computer_congratulations(Computer_Player) :-
+    print_game_name,
+    print_computer_congratulations_message(Computer_Player),
+    print_footer.
+
 print_sorry :-
     print_game_name,
     print_sorry_message,
@@ -70,7 +75,7 @@ print_footer :-
 print_game_name :-
     write(' _______________________________________________________________________ '),nl,
     write('|                                                                       |'),nl,
-    write('|                            Quantik                                    |'),nl,
+    write('|                               Quantik                                 |'),nl,
     write('|_______________________________________________________________________|'),nl.
 
 print_difficulty_options :-
@@ -93,17 +98,25 @@ print_congratulations_message(Player) :-
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl.
 
-print_sorry_message :-  
-    write('|=======================================================================|'),nl,
-    write('|                                                                       |'),nl,
-    write('|                    The Computer won this time!!                       |'),nl,
-    write('|                                                                       |'),nl,
-    write('|_______________________________________________________________________|'),nl.
-
 print_congratulations_message :-  
     write('|=======================================================================|'),nl,
     write('|                                                                       |'),nl,
     write('|           Congratulations, you win against the computer!              |'),nl,
+    write('|                                                                       |'),nl,
+    write('|_______________________________________________________________________|'),nl.
+
+print_computer_congratulations_message(Player) :-
+    write('|=======================================================================|'),nl,
+    write('|                                                                       |'),nl,
+    write('|                           Computer '), write(Player),              
+    write(' wins!!                           |'),nl,
+    write('|                                                                       |'),nl,
+    write('|_______________________________________________________________________|'),nl.
+
+print_sorry_message :-  
+    write('|=======================================================================|'),nl,
+    write('|                                                                       |'),nl,
+    write('|                    The Computer won this time!!                       |'),nl,
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl.
 

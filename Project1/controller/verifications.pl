@@ -68,28 +68,31 @@ game_over(_Show_Message, Board, _Winner, [Row|[Column|_Piece]], _White_Pieces, _
 
 game_over(1, Board, Winner, _Move, White_Pieces, Brown_Pieces, Mode) :-
     display_game(Board, 0, White_Pieces, Brown_Pieces),
-    congratulate_winner(Winner, Mode),
+    congratulate_winner(Mode, Winner),
     get_interaction,
     play.
 
 % =========================================================================================
 %                               Gets the rigth end menu
 % =========================================================================================
-congratulate_winner(Player, 1) :- % Winner is Player in a game Person vs Person
+congratulate_winner(1, Player) :- % Winner is Player in a game Person vs Person
     print_congratulations(Player).
 
-congratulate_winner(Player, 4) :-  % Winner is Player in a game Computer vs Computer
-    New_Player is Player - 2,
-    print_congratulations(New_Player).
+congratulate_winner(2, 1) :-    % player 1 is the winner in mode 2
+    print_congratulations.      % the player wins the computer
 
-congratulate_winner(2, 2) :- % player 2 is the winner in mode 2
-    print_sorry.             % the computer wins the person
+congratulate_winner(2, 3) :-    % player 3 is the winner in mode 2
+    print_sorry.                % the computer wins the person
 
-congratulate_winner(1, 3) :- % player 1 is the winner in mode 2
-    print_sorry.             % the computer wins the person
+congratulate_winner(3, 3) :-    % player 1 is the winner in mode 3
+    print_sorry.                % the computer wins the player
 
-congratulate_winner(_, _) :-  % The person won the computer
-    print_congratulations.
+congratulate_winner(3, 2) :-    % player 2 is the winner in mode 3
+    print_congratulations.      % the player wins the computer
+
+congratulate_winner(4, Computer_Player) :-  % Winner is Player in a game Computer vs Computer
+    Player is Computer_Player - 2,
+    print_computer_congratulations(Player).
 
 get_row_sum([Row| _Rest], 1, Solution) :-
     sum_row(Row, 0, Solution).
