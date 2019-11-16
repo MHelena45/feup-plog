@@ -48,12 +48,11 @@ value(_Level, Board, Player, _Move, White_Pieces, Brown_Pieces, 10) :-
 
 % If we can win in the next play with a move that the adversersay can't make
 value(_Level, Board, Player, _Move, White_Pieces, Brown_Pieces, -65) :-
-    change_player(1, Player, New_Player),   % gets the number of the other Player
-    setof([Row, Column, Piece], (valid_move(0, [Row, Column, Piece], Player, Board, White_Pieces, Brown_Pieces),
-        get_opposite(Other_Piece, Piece),
-        not(valid_move(0, [Row, Column, Other_Piece], New_Player, Board, White_Pieces, Brown_Pieces)),
-        move_piece([Row, Column, Piece], Board, New_Board),  
-        not(game_over(0, New_Board, _Player, [Row, Column, Piece], _White_Pieces, _Brown_Pieces, _Mode))), _List_Of_Moves),
+    setof(Move, (
+            valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces),
+            move_piece(Move, Board, New_Board),  
+            not(game_over(0, New_Board, _Player, Move, _White_Pieces, _Brown_Pieces, _Mode))
+        ), _List_Of_Moves),
     !.
 
 % Only in level two are plays that can have no value
@@ -65,10 +64,6 @@ value(2, _Board, _Player, _Move, _White_Pieces, _Brown_Pieces, 0).
     is a row, column ou square where the plays hasn't already play */
 value(3, Board, Player, _Move, White_Pieces, Brown_Pieces, Value) :-
     change_player(1, Player, New_Player),
-    % checks if the play doesn't give the opposite the win
-    not(setof(Move, (valid_move(0, Move, New_Player, Board, White_Pieces, Brown_Pieces),
-        move_piece(Move, Board, New_Board),
-        not(game_over(0, New_Board, _New_Player, Move, _White_Pieces, _Brown_Pieces, _Mode))), _List_Of_Moves)),
     % checks the valid_moves of the other player
     setof(Move, valid_move(0, Move, New_Player, Board, White_Pieces, Brown_Pieces), List_Of_Moves),
     length(List_Of_Moves, Length),  % if the number of plays of the other player is reduce then the value is greater to us
