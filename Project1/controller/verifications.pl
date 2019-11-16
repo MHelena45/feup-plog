@@ -89,6 +89,11 @@ playAgain(_Ans, Mode, Difficulty_Level, Score1, Score2) :-
 % =========================================================================================
 %                               Gets the rigth end menu
 % =========================================================================================
+
+
+congratulate_winner(Computer_Player, 4, Score1, Score2) :-  % Winner is Player in a game Computer vs Computer
+    print_computer_congratulations(Player, Score1, Score2).
+
 congratulate_winner(Player, 1, Score1, Score2) :- % Winner is Player in a game Person vs Person
     print_congratulations(Player, Score1, Score2).
 
