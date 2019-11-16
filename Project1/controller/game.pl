@@ -69,7 +69,7 @@ play_person(Player, Mode, Board, White_Pieces, Brown_Pieces, New_Board, New_Whit
 % Computer plays
 play_computer(Computer_Player, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces, Score1, Score2) :-
     get_num_player(Mode, Computer_Player, Player),
-    choose_move(Board, White_Pieces, Brown_Pieces, Level, Move, Player, 0), % Only generates valid moves
+    choose_move(Board, White_Pieces, Brown_Pieces, Level, Move, Player), % Only generates valid moves
     move_piece(Move, Board, New_Board),         % change the board
     remove_piece(Move, Player, White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces),  % remove piece play from the available ones
     game_over(1, New_Board, Computer_Player, Move, New_White_Pieces, New_Brown_Pieces, Mode, Level, Score1, Score2). % check end
