@@ -13,7 +13,7 @@ print_boards_content([Board_Line|Board_Rest], White_Pieces, Brown_Pieces, Num_Li
     nth0(0, White_Pieces_Rest, SecondWhiteElemOfLine, White_Pieces_Rest1),
     nth0(0, Brown_Pieces, FirstBrownElemOfLine, Brown_Pieces_Rest),    
     nth0(0, Brown_Pieces_Rest, SecondBownElemOfLine, Brown_Pieces_Rest1),
-    print_boards_line(Board_Line, [FirstWhiteElemOfLine, SecondWhiteElemOfLine], [FirstBrownElemOfLine , SecondBownElemOfLine], Num_Line, 1), 
+    print_boards_line(Board_Line, [SecondWhiteElemOfLine, FirstWhiteElemOfLine], [FirstBrownElemOfLine , SecondBownElemOfLine], Num_Line, 1), 
     print_line_seperators(Num_Line),
     Num_Line1 is Num_Line + 1,
     print_boards_content(Board_Rest,  White_Pieces_Rest1, Brown_Pieces_Rest1, Num_Line1).

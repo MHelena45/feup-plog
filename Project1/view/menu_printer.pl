@@ -21,24 +21,24 @@ print_level_menu :-
     print_difficulty_options,
     print_footer.
 
-print_congratulations(Player) :-
+print_congratulations(Player, Score1, Score2) :-
     print_game_name,
-    print_congratulations_message(Player), 
+    print_congratulations_message(Player, Score1, Score2), 
     print_footer.
 
-print_congratulations :-
+print_congratulations(Score1, Score2) :-
     print_game_name,
-    print_congratulations_message, 
+    print_congratulations_message(Score1, Score2), 
     print_footer.
 
-print_computer_congratulations(Computer_Player) :-
+print_computer_congratulations(Computer_Player, Score1, Score2) :-
     print_game_name,
-    print_computer_congratulations_message(Computer_Player),
+    print_computer_congratulations_message(Computer_Player, Score1, Score2),
     print_footer.
 
-print_sorry :-
+print_sorry(Score1, Score2) :-
     print_game_name,
-    print_sorry_message,
+    print_sorry_message(Score1, Score2),
     print_footer.
 
 print_welcome_message :-
@@ -90,22 +90,34 @@ print_difficulty_options :-
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________| '),nl,nl,nl.
 
-print_congratulations_message(Player) :-
+print_congratulations_message(Player, Score1, Score2) :-
     write('|=======================================================================|'),nl,
     write('|                                                                       |'),nl,
     write('|                    Congratulations, player '), write(Player),
     write('                          |'),nl,
     write('|                                                                       |'),nl,
+    write('|                          Score: '),
+    write(Score1),
+    write(' - '), 
+    write(Score2),
+    write('                                 |'),nl,
+    write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl.
 
-print_congratulations_message :-  
+print_sorry_message(Score1, Score2) :-  
     write('|=======================================================================|'),nl,
     write('|                                                                       |'),nl,
     write('|           Congratulations, you win against the computer!              |'),nl,
     write('|                                                                       |'),nl,
+    write('|                          Score: '),
+    write(Score1),
+    write(' - '), 
+    write(Score2),
+    write('                                 |'),nl,
+    write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl.
 
-print_computer_congratulations_message(Player) :-
+print_computer_congratulations_message(Player, Score1, Score2) :-
     write('|=======================================================================|'),nl,
     write('|                                                                       |'),nl,
     write('|                           Computer '), write(Player),              
@@ -117,6 +129,12 @@ print_sorry_message :-
     write('|=======================================================================|'),nl,
     write('|                                                                       |'),nl,
     write('|                    The Computer won this time!!                       |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                          Score: '),
+    write(Score1),
+    write(' - '), 
+    write(Score2),
+    write('                                 |'),nl,
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl.
 

@@ -53,10 +53,11 @@ ask_level(Level) :-
     skip_line.
 
 % used to leave help menu and in in case of a tie to go back to main
-get_interaction :-
+get_interaction(Ans) :-
     repeat,
-    write('Tap any key and Enter to go back to the main menu.'),
-    get_char(_Ans),
+    write('Tap any key and Enter to play again and 0 to go back to the main menu.'),
+    get_code(Ans_Code),
+    Ans is Ans_Code - 48,
     skip_line.
 
 exiting_message :-
