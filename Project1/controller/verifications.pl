@@ -7,7 +7,7 @@
 % =================================================================================
 
 valid_move(0, [Row,Column,Piece], Player, Board, White_Pieces, Brown_Pieces) :-
-    check_position(Row), check_position(Column), valid_piece(Piece),
+    between(1, 4, Row), between(1, 4, Column), valid_piece(Piece),
     is_cell_empty(0, Board, Row, Column), % Checks if the position is empty 
     valid_play(0, Board, Row, Column, Piece), % Checks if the move is valid
     is_piece_available(0, Player, Piece, White_Pieces, Brown_Pieces). % Checks if the piece is available (2 equal pieces max per player)
@@ -275,14 +275,6 @@ get_opposite(12, 11).
 get_opposite(52, 51).
 get_opposite(72, 71).
 get_opposite(92, 91).
-
-% ----------------------------------- VALID POSITION ---------------------------------
-% Check if row and Column are valid (between 1 and 4 inclusive)
-% we did use an expression because give error when using chars.
-check_position(1).
-check_position(2).
-check_position(3).
-check_position(4).
 
 % ----------------------------------- VALID Piece ---------------------------------
 % Checks if piece is valid in data struct representation

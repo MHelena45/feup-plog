@@ -8,6 +8,7 @@
 :- use_module(library(system)).
 :- use_module(library(random)).
 :- use_module(library(lists)).
+:- use_module(library(between)).
 
 play :-
     main_menu(Mode, Difficulty_Level),
@@ -115,7 +116,7 @@ get_piece(Color_Piece, Player) :-
 
 get_row(Row) :-
     ask_row(Row),
-    check_position(Row).
+    between(1, 4, Row).
 
 get_row(Row) :-
     invalid_move,
@@ -123,7 +124,7 @@ get_row(Row) :-
 
 get_column(Column) :-
     ask_column(Column),
-    check_position(Column).
+    between(1, 4, Column).
 
 get_column(Column) :-
     invalid_column,
@@ -138,7 +139,7 @@ get_num_player(2, 3, 2).    % get_num_player(Mode, Computer_Player, Player),
 get_num_player(3, 3, 1).
 get_num_player(4, 3, 1).
 get_num_player(4, 4, 2).
-% less used
+% less used, only to put the score in the rigth player
 get_num_player(2, 1, 1).
 get_num_player(1, Player, Player).
 get_num_player(3, 2, 2).
