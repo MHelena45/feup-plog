@@ -276,6 +276,13 @@ get_opposite(52, 51).
 get_opposite(72, 71).
 get_opposite(92, 91).
 
+% ----------------------------------- CHECK PIECE ---------------------------------
+% Accepted piece input
+check_piece(cone).
+check_piece(sphere).
+check_piece(cylinder).
+check_piece(cube).
+
 % ----------------------------------- VALID Piece ---------------------------------
 % Checks if piece is valid in data struct representation
 valid_piece(11).

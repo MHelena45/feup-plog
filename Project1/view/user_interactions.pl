@@ -12,14 +12,23 @@ greet_player(Player) :-                         % Player con be 1 or 2
     write_color(Player), write('.'),
     nl.
     
-ask_piece(Char1_Piece, Char2_Piece, Char3_Piece, Char4_Piece) :-
+ask_piece(Piece) :-
     write('\nWhat piece do you want to play (cone, cylinder, sphere or cube)?\n'),
     % Gets piece that is going to be checked latter
     get_char(Char1_Piece),
     get_char(Char2_Piece),
     get_char(Char3_Piece),
-    get_char(Char4_Piece),                            
+    get_char(Char4_Piece),
+    translate_chars(Char1_Piece, Char2_Piece, Char3_Piece, Char4_Piece, Piece),                            
     skip_line.
+
+% The play only writes the form and it is translated to the correct number to save in the board according to the actual player
+% White pieces translate 
+translate_chars('c', 'o', 'n', 'e', cone). % form, number of player and number of the correspondent piece
+translate_chars('c', 'u', 'b', 'e', cube).
+translate_chars('c', 'y', 'l', 'i', cylinder).
+translate_chars('s', 'p', 'h', 'e', sphere).
+translate_chars(_, _, _, _, none). % Verification checking that the piece is valid is only made in game module
 
 ask_row(Row) :-
     write('In which row?\n'),
