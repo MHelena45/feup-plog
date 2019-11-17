@@ -61,6 +61,12 @@ ask_level(Level) :-
     Level is Level_Code - 48,
     skip_line.
 
+press_any_button :-
+    repeat,
+    write('Tap any key and Enter to go back to the main menu.'),
+    get_code(_Ans_Code),
+    skip_line.
+
 % used to leave help menu, finished games and in in case of a tie to go back to main
 get_interaction(Ans) :-
     repeat,

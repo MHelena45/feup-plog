@@ -32,7 +32,7 @@ manage_option('4', 4, Level) :-
 % Help menu
 manage_option('5', _, _) :-
     print_help_menu,
-    get_interaction(_Ans),
+    press_any_button,
     play.
 
 % Exit

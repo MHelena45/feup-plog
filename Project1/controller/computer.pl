@@ -11,18 +11,12 @@ valid_moves(1, Board, White_Pieces, Brown_Pieces, Player, List_Of_Moves) :-
     sleep(1).           % used for let the user see the play done
 
 % Return in List_of_Moves only the best moves at the moment
-valid_moves(Level, Board, White_Pieces, Brown_Pieces, Player, List_Of_Moves ) :-
+valid_moves(Level, Board, White_Pieces, Brown_Pieces, Player, List_Of_Moves) :-
     getPiecesAvailable( White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces),
     setof([Value|Move], (valid_move(0, Move, Player, Board, New_White_Pieces, New_Brown_Pieces), 
         calc_value(Level, Board, Player, Move, New_White_Pieces, New_Brown_Pieces, Value)), Value_List_Of_Moves),        
     nth0(0, Value_List_Of_Moves, [Value | _One_Most_Value_Move]),   % gets the lowest value of the game
     setof(Move1, member([Value | Move1], Value_List_Of_Moves), List_Of_Moves).
-
-% If there are no more moves available it's a tie
-valid_moves(_Level, _Board, _White_Pieces, _Brown_Pieces, _Player, _List_Of_Moves, 1) :-
-    no_more_moves_message,
-    get_interaction(_Ans),
-    play.
 
 % Gets a random move from the List of moves that was previously obtained 
 get_move(_Level, List_Of_Moves, Move) :-  

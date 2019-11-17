@@ -46,11 +46,11 @@ play(Player, Mode, Difficulty_Level, Board, White_Pieces, Brown_Pieces, Score1, 
     play(New_Player, Mode, Difficulty_Level, New_Board, New_White_Pieces, New_Brown_Pieces, Score1, Score2).  % Changes current board
 
 % move of Player 1
-play_move(1, Mode, _Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces, Score1, Score2) :-
-    play_person(1, Mode, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces, Score1, Score2).
+play_move(1, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces, Score1, Score2) :-
+    play_person(1, Mode, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces, Level, Score1, Score2).
 % move of player 2
-play_move(2, Mode, _Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces, Score1, Score2) :-
-    play_person(2, Mode, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces, Score1, Score2).
+play_move(2, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces, Score1, Score2) :-
+    play_person(2, Mode, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces, Level, Score1, Score2).
 
 % move of computer 1
 play_move(3, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces, Score1, Score2) :-
@@ -60,8 +60,8 @@ play_move(4, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_Whit
     play_computer(4, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces, Score1, Score2).
 
 % Person Player plays
-play_person(Player, Mode, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces, Score1, Score2) :-
-    check_moves_available(Player, Board, White_Pieces, Brown_Pieces),
+play_person(Player, Mode, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces, Level, Score1, Score2) :-
+    check_moves_available(Player, Board, White_Pieces, Brown_Pieces, Mode, Level, Score1, Score2),
     repeat, % if the colocation of the piece fails, we ask again the all play
     get_move(Move, Player), % Asks the move from player
     move(1, Move, Board, White_Pieces, Brown_Pieces, Player, New_Board, New_White_Pieces, New_Brown_Pieces),
@@ -70,6 +70,7 @@ play_person(Player, Mode, Board, White_Pieces, Brown_Pieces, New_Board, New_Whit
 % Computer plays
 play_computer(Computer_Player, Mode, Level, Board, White_Pieces, Brown_Pieces, New_Board, New_White_Pieces, New_Brown_Pieces, Score1, Score2) :-
     get_num_player(Mode, Computer_Player, Player),
+    check_moves_available(Player, Board, White_Pieces, Brown_Pieces, Mode, Level, Score1, Score2),
     choose_move(Board, White_Pieces, Brown_Pieces, Level, Move, Player), % Only generates valid moves
     move_piece(Move, Board, New_Board),         % change the board
     remove_piece(Move, Player, White_Pieces, Brown_Pieces, New_White_Pieces, New_Brown_Pieces),  % remove piece play from the available ones
@@ -177,14 +178,14 @@ remove_piece([_Row,_Column,Piece], 2, White_Pieces, Brown_Pieces, White_Pieces, 
 % ----------------------  CHECK MOVES AVAILABLE  -------------------------
 % Checks if there are any more moves available for the player
 % ========================================================================
-check_moves_available(Player, Board, White_Pieces, Brown_Pieces) :-
+check_moves_available(Player, Board, White_Pieces, Brown_Pieces, _Mode, _Difficulty_Level, _Score1, _Score2) :-
     setof(Move, valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), _List_Of_Moves).
 
 % If there are no more moves available it's a tie
-check_moves_available(_New_Player, _New_Board, _New_White_Pieces, _New_Brown_Pieces) :-
+check_moves_available(_New_Player, _New_Board, _New_White_Pieces, _New_Brown_Pieces, Mode, Difficulty_Level, Score1, Score2) :-
     no_more_moves_message,
-    get_interaction(_Ans),
-    play.
+    get_interaction(Ans),
+    playAgain(Ans, Mode, Difficulty_Level, Score1, Score2).      % ask if want to go back to main or play again
 
 % ======================================================================
 % --------------------------- TRANSLATIONS -----------------------------
