@@ -182,7 +182,7 @@ check_moves_available(Player, Board, White_Pieces, Brown_Pieces) :-
 
 check_moves_available(_New_Player, _New_Board, _New_White_Pieces, _New_Brown_Pieces) :-
     no_more_moves_message,
-    get_interaction,
+    get_interaction(_Ans),
     play.
 
 % ======================================================================
