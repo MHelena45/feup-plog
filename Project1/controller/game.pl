@@ -180,6 +180,7 @@ remove_piece([_Row,_Column,Piece], 2, White_Pieces, Brown_Pieces, White_Pieces, 
 check_moves_available(Player, Board, White_Pieces, Brown_Pieces) :-
     setof(Move, valid_move(0, Move, Player, Board, White_Pieces, Brown_Pieces), _List_Of_Moves).
 
+% If there are no more moves available it's a tie
 check_moves_available(_New_Player, _New_Board, _New_White_Pieces, _New_Brown_Pieces) :-
     no_more_moves_message,
     get_interaction(_Ans),

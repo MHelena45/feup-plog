@@ -18,7 +18,7 @@ valid_moves(Level, Board, White_Pieces, Brown_Pieces, Player, List_Of_Moves ) :-
     nth0(0, Value_List_Of_Moves, [Value | _One_Most_Value_Move]),   % gets the lowest value of the game
     setof(Move1, member([Value | Move1], Value_List_Of_Moves), List_Of_Moves).
 
-% If there are no more moves availablem it's a tie
+% If there are no more moves available it's a tie
 valid_moves(_Level, _Board, _White_Pieces, _Brown_Pieces, _Player, _List_Of_Moves, 1) :-
     no_more_moves_message,
     get_interaction(_Ans),

@@ -90,8 +90,18 @@ print_difficulty_options :-
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________| '),nl,nl,nl.
 
+% both score are lower than 10
 print_score(Score1, Score2) :-
+    Score1 < 10, Score2 < 10,
     write('|                          Score: '),
+    write(Score1),
+    write(' - '), 
+    write(Score2),
+    write('                                 |'),nl.
+
+% if one score is greater than 9, we have to reduce a space
+print_score(Score1, Score2) :-
+    write('|                         Score: '),
     write(Score1),
     write(' - '), 
     write(Score2),

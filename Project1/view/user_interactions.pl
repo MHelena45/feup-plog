@@ -61,7 +61,7 @@ ask_level(Level) :-
     Level is Level_Code - 48,
     skip_line.
 
-% used to leave help menu and in in case of a tie to go back to main
+% used to leave help menu, finished games and in in case of a tie to go back to main
 get_interaction(Ans) :-
     repeat,
     write('Tap any key and Enter to play again and 0 to go back to the main menu.'),
