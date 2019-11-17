@@ -284,6 +284,13 @@ check_position(2).
 check_position(3).
 check_position(4).
 
+% ----------------------------------- CHECK PIECE ---------------------------------
+% Accepted piece input
+check_piece(cone).
+check_piece(sphere).
+check_piece(cylinder).
+check_piece(cube).
+
 % ----------------------------------- VALID Piece ---------------------------------
 % Checks if piece is valid in data struct representation
 valid_piece(11).

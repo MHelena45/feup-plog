@@ -105,9 +105,10 @@ get_move([Row,Column,Piece], Player) :-
     get_column(Column),
     !.                              % Avoids showing wrong error mensagens
 
-get_piece(Piece, Player) :-
-    ask_piece(Char1_Piece, Char2_Piece, Char3_Piece, Char4_Piece),
-    translate(Char1_Piece, Char2_Piece, Char3_Piece, Char4_Piece, Player, Piece).
+get_piece(Color_Piece, Player) :-
+    ask_piece(Piece),
+    check_piece(Piece),
+    translate(Piece, Player, Color_Piece).
 
 get_piece(Color_Piece, Player) :-
     piece_not_valid,
@@ -186,15 +187,15 @@ check_moves_available(_New_Player, _New_Board, _New_White_Pieces, _New_Brown_Pie
 % ======================================================================
 % --------------------------- TRANSLATIONS -----------------------------
 % ======================================================================
-% The play only writes the form and it is translated to the correct number to save in the board according to the actual player
+% The play only writes the form and it is translated to the correct number to save in the board
 % White pieces translate 
-translate('c', 'o', 'n', 'e', 1, 11). % form, number of player and number of the correspondent piece
-translate('c', 'u', 'b', 'e', 1, 51).
-translate('c', 'y', 'l', 'i', 1, 71).
-translate('s', 'p', 'h', 'e', 1, 91).
+translate(cone, 1, 11). % form, number of player and number of the correspondent piece
+translate(cube, 1, 51).
+translate(cylinder, 1, 71).
+translate(sphere, 1, 91).
 
 % Brown pieces
-translate('c', 'o', 'n', 'e', 2, 12).
-translate('c', 'u', 'b', 'e', 2, 52).
-translate('c', 'y', 'l', 'i', 2, 72).
-translate('s', 'p', 'h', 'e', 2, 92).
+translate(cone, 2, 12).
+translate(cube, 2, 52).
+translate(cylinder, 2, 72).
+translate(sphere, 2, 92).
