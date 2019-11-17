@@ -1,6 +1,6 @@
 :- include('pieces_printer.pl').
-% display empty game
 
+% display empty game
 display_game(Board, Player, White_Pieces, Brown_Pieces) :-
     clear_screen,
     print_header_line,
