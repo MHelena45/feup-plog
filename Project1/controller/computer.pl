@@ -49,8 +49,7 @@ value(_Level, Board, Player, _Move, White_Pieces, Brown_Pieces, 10) :-
 % If we can win in the next play with a move that the adversersay can't make
 value(_Level, Board, Player, _Move, White_Pieces, Brown_Pieces, -65) :-
     change_player(1, Player, New_Player),   % gets the number of the other Player
-    setof([Row, Column, Piece], 
-        (valid_move(0, [Row, Column, Piece], Player, Board, White_Pieces, Brown_Pieces), % gets valid moves
+    setof([Row, Column, Piece], (valid_move(0, [Row, Column, Piece], Player, Board, White_Pieces, Brown_Pieces), % gets valid moves
         get_opposite(Other_Piece, Piece),                                                % gets piece of the other player with the same form
         not(valid_move(0, [Row, Column, Other_Piece], New_Player, Board, White_Pieces, Brown_Pieces)),  % checks if the other player can win with the same play that us
         move_piece([Row, Column, Piece], Board, New_Board),                                             % does play
