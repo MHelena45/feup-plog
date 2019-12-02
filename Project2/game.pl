@@ -22,7 +22,7 @@ checkPosition([C1, C2, C3, C4| Rest]) :-
     C2s1 #= C2 - 1,
     (C2p1 #< C3 #\/ C2s1 #> C3), % check that C2 and C3 are spaced
     (C2p1 #< C4 #\/ C2s1 #> C4), % check that C2 and C4 are spaced
-    checkPosition(Rest).
+    checkPosition([C3, C4| Rest]).
     
 checkPosition([C1, C2]) :-
     % check that C1 and C2 don't touch and C1 is less than C2
