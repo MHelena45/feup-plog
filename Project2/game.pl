@@ -1,11 +1,16 @@
 :-use_module(library(clpfd)).
 
 % board is 9*9
-play :-
+play(Row, RowValue, Column, ColumnValue) :-
     length(Vars, 18),
     domain(Vars, 1, 9),  
     global_cardinality(Vars, [1-2, 2-2, 3-2, 4-2, 5-2, 6-2, 7-2, 8-2, 9-2]),
-    checkPosition(Vars),    
+    checkPosition(Vars), 
+    Index1 is (Row - 1) * 2 + 1,
+    Index2 is Row * 2,
+    element(Index1, Vars, Element1), 
+    element(Index2, Vars, Element2),
+    Element2 #= Element1 + RowValue + 1, 
     labeling([],Vars),
     write(Vars).
 
