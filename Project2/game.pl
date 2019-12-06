@@ -6,19 +6,48 @@ play(Row, RowValue, Column, ColumnValue) :-
     domain(Vars, 1, 9),  
     global_cardinality(Vars, [1-2, 2-2, 3-2, 4-2, 5-2, 6-2, 7-2, 8-2, 9-2]),
     checkPosition(Vars), 
+    checkRowDistance(Row, RowValue, Vars),
+    checkColumnDistance(Column, ColumnValue, Vars),
+    labeling([], Vars),
+    write(Vars).
+
+% When there are two numbers for the row spacing in the board
+play(Row, RowValue, Row1, RowValue1, Column, ColumnValue) :-
+    length(Vars, 18),
+    domain(Vars, 1, 9),  
+    global_cardinality(Vars, [1-2, 2-2, 3-2, 4-2, 5-2, 6-2, 7-2, 8-2, 9-2]),
+    checkPosition(Vars), 
+    checkRowDistance(Row, RowValue, Vars),
+    checkRowDistance(Row1, RowValue1, Vars),
+    checkColumnDistance(Column, ColumnValue, Vars),
+    labeling([], Vars),
+    write(Vars).
+
+checkRowDistance(Row, RowValue, Vars) :-
     % check if the indicated row have the rigth spacing between the 2 black squares
-    Index1 is (Row - 1) * 2 + 1,
+    Index1 is Row * 2 - 1,
     Index2 is Row * 2,
     element(Index1, Vars, Element1), 
     element(Index2, Vars, Element2),
-    Element2 #= Element1 + RowValue + 1, 
-    % check if the indicated row have the rigth spacing between the 2 black squares
-    element(Position1, Vars, Column), 
-    element(Position2, Vars, Column), 
-    Position2 #= Position1 + (ColumnValue * 2) + 2, % both squares are the first ou second in that row
-    labeling([],Vars),
-    write(Vars).
+    Element2 #= Element1 + RowValue + 1.
 
+% check if the indicated row have the rigth spacing between the 2 black squares
+checkColumnDistance(Column, ColumnValue, Vars) :-  
+    element(Position1, Vars, Column),           % gets the index position of the element with the indicated row
+    element(Position2, Vars, Column),
+    % condition for squares that are both the first or second of there row
+    (Position2 #= (Position1 + (ColumnValue * 2) + 2)) #/\ (Position1 mod 2 #= Position2 mod 2).
+
+checkColumnDistance(Column, ColumnValue, Vars) :-  
+    element(Position1, Vars, Column),           % gets the index position of the element with the indicated row
+    element(Position2, Vars, Column),
+    % condition for squares that one is the first of is row and the other is the second in it's row
+    (Position2 #= (Position1 + (ColumnValue * 2) + 1)) #/\ ((Position1 mod 2 #= (Position2 mod 2 + 1))).
+
+
+/**
+ * check position check if the squares don't touch each other
+ */
 checkPosition([C1, C2, C3, C4| Rest]) :-
     % check that C1 and C2 don't touch and C1 is less than C2
     C1p1 #= C1 + 1, % position of the first square of the row plus 1
@@ -34,6 +63,7 @@ checkPosition([C1, C2, C3, C4| Rest]) :-
     (C2p1 #< C4 #\/ C2s1 #> C4), % check that C2 and C4 are spaced
     checkPosition([C3, C4| Rest]).
     
+% check the distance between the two elements of the last line
 checkPosition([C1, C2]) :-
     % check that C1 and C2 don't touch and C1 is less than C2
     C1p1 #= C1 + 1, % position of the first square of the row plus 1
