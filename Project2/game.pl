@@ -1,10 +1,12 @@
 :-use_module(library(clpfd)).
 
 % board is 9*9
-play(Row, RowValue, Column, ColumnValue) :-
-    length(Vars, 18),
-    domain(Vars, 1, 9),  
-    global_cardinality(Vars, [1-2, 2-2, 3-2, 4-2, 5-2, 6-2, 7-2, 8-2, 9-2]),
+play(BoardSize, Row, RowValue, Column, ColumnValue) :-
+    BoardSquares is BoardSize * 2,
+    length(Vars, BoardSquares),
+    domain(Vars, 1, BoardSize),  
+    getCardinality(BoardSize, [], ListOfCardinality),
+    global_cardinality(Vars, ListOfCardinality),
     checkPosition(Vars), 
     checkRowDistance(Row, RowValue, Vars),
     checkColumnDistance(Column, ColumnValue, Vars),
@@ -12,16 +14,25 @@ play(Row, RowValue, Column, ColumnValue) :-
     write(Vars).
 
 % When there are two numbers for the row spacing in the board
-play(Row, RowValue, Row1, RowValue1, Column, ColumnValue) :-
-    length(Vars, 18),
-    domain(Vars, 1, 9),  
-    global_cardinality(Vars, [1-2, 2-2, 3-2, 4-2, 5-2, 6-2, 7-2, 8-2, 9-2]),
+play(BoardSize, Row, RowValue, Row1, RowValue1, Column, ColumnValue) :-
+    BoardSquares is BoardSize * 2,
+    length(Vars, BoardSquares),
+    domain(Vars, 1, BoardSize),  
+    getCardinality(BoardSize, [], ListOfCardinality),
+    global_cardinality(Vars, ListOfCardinality),
     checkPosition(Vars), 
     checkRowDistance(Row, RowValue, Vars),
     checkRowDistance(Row1, RowValue1, Vars),
     checkColumnDistance(Column, ColumnValue, Vars),
     labeling([], Vars),
     write(Vars).
+
+getCardinality(0, ListOfCardinality, ListOfCardinality).
+getCardinality(BoardSize, ListOfCardinality, FinalListOfCardinality) :-
+    BoardSize1 is BoardSize  - 1,
+    append([BoardSize-2],ListOfCardinality, ListOfCardinality1),
+    getCardinality(BoardSize1, ListOfCardinality1, FinalListOfCardinality ).
+    
 
 checkRowDistance(Row, RowValue, Vars) :-
     % check if the indicated row have the rigth spacing between the 2 black squares
@@ -35,15 +46,7 @@ checkRowDistance(Row, RowValue, Vars) :-
 checkColumnDistance(Column, ColumnValue, Vars) :-  
     element(Position1, Vars, Column),           % gets the index position of the element with the indicated row
     element(Position2, Vars, Column),
-    % condition for squares that are both the first or second of there row
-    (Position2 #= (Position1 + (ColumnValue * 2) + 2)) #/\ (Position1 mod 2 #= Position2 mod 2).
-
-checkColumnDistance(Column, ColumnValue, Vars) :-  
-    element(Position1, Vars, Column),           % gets the index position of the element with the indicated row
-    element(Position2, Vars, Column),
-    % condition for squares that one is the first of is row and the other is the second in it's row
-    (Position2 #= (Position1 + (ColumnValue * 2) + 1)) #/\ ((Position1 mod 2 #= (Position2 mod 2 + 1))).
-
+    (Position1 + 1) // 2 #= (Position2 + 1) // 2 + ColumnValue  + 1.
 
 /**
  * check position check if the squares don't touch each other
