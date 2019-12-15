@@ -1,57 +1,61 @@
 :-use_module(library(clpfd)).
 
-% board is 9*9
-play(BoardSize, Row, RowValue, Column, ColumnValue) :-
-    BoardSquares is BoardSize * 2,
-    length(Vars, BoardSquares),
-    domain(Vars, 1, BoardSize),  
-    getCardinality(BoardSize, [], ListOfCardinality),
-    global_cardinality(Vars, ListOfCardinality),
-    checkPosition(Vars), 
-    checkRowDistance(Row, RowValue, Vars),
-    checkColumnDistance(Column, ColumnValue, Vars),
+:- include('menu.pl').
+:- include('solution_printer.pl').
+:- include('user_interactions.pl').
+
+play :-
+    main_menu(Board_Size),
+    play(Board_Size).
+
+% board has variable size
+play(Board_Size) :-
+    get_vars_list(Board_Size, Vars),  
+    restrict_cardinality(Board_Size, Vars),
+    check_distances(Vars),
+    check_specific_distances(Vars), 
     labeling([], Vars),
-    write(Vars).
+    print_solution(Board_Size, Vars).
 
-% When there are two numbers for the row spacing in the board
-play(BoardSize, Row, RowValue, Row1, RowValue1, Column, ColumnValue) :-
-    BoardSquares is BoardSize * 2,
-    length(Vars, BoardSquares),
-    domain(Vars, 1, BoardSize),  
-    getCardinality(BoardSize, [], ListOfCardinality),
-    global_cardinality(Vars, ListOfCardinality),
-    checkPosition(Vars), 
-    checkRowDistance(Row, RowValue, Vars),
-    checkRowDistance(Row1, RowValue1, Vars),
-    checkColumnDistance(Column, ColumnValue, Vars),
-    labeling([], Vars),
-    write(Vars).
+check_specific_distances(_). 
+    % TODO
 
-getCardinality(0, ListOfCardinality, ListOfCardinality).
-getCardinality(BoardSize, ListOfCardinality, FinalListOfCardinality) :-
-    BoardSize1 is BoardSize  - 1,
-    append([BoardSize-2],ListOfCardinality, ListOfCardinality1),
-    getCardinality(BoardSize1, ListOfCardinality1, FinalListOfCardinality ).
-    
+get_vars_list(Board_Size, Vars) :-
+    Board_Squares is Board_Size * 2,
+    length(Vars, Board_Squares),
+    domain(Vars, 1, Board_Size).
 
-checkRowDistance(Row, RowValue, Vars) :-
+restrict_cardinality(Board_Size, Vars) :-
+    get_cardinality(Board_Size, List_Of_Cardinality),
+    global_cardinality(Vars, List_Of_Cardinality).
+
+get_cardinality(Board_Size, List_Of_Cardinality) :-
+    get_cardinality(Board_Size, [], List_Of_Cardinality).
+
+get_cardinality(0, List_Of_Cardinality, List_Of_Cardinality).
+get_cardinality(Board_Size, List_Of_Cardinality, Final_List_Of_Cardinality) :-
+    Board_Size1 is Board_Size  - 1,
+    append([Board_Size-2], List_Of_Cardinality, List_Of_Cardinality1),
+    get_cardinality(Board_Size1, List_Of_Cardinality1, Final_List_Of_Cardinality ).
+
+check_row_distance(Row, Row_Value, Vars) :-
     % check if the indicated row have the rigth spacing between the 2 black squares
     Index1 is Row * 2 - 1,
     Index2 is Row * 2,
     element(Index1, Vars, Element1), 
     element(Index2, Vars, Element2),
-    Element2 #= Element1 + RowValue + 1.
+    Element2 #= Element1 + Row_Value + 1.
 
 % check if the indicated row have the rigth spacing between the 2 black squares
-checkColumnDistance(Column, ColumnValue, Vars) :-  
+check_column_distance(Column, Column_Value, Vars) :-  
     element(Position1, Vars, Column),           % gets the index position of the element with the indicated row
     element(Position2, Vars, Column),
-    (Position1 + 1) // 2 #= (Position2 + 1) // 2 + ColumnValue  + 1.
+    (Position1 + 1) // 2 #= (Position2 + 1) // 2 + Column_Value  + 1.
 
 /**
- * check position check if the squares don't touch each other
+ * check_distances check if the squares don't touch each other, event at corners
  */
-checkPosition([C1, C2, C3, C4| Rest]) :-
+check_distances([C1, C2, C3, C4| Rest]) :-
     % check that C1 and C2 don't touch and C1 is less than C2
     C1p1 #= C1 + 1, % position of the first square of the row plus 1
     C1s1 #= C1 - 1, % position of the first square of the next row plus 1
@@ -64,10 +68,10 @@ checkPosition([C1, C2, C3, C4| Rest]) :-
     C2s1 #= C2 - 1,
     (C2p1 #< C3 #\/ C2s1 #> C3), % check that C2 and C3 are spaced
     (C2p1 #< C4 #\/ C2s1 #> C4), % check that C2 and C4 are spaced
-    checkPosition([C3, C4| Rest]).
+    check_distances([C3, C4| Rest]).
     
 % check the distance between the two elements of the last line
-checkPosition([C1, C2]) :-
+check_distances([C1, C2]) :-
     % check that C1 and C2 don't touch and C1 is less than C2
     C1p1 #= C1 + 1, % position of the first square of the row plus 1
     C1p1 #< C2.     % check that C2 is greater than C1 and there is a space beetwen them
