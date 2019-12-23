@@ -15,15 +15,13 @@ ask_board_size(Board_Size) :-
 
 ask_row_or_column(Option) :-
     repeat,
-    write('> Do you wish to restrict a row or a column (Options: row / column / exit) ?'),
+    write('> Do you wish to restrict a row or a column (Options: row / column / stop) ?'),
     read(User_Option),
     translate_option(User_Option, Option).
 
 translate_option('row', row).
 translate_option('column', column).
-translate_option('exit', stop).
-translate_option(_, _) :-
-    invalid_row_column, !, fail.
+translate_option('stop', stop).
 
 ask_which_row(Num_Row) :-
     write('> Which row do you want to restrict?'),
@@ -61,6 +59,15 @@ invalid_row_message :-
 invalid_column_message :-
     write('\n> Invalid Column. \n\n').
 
-invalid_row_column :-
-    write('\n> Invalid option. Valid options: "r" / "c" / "row" / "column"\n\n').
+invalid_user_option :-
+    write('\n> Invalid option. \n\n').
+
+invalid_coord :-
+    write('\n> Invalid coordinate.\n\n').
+
+invalid_distance :-
+    write('\n> Invalid distance.\n\n').
+
+impossible_distance_restriction :-
+    write('\n> There can\'t be two shaded squares together and there can only be two shaded squares per row and per column.').
 
