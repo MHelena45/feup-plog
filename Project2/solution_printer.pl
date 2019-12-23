@@ -1,5 +1,6 @@
-print_solution(Board_Size, Vars) :-
+print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions) :-
     clear_screen,
+    print_column_restrictions(Board_Size, Column_Restrictions), nl,
     print_first_line_seperator(Board_Size), nl,
     print_puzzle(Board_Size, Vars).
 
@@ -79,4 +80,7 @@ print_line_seperator(Num_Seperators, Counter) :-
     print_line_seperator(Num_Seperators, Counter1).
     
 print_col_seperator :- write('|').
+
+print_column_restrictions(Board_Size, Column_Restrictions) :-
+    
 
