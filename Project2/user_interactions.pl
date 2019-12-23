@@ -23,7 +23,7 @@ translate_option('row', row).
 translate_option('column', column).
 translate_option('exit', stop).
 translate_option(_, _) :-
-    invalid_row_colum, !, fail.
+    invalid_row_column, !, fail.
 
 ask_which_row(Num_Row) :-
     write('> Which row do you want to restrict?'),
@@ -61,6 +61,6 @@ invalid_row_message :-
 invalid_column_message :-
     write('\n> Invalid Column. \n\n').
 
-invalid_row_colum :-
+invalid_row_column :-
     write('\n> Invalid option. Valid options: "r" / "c" / "row" / "column"\n\n').
 

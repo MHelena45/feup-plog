@@ -1,6 +1,6 @@
 print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions) :-
     clear_screen,
-    print_column_restrictions(Board_Size, Column_Restrictions), nl,
+    print_column_restrictions(Column_Restrictions), nl,
     print_first_line_seperator(Board_Size), nl,
     print_puzzle(Board_Size, Vars).
 
@@ -81,6 +81,23 @@ print_line_seperator(Num_Seperators, Counter) :-
     
 print_col_seperator :- write('|').
 
-print_column_restrictions(Board_Size, Column_Restrictions) :-
-    
+print_column_restrictions(Column_Restrictions) :-
+    sort(Column_Restrictions, Sorted_Column_Restrictions),
+    print_column_restrictions(Sorted_Column_Restrictions, 1).
+
+print_column_restrictions([], _Col_Counter).
+print_column_restrictions([Num_Col-Distance|More], Col_Counter) :-
+    print_col_rest(Num_Col, Distance, Col_Counter),
+    New_Col_Counter is Num_Col + 1,
+    print_column_restrictions(More, New_Col_Counter).
+
+print_col_rest(Num_Col, Distance, Num_Col) :-
+    print('   '),
+    print(Distance),
+    print('  ').
+
+print_col_rest(Num_Col, Distance, Col_Counter) :-
+    write('      '),
+    Col_Counter1 is Col_Counter + 1,
+    print_col_rest(Num_Col, Distance, Col_Counter1).
 

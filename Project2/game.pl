@@ -1,4 +1,5 @@
 :-use_module(library(clpfd)).
+:-use_module(library(lists)).
 
 :- include('menu.pl').
 :- include('solution_printer.pl').
@@ -83,7 +84,7 @@ restrict_user_option(column, Vars, Board_Size, Row_Rest_Acc, Col_Rest_Acc, Row_R
     append(Col_Rest_Acc, [Num_Column-Distance], New_Col_Acc),
     restrict_specific_distances(Vars, Board_Size, Row_Rest_Acc, New_Col_Acc, Row_Restrictions, Column_Restrictions).
 
-restrict_user_option(stop, _Vars, _Board_Size, Row_Rest_Acc, New_Col_Acc, Row_Rest_Acc, New_Col_Acc).
+restrict_user_option(stop, _Vars, _Board_Size, Row_Rest_Acc, Col_Rest_Acc, Row_Rest_Acc, Col_Rest_Acc) :- !.
 
 get_num_row(Num_Row, Board_Size) :-
     repeat,
