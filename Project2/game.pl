@@ -10,11 +10,14 @@ play :-
 
 % board has variable size
 play(Board_Size) :-
+    statistics(runtime, _),
     get_vars_list(Board_Size, Vars),  
     restrict_cardinality(Board_Size, Vars),
     check_distances(Vars),
     check_specific_distances(Vars), 
     labeling([], Vars),
+    statistics(runtime, X),
+    write(X),
     print_solution(Board_Size, Vars).
 
 check_specific_distances(_). 
@@ -75,3 +78,24 @@ check_distances([C1, C2]) :-
     % check that C1 and C2 don't touch and C1 is less than C2
     C1p1 #= C1 + 1, % position of the first square of the row plus 1
     C1p1 #< C2.     % check that C2 is greater than C1 and there is a space beetwen them
+
+
+
+play(BoardSize, Row, RowValue, Column, ColumnValue) :-
+    statistics(runtime, _),
+    BoardSquares is BoardSize * 2,
+    length(Vars, BoardSquares),
+    domain(Vars, 1, BoardSize),  
+    get_cardinality(BoardSize, [], ListOfCardinality),
+    global_cardinality(Vars, ListOfCardinality),
+    check_distances(Vars), 
+    check_row_distance(Row, RowValue, Vars),
+    check_column_distance(Column, ColumnValue, Vars),
+    labeling([], Vars),
+    statistics(runtime, X),
+    print_solution(BoardSize, Vars),
+    open('C:\\Users\\ferre\\Desktop\\3ano\\feup-plog\\Project2\\times', append, C),
+    set_output(C),
+    write(X), write('ms\n'),
+    statistics, 
+    told. %write
