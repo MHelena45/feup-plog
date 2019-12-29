@@ -11,11 +11,23 @@ play :-
 
 % board has variable size
 play(Board_Size) :-
+    statistics(runtime, _),
     get_vars_list(Board_Size, Vars),  
     restrict_cardinality(Board_Size, Vars),
     restrict_distances(Vars),
     restrict_specific_distances(Vars, Board_Size, Row_Restrictions, Column_Restrictions), 
     labeling([], Vars),
+    statistics(runtime, X),
+    print_solution(Board_Size, Vars),
+    % the path down is mine path to the file
+    open('C:\\Users\\ferre\\Desktop\\3ano\\feup-plog\\Project2\\times', append, C),
+    set_output(C), % set output to write on the file and not in the console
+    write(X), write('ms\n'),
+    statistics, 
+    told. %write
+
+check_specific_distances(_). 
+    % TODO
     print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions).
 
 get_vars_list(Board_Size, Vars) :-
