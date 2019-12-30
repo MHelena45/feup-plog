@@ -1,8 +1,16 @@
 :- dynamic num_cols_per_cell/1.
 :- dynamic num_lines_per_cell/1.
 
-
 print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions) :-
+    clear_screen,
+    sort_restrictions(Row_Restrictions, Column_Restrictions, Sorted_Row_Restrictions, Sorted_Column_Restrictions),
+    calc_cell_size(Board_Size),
+    print_column_restrictions(Sorted_Column_Restrictions), nl,
+    print_first_line_seperator(Board_Size), nl,
+    print_puzzle(Board_Size, Sorted_Row_Restrictions, Vars).
+
+% print unsolved
+print_unsolved_puzzle(Board_Size, Vars, Row_Restrictions, Column_Restrictions) :-
     clear_screen,
     sort_restrictions(Row_Restrictions, Column_Restrictions, Sorted_Row_Restrictions, Sorted_Column_Restrictions),
     calc_cell_size(Board_Size),
