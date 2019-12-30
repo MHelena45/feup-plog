@@ -9,10 +9,9 @@ ask_board_size(Board_Size) :-
     repeat,
     write('> Enter Board Size: '),
     read(Board_Size).
-    /* get_code(Size_Code),
-    Board_Size is Size_Code - 48,
-    skip_line. */
-
+    /* we use read instead of get_code because de board can have any size, so the number can have 1 digit or
+        100000... digits */
+    
 ask_row_or_column(Option) :-
     repeat,
     write('> Do you wish to restrict a row or a column (Options: row / column / stop) ?'),
@@ -48,7 +47,7 @@ exiting_message :-
 %                        Error messages
 % ===========================================================
 invalid_option_message :-
-    write('\n> Invalid Option! Options between 0 and 2.\n\n').
+    write('\n> Invalid Option! Options between 0 and 3.\n\n').
 
 invalid_board_size_message :-
     write('\n> Invalid board size.\n').

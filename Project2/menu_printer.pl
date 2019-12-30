@@ -16,11 +16,13 @@ print_options :-
     write('|=======================================================================|'),nl,
     write('|       Your Options:                                                   |'),nl,
     write('|                                                                       |'),nl,
-    write('|                          1. Play                                      |'),nl,
+    write('|                      1. Get puzzles                                   |'),nl,
     write('|                                                                       |'),nl,
-    write('|                          2. Help                                      |'),nl,
+    write('|                      2. See solutions                                 |'),nl,
     write('|                                                                       |'),nl,
-	write('|                          0. Exit                                      |'),nl,
+    write('|                      3. Help                                          |'),nl,
+    write('|                                                                       |'),nl,
+	write('|                      0. Exit                                          |'),nl,
     write('|                                                                       |'),nl,
     write('|_______________________________________________________________________|'),nl.
 

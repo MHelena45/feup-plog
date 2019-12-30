@@ -5,8 +5,13 @@ main_menu(Board_Size) :-
     ask_menu_option(Option),
     manage_option(Option, Board_Size).
 
-% Play 
+% get puzzles
 manage_option('1', Board_Size) :-
+    get_board_size(Board_Size),
+    get_puzzle(Board_Size).
+
+% see solutions
+manage_option('2', Board_Size) :-
     get_board_size(Board_Size).
 
 % Help

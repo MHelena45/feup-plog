@@ -1,5 +1,7 @@
 :-use_module(library(clpfd)).
 :-use_module(library(lists)).
+:- use_module(library(random)). % used to generate radom puzzles
+:- use_module(library(between)).
 
 :- include('menu.pl').
 :- include('solution_printer.pl').
@@ -19,9 +21,10 @@ play(Board_Size) :-
     labeling([], Vars),
     statistics(runtime, X),
     print_solution(Board_Size, Vars),
-    % the path down is mine path to the file
-    open('C:\\Users\\ferre\\Desktop\\3ano\\feup-plog\\Project2\\times', append, C),
-    set_output(C), % set output to write on the file and not in the console
+    % Helena's Path
+    open('C:\\Users\\ferre\\Desktop\\3ano\\feup-plog\\Project2\\times.txt', append, C),
+    % Gaspar's Path
+    %open('C:\\Users\\pasga\\OneDrive - Universidade do Porto\\FEUP\\3rdYear\\PLOG\\feup-plog\\Project2\\times.txt', append, C),
     write(X), write('ms\n'),
     statistics, 
     told. %write
@@ -157,3 +160,34 @@ restrict_column_distance(Column, Column_Value, Vars) :-
 
 restrict_column_distance(_Column, _Column_Value, _Vars) :-
     impossible_distance_restriction, fail.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                      Generate puzzles
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+get_puzzle(Board_Size) :-
+    % number of the row where the restriction will exists
+    random(1, Board_Size, Row),
+    % number of the column where the restriction will exists
+    random(1, Board_Size, Column),
+    % even if 2 squares are in the maximum distance, that distante is (Board_Size - 2)
+    Distance is (Board_Size - 2),
+    % distance between the two squares in the row
+    random(1, Distance, Row_Value),
+    % distance betwwn the 2 squares in the same column
+    random(1, Distance, Column_Value),
+    check_if_solution_exists(Board_Size, Column, Column_Value, Row, Row_Value).
+
+check_if_solution_exists(Board_Size, Column, Column_Value, Row, Row_Value) :-
+    get_vars_list(Board_Size, Vars),  
+    restrict_cardinality(Board_Size, Vars),
+    restrict_distances(Vars),
+    restrict_column_distance(Column, Column_Value, Vars),
+    restrict_row_distance(Row, Row_Value, Vars),
+    labeling([], Vars),
+    write(Vars).
+
+% get another puzzle
+check_if_solution_exists(Board_Size, _Column, _Column_Value, _Row, _Row_Value) :-
+    get_puzzle(Board_Size).
+
