@@ -20,18 +20,15 @@ play(Board_Size) :-
     restrict_specific_distances(Vars, Board_Size, Row_Restrictions, Column_Restrictions), 
     labeling([], Vars),
     statistics(runtime, X),
-    print_solution(Board_Size, Vars),
+    print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions),
     % Helena's Path
     open('C:\\Users\\ferre\\Desktop\\3ano\\feup-plog\\Project2\\times.txt', append, C),
     % Gaspar's Path
     %open('C:\\Users\\pasga\\OneDrive - Universidade do Porto\\FEUP\\3rdYear\\PLOG\\feup-plog\\Project2\\times.txt', append, C),
+    set_output(C), % set output to write on the file and not in the console
     write(X), write('ms\n'),
     statistics, 
     told. %write
-
-check_specific_distances(_). 
-    % TODO
-    print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions).
 
 get_vars_list(Board_Size, Vars) :-
     Board_Squares is Board_Size * 2,
