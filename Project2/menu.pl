@@ -1,27 +1,28 @@
 :- include('menu_printer.pl').
 
-main_menu(Board_Size) :-
+main_menu :-
     print_main_menu,
     ask_menu_option(Option),
-    manage_option(Option, Board_Size).
+    manage_option(Option).
 
 % get puzzles
-manage_option('1', Board_Size) :-
+manage_option('1') :-
     get_board_size(Board_Size),
     get_puzzle(Board_Size).
 
 % see solutions
-manage_option('2', Board_Size) :-
-    get_board_size(Board_Size).
+manage_option('2') :-
+    get_board_size(Board_Size),
+    play(Board_Size).
 
 % Help
-manage_option('2', _Board_Size) :-
+manage_option('2') :-
     print_help_menu,
     press_any_button,
     play.
 
 % Exit
-manage_option('0', _Board_Size) :-
+manage_option('0') :-
     exiting_message,
     break. % Stops executation
 

@@ -9,8 +9,7 @@
 
 % start execution
 play :-
-    main_menu(Board_Size),
-    play(Board_Size).
+    main_menu.
 
 % board has variable size
 play(Board_Size) :-
@@ -19,7 +18,9 @@ play(Board_Size) :-
     restrict_distances(Vars),
     restrict_specific_distances(Vars, Board_Size, Row_Restrictions, Column_Restrictions), 
     labeling([], Vars),
-    print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions).
+    print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions),
+    press_any_button,
+    main_menu.
 
 /**  gets all vars needed acording to the board size.
  *  As we can only have 2 squares per row, vars represents the column of the black squares.
@@ -77,7 +78,7 @@ restrict_specific_distances(Vars, Board_Size, Row_Rest_Acc, Col_Rest_Acc, Row_Re
 
 % Restrict Row
 restrict_user_option(row, Vars, Board_Size, Row_Rest_Acc, Col_Rest_Acc, Row_Restrictions, Column_Restrictions) :-
-    get_num_row(Num_Row, Board_Size), !,
+    get_num_row(Num_Row, Board_Size, Row_Rest_Acc), !,
     get_distance(Distance, Board_Size),
     restrict_row_distance(1, Num_Row, Distance, Vars),
     append(Row_Rest_Acc, [Num_Row-Distance], New_Row_Acc),
@@ -85,8 +86,8 @@ restrict_user_option(row, Vars, Board_Size, Row_Rest_Acc, Col_Rest_Acc, Row_Rest
 
 % Restrict Column
 restrict_user_option(column, Vars, Board_Size, Row_Rest_Acc, Col_Rest_Acc, Row_Restrictions, Column_Restrictions) :-
-    get_num_column(Num_Column, Board_Size), !,
-    get_distance(Distance, Board_Size),
+    get_num_column(Num_Column, Board_Size, Col_Rest_Acc), !,
+    get_distance(Distance, Board_Size), 
     restrict_column_distance(1, Num_Column, Distance, Vars),
     append(Col_Rest_Acc, [Num_Column-Distance], New_Col_Acc),
     !, restrict_specific_distances(Vars, Board_Size, Row_Rest_Acc, New_Col_Acc, Row_Restrictions, Column_Restrictions).
@@ -98,22 +99,24 @@ get_user_option(Option) :-
     ask_row_or_column(Option),
     valid_user_option(Option).
 
-get_num_row(Num_Row, Board_Size) :-
+get_num_row(Num_Row, Board_Size, Row_Restrictions) :-
     repeat,
     ask_which_row(Num_Row),
-    valid_coord(Num_Row, Board_Size).
+    valid_coord(Num_Row, Board_Size),
+    valid_restriction(Num_Row, Row_Restrictions).
 
-get_num_column(Num_Column, Board_Size) :-
+get_num_column(Num_Column, Board_Size, Column_Restrictions) :-
     repeat,
     ask_which_column(Num_Column),
-    valid_coord(Num_Column, Board_Size).
+    valid_coord(Num_Column, Board_Size),
+    valid_restriction(Num_Column, Column_Restrictions).
 
 get_distance(Distance, Board_Size) :-
     repeat, 
     ask_distance(Distance),
     valid_distance(Distance, Board_Size).
 
-% the user can only responde with 3 option
+% the user can only responde with 3 options
 valid_user_option(row).
 valid_user_option(column).
 valid_user_option(stop).
@@ -127,6 +130,13 @@ valid_coord(Coord, Board_Size) :-
 valid_coord(_Coord, _Board_Size) :-
     invalid_coord, fail.
 
+valid_restriction(_Num_Res, []).
+valid_restriction(Num_Res, [Num_Res-_Distance|_Rest]) :-
+    invalid_restriction, !, fail.
+
+valid_restriction(Num_Res, [_Num-_Distance|Rest]) :-
+    valid_restriction(Num_Res, Rest).
+
 valid_distance(Distance, Board_Size) :-
     Distance >= 1,
     Max_Distance is Board_Size - 2,
@@ -136,7 +146,7 @@ valid_distance(_Distance, _Board_Size) :-
     invalid_distance, fail.
 
 restrict_row_distance( _Show_error_message, Row, Row_Value, Vars) :-
-    % check if the indicated row have the rigth spacing between the 2 black squares
+    % check if the indicated row have the right spacing between the 2 black squares
     Index1 is Row * 2 - 1,
     Index2 is Row * 2,
     element(Index1, Vars, Element1), 
@@ -164,43 +174,47 @@ get_puzzle(Board_Size) :-
     restrict_cardinality(Board_Size, Vars),
     restrict_distances(Vars),
     Number_of_Restrictions is Board_Size//40 + 1,
-    generate_restrict_column_distance(Number_of_Restrictions, Board_Size, Vars),
-    generate_restrict_row_distance(Number_of_Restrictions, Board_Size, Vars),
+    generate_restrict_column_distance(Number_of_Restrictions, Board_Size, Vars, [], Column_Restrictions),
+    generate_restrict_row_distance(Number_of_Restrictions, Board_Size, Vars, [], Row_Restrictions),
+    print_unsolved_puzzle(Board_Size, Row_Restrictions, Column_Restrictions),
     labeling([], Vars),
-    press_any_button.
+    press_any_button,
+    main_menu.
 
 % get another puzzle
 get_puzzle(Board_Size):-
     % if we can not solve this problem he have to generate other
     get_puzzle(Board_Size).
 
-generate_restrict_column_distance(0, _Board_Size, _Vars).
-generate_restrict_column_distance(Restriction_Left, Board_Size, Vars) :-
+generate_restrict_column_distance(0, _Board_Size, _Vars, Column_Restrictions, Column_Restrictions).
+generate_restrict_column_distance(Restriction_Left, Board_Size, Vars, Col_Acc, Column_Restrictions) :-
     Restriction_Left > 0,
     % number of the column where the restriction will exists
     random(1, Board_Size, Column),
     % even if 2 squares are in the maximum distance, that distante is (Board_Size - 2)
-    Distance is (Board_Size - 2),
+    Max_Distance is (Board_Size - 2),
     % distance betwwn the 2 squares in the same column
-    random(1, Distance, Column_Value),
+    random(1, Max_Distance, Column_Value),
     restrict_column_distance(0, Column, Column_Value, Vars), 
-    write('Column : '), write(Column), write(' with '), write( Column_Value), nl,
+    write('Column : '), write(Column), write(' with '), write(Column_Value), nl,
+    append(Col_Acc, [Column-Column_Value], New_Column_Restrictions),
     Restriction_Next_Left is Restriction_Left - 1,
-    generate_restrict_column_distance(Restriction_Next_Left, Board_Size, Vars).
+    generate_restrict_column_distance(Restriction_Next_Left, Board_Size, Vars, New_Column_Restrictions, Column_Restrictions).
 
-generate_restrict_row_distance(0, _Board_Size, _Vars).
-generate_restrict_row_distance(Restriction_Left, Board_Size, Vars) :-
+generate_restrict_row_distance(0, _Board_Size, _Vars, Row_Restrictions, Row_Restrictions).
+generate_restrict_row_distance(Restriction_Left, Board_Size, Vars, Row_Acc, Row_Restrictions) :-
     Restriction_Left > 0,
     % number of the row where the restriction will exists
     random(1, Board_Size, Row),
     % even if 2 squares are in the maximum distance, that distante is (Board_Size - 2)
     Distance is (Board_Size - 2),
-    % distance betwwn the 2 squares in the same row
+    % distance between the 2 squares in the same row
     random(1, Distance, Row_Value),
     restrict_row_distance(0, Row, Row_Value, Vars),
-    write('Row : '), write(Row), write(' with '), write( Row_Value), nl,
+    write('Row : '), write(Row), write(' with '), write(Row_Value), nl,
+    append(Row_Acc, [Row-Row_Value], New_Row_Restrictions),
     Restriction_Next_Left is Restriction_Left - 1,
-    generate_restrict_row_distance(Restriction_Next_Left, Board_Size, Vars).
+    generate_restrict_row_distance(Restriction_Next_Left, Board_Size, Vars, New_Row_Restrictions, Row_Restrictions).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %           time measure

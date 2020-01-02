@@ -10,23 +10,32 @@ print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions) :-
     print_puzzle(Board_Size, Sorted_Row_Restrictions, Vars).
 
 % print unsolved
-print_unsolved_puzzle(Board_Size, Vars, Row_Restrictions, Column_Restrictions) :-
+print_unsolved_puzzle(Board_Size, Row_Restrictions, Column_Restrictions) :-
     clear_screen,
     sort_restrictions(Row_Restrictions, Column_Restrictions, Sorted_Row_Restrictions, Sorted_Column_Restrictions),
     calc_cell_size(Board_Size),
     print_column_restrictions(Sorted_Column_Restrictions), nl,
     print_first_line_seperator(Board_Size), nl,
-    print_puzzle(Board_Size, Sorted_Row_Restrictions, Vars).
+    print_unsolved(Board_Size, Sorted_Row_Restrictions).
 
 print_puzzle(Board_Size, Row_Restrictions, Vars) :-
     print_puzzle(Board_Size, Row_Restrictions, Vars, 1).
 
-print_puzzle(_Board_Size, _Row_Restrictions, [], _Row_Counter).
+print_unsolved(Board_Size, Row_Restrictions) :-
+    print_unsolved(Board_Size, Row_Restrictions, 1).
 
+print_puzzle(_Board_Size, _Row_Restrictions, [], _Row_Counter).
 print_puzzle(Board_Size, Row_Restrictions, [Shaded_Col1, Shaded_Col2 |Rows_Rest], Row_Counter) :-
     print_row(Row_Counter, Board_Size, Shaded_Col1, Shaded_Col2, Row_Restrictions, New_Restrictions),
     New_Row_Counter is Row_Counter + 1,
     print_puzzle(Board_Size, New_Restrictions, Rows_Rest, New_Row_Counter).
+
+print_unsolved(Board_Size, _Row_Restrictions, Row_Counter) :-
+    Row_Counter > Board_Size.
+print_unsolved(Board_Size, Row_Restrictions, Row_Counter) :-
+    print_unsolved_row(Row_Counter, Board_Size, Row_Restrictions, New_Restrictions),
+    New_Row_Counter is Row_Counter + 1,
+    print_unsolved(Board_Size, New_Restrictions, New_Row_Counter).
 
 print_row(Row_Counter, Board_Size, Shaded_Col1, Shaded_Col2, Row_Restrictions, New_Restrictions) :-
     num_lines_per_cell(Num_Lines),
@@ -34,11 +43,16 @@ print_row(Row_Counter, Board_Size, Shaded_Col1, Shaded_Col2, Row_Restrictions, N
     remove_restriction(Row_Counter, Row_Restrictions, New_Restrictions),
     print_line_seperator(Board_Size), nl.
 
+print_unsolved_row(Row_Counter, Board_Size, Row_Restrictions, New_Restrictions) :-
+    num_lines_per_cell(Num_Lines),
+    print_empty_console_lines(Num_Lines, Row_Counter, Board_Size, Row_Restrictions),
+    remove_restriction(Row_Counter, Row_Restrictions, New_Restrictions),
+    print_line_seperator(Board_Size), nl.
+
 remove_restriction(Num_Row, [Num_Row-_Distance|Rest], Rest).
 remove_restriction(_Num_Row, Restrictions, Restrictions).
 
 print_console_lines(0, _Row_Counter, _Board_Size, _Shaded_Col1, _Shaded_Col2, _Row_Restrictions).
-
 print_console_lines(Num_Line, Row_Counter, Board_Size, Shaded_Col1, Shaded_Col2, Row_Restrictions) :-
     check_num_line(Num_Line, Print),
     print_row_restriction(Print, Row_Counter, Row_Restrictions),
@@ -46,11 +60,18 @@ print_console_lines(Num_Line, Row_Counter, Board_Size, Shaded_Col1, Shaded_Col2,
     Num_Line1 is Num_Line - 1,
     print_console_lines(Num_Line1, Row_Counter, Board_Size, Shaded_Col1, Shaded_Col2, Row_Restrictions).
 
+print_empty_console_lines(0, _Row_Counter, _Board_Size, _Row_Restrictions).
+print_empty_console_lines(Num_Line, Row_Counter, Board_Size, Row_Restrictions) :-
+    check_num_line(Num_Line, Print),
+    print_row_restriction(Print, Row_Counter, Row_Restrictions),
+    print_console_line(Board_Size, -1, -1), nl,
+    Num_Line1 is Num_Line - 1,
+    print_empty_console_lines(Num_Line1, Row_Counter, Board_Size, Row_Restrictions).
+
 check_num_line(Num_Line, 1) :-
     num_lines_per_cell(Num_Lines),
     Result is div(Num_Lines, 2),
     Num_Line == Result.
-
 check_num_line(_Num_Line, 0).
 
 print_console_line(Board_Size, Shaded_Col1, Shaded_Col2) :-
@@ -139,12 +160,18 @@ print_line_seperator(Num_Seperators, Counter) :-
 print_col_seperator :- write('|').
 
 print_row_restriction(1, Num_Row, [Num_Row-Distance|_Rest]) :-
-    write(' '),
+    check_num_digits(Distance),
     write(Distance),
     write(' ').
 
 print_row_restriction(_, _Num_Row, _Row_Restrictions) :-
     write('   ').
+
+check_num_digits(Distance) :-
+    0 is div(Distance, 10),
+    write(' ').
+
+check_num_digits(_Distance).
 
 print_column_restrictions(Column_Restrictions) :-
     write('   '),
