@@ -176,18 +176,13 @@ get_puzzle(Board_Size) :-
     restrict_cardinality(Board_Size, Vars),
     restrict_distances(Vars),
     Number_of_Restrictions is Board_Size//40 + 1,
-    repeat,
+    repeat, % if we can't solve this problem he have to generate other constrains
     generate_restrict_column_distance(Number_of_Restrictions, Board_Size, Vars, [], Column_Restrictions),
     generate_restrict_row_distance(Number_of_Restrictions, Board_Size, Vars, [], Row_Restrictions),
     labeling([], Vars),
     print_unsolved_puzzle(Board_Size, Row_Restrictions, Column_Restrictions),
     press_any_button,
     main_menu.
-
-% get another puzzle
-get_puzzle(Board_Size):-
-    % if we can not solve this problem he have to generate other
-    get_puzzle(Board_Size).
 
 generate_restrict_column_distance(0, _Board_Size, _Vars, Column_Restrictions, Column_Restrictions).
 generate_restrict_column_distance(Restriction_Left, Board_Size, Vars, Col_Acc, Column_Restrictions) :-
@@ -217,9 +212,9 @@ generate_restrict_row_distance(Restriction_Left, Board_Size, Vars, Row_Acc, Row_
     Restriction_Next_Left is Restriction_Left - 1,
     generate_restrict_row_distance(Restriction_Next_Left, Board_Size, Vars, New_Row_Restrictions, Row_Restrictions).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%           time measure
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%           time measure and puzzzle analyse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % measure time with one restriction in column and row only
 time(Board_Size, Column, Column_Value, Row, Row_Value) :-   
     statistics(runtime, _),
@@ -228,6 +223,7 @@ time(Board_Size, Column, Column_Value, Row, Row_Value) :-
     restrict_distances(Vars),
     restrict_column_distance(0, Column, Column_Value, Vars), 
     restrict_row_distance(0, Row, Row_Value, Vars),
+    write('Backtracking'), % analyse if backtracking exists (once is always print)
     labeling([], Vars),
     statistics(runtime, X),
     %  print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions),
@@ -249,6 +245,7 @@ time(Board_Size, Column, Column_Value, Row, Row_Value, Row1, Row1_Value) :-
     restrict_column_distance(0, Column, Column_Value, Vars), 
     restrict_row_distance(0, Row, Row_Value, Vars),
     restrict_row_distance(0, Row1, Row1_Value, Vars),
+    write('Backtracking'), % analyse if backtracking exists (once is always print)
     labeling([], Vars),
     statistics(runtime, X),
     %  print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions),
@@ -271,6 +268,7 @@ time(Board_Size, Column, Column_Value, Row, Row_Value, Row1, Row1_Value, Row2, R
     restrict_row_distance(0, Row, Row_Value, Vars),
     restrict_row_distance(0, Row1, Row1_Value, Vars),
     restrict_row_distance(0, Row2, Row2_Value, Vars),
+    write('Backtracking'), % analyse if backtracking exists (once is always print)
     labeling([], Vars),
     statistics(runtime, X),
     %  print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions),
