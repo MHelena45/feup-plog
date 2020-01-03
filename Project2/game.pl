@@ -28,8 +28,11 @@ play(Board_Size) :-
 get_vars_list(Board_Size, Vars) :-
     Board_Squares is Board_Size * 2, % size of the vector vars
     length(Vars, Board_Squares),
-    domain(Vars, 1, Board_Size). % vars can only be between 1 and th board size
+    domain(Vars, 1, Board_Size). % vars can only be between 1 and the board size
 
+/**
+ + makes sure there are only two black squares per column and row
+ */
 restrict_cardinality(Board_Size, Vars) :-
     get_cardinality(Board_Size, List_Of_Cardinality),
     global_cardinality(Vars, List_Of_Cardinality).
@@ -45,7 +48,7 @@ get_cardinality(Board_Size, List_Of_Cardinality, Final_List_Of_Cardinality) :-
 
 /**
  * Check if the squares don't touch each other, even at corners.
- * First is used to all rows except the last.
+ * First predicate is used to all rows except the last.
  */
 restrict_distances([C1, C2, C3, C4| Rest]) :-
     % check that C1 and C2 don't touch and C1 is less than C2
@@ -65,8 +68,7 @@ restrict_distances([C1, C2, C3, C4| Rest]) :-
 % check the distance between the two elements of the last row
 restrict_distances([C1, C2]) :-
     % check that C1 and C2 don't touch and C1 is less than C2
-    C1p1 #= C1 + 1, % position of the first square of the row plus 1
-    C1p1 #< C2.     % check that C2 is greater than C1 and there is a space beetwen them
+    C1 + 1 #< C2.   % check that C2 is greater than C1 and there is a space beetwen them
 
 restrict_specific_distances(Vars, Board_Size, Row_Restrictions, Column_Restrictions) :-
     restrict_specific_distances(Vars, Board_Size, [], [], Row_Restrictions, Column_Restrictions).
@@ -137,8 +139,8 @@ valid_distance(_Distance, _Board_Size) :-
 
 restrict_row_distance( _Show_error_message, Row, Row_Value, Vars) :-
     % check if the indicated row have the rigth spacing between the 2 black squares
-    Index1 is Row * 2 - 1,
-    Index2 is Row * 2,
+    Index2 is Row * 2 ,
+    Index1 is Index2 - 1, % subtract operation are faster than multiplication ones
     element(Index1, Vars, Element1), 
     element(Index2, Vars, Element2),
     Element2 #= Element1 + Row_Value + 1.
@@ -222,5 +224,48 @@ time(Board_Size, Column, Column_Value, Row, Row_Value) :-
     % open('C:\\Users\\pasga\\OneDrive - Universidade do Porto\\FEUP\\3rdYear\\PLOG\\feup-plog\\Project2\\times.txt', append, C),
     % set_output(C), % set output to write on the file and not in the console
     write(X), write('ms\n'),
-    statistics, 
+   % statistics, 
+    told. %write
+
+% measure time with one restriction in a column and two restriction in a row
+time(Board_Size, Column, Column_Value, Row, Row_Value, Row1, Row1_Value) :-   
+    statistics(runtime, _),
+    get_vars_list(Board_Size, Vars),  
+    restrict_cardinality(Board_Size, Vars),
+    restrict_distances(Vars),
+    restrict_column_distance(0, Column, Column_Value, Vars), 
+    restrict_row_distance(0, Row, Row_Value, Vars),
+    restrict_row_distance(0, Row1, Row1_Value, Vars),
+    labeling([], Vars),
+    statistics(runtime, X),
+    %  print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions),
+    % Helena's Path
+    % open('C:\\Users\\ferre\\Desktop\\3ano\\feup-plog\\Project2\\times.txt', append, C),
+    % Gaspar's Path
+    % open('C:\\Users\\pasga\\OneDrive - Universidade do Porto\\FEUP\\3rdYear\\PLOG\\feup-plog\\Project2\\times.txt', append, C),
+    % set_output(C), % set output to write on the file and not in the console
+    write(X), write('ms\n'),
+    % statistics, 
+    told. %write
+
+% measure time with one restriction in a column and three restriction in a row
+time(Board_Size, Column, Column_Value, Row, Row_Value, Row1, Row1_Value, Row2, Row2_Value) :-   
+    statistics(runtime, _),
+    get_vars_list(Board_Size, Vars),  
+    restrict_cardinality(Board_Size, Vars),
+    restrict_distances(Vars),
+    restrict_column_distance(0, Column, Column_Value, Vars), 
+    restrict_row_distance(0, Row, Row_Value, Vars),
+    restrict_row_distance(0, Row1, Row1_Value, Vars),
+    restrict_row_distance(0, Row2, Row2_Value, Vars),
+    labeling([], Vars),
+    statistics(runtime, X),
+    %  print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions),
+    % Helena's Path
+    % open('C:\\Users\\ferre\\Desktop\\3ano\\feup-plog\\Project2\\times.txt', append, C),
+    % Gaspar's Path
+    % open('C:\\Users\\pasga\\OneDrive - Universidade do Porto\\FEUP\\3rdYear\\PLOG\\feup-plog\\Project2\\times.txt', append, C),
+    % set_output(C), % set output to write on the file and not in the console
+    write(X), write('ms\n'),
+    % statistics, 
     told. %write
