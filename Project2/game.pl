@@ -176,8 +176,8 @@ get_puzzle(Board_Size) :-
     Number_of_Restrictions is Board_Size//40 + 1,
     generate_restrict_column_distance(Number_of_Restrictions, Board_Size, Vars, [], Column_Restrictions),
     generate_restrict_row_distance(Number_of_Restrictions, Board_Size, Vars, [], Row_Restrictions),
-    print_unsolved_puzzle(Board_Size, Row_Restrictions, Column_Restrictions),
     labeling([], Vars),
+    print_unsolved_puzzle(Board_Size, Row_Restrictions, Column_Restrictions),
     press_any_button,
     main_menu.
 
