@@ -36,10 +36,10 @@ get_board_size(Board_Size) :-
     ask_board_size(Board_Size),
     valid_board_size(Board_Size).
 
-get_board_size(_Board_Size) :-
-    invalid_board_size_message,
-    fail.
-
 % board with less than 8 rows/columns are not valid
 valid_board_size(Board_Size) :-
     Board_Size >= 8.
+
+valid_board_size(_Board_Size) :-
+    invalid_board_size_message,
+    fail.

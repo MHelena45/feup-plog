@@ -32,12 +32,16 @@ get_vars_list(Board_Size, Vars) :-
     domain(Vars, 1, Board_Size). % vars can only be between 1 and the board size
 
 /**
- + makes sure there are only two black squares per column and row
+ * makes sure there are only two black squares per column (and row indirectly)
  */
 restrict_cardinality(Board_Size, Vars) :-
     get_cardinality(Board_Size, [], List_Of_Cardinality),
     global_cardinality(Vars, List_Of_Cardinality).   
 
+/**
+ * gets the list of cardinality being applied. Every integer number in the domain [1, board_size], 
+ * must appear twice.
+ */
 get_cardinality(0, List_Of_Cardinality, List_Of_Cardinality).
 get_cardinality(Board_Size, List_Of_Cardinality, Final_List_Of_Cardinality) :-
     Board_Size1 is Board_Size  - 1,
@@ -49,12 +53,11 @@ get_cardinality(Board_Size, List_Of_Cardinality, Final_List_Of_Cardinality) :-
  * First predicate is used to all rows except the last.
  */
 restrict_distances([C1, C2, C3, C4| Rest]) :-
-    % check that C1 and C2 don't touch and C1 is less than C2
+    % check that C1 and C2 don't touch and C1 is lower than C2
     C1p1 #= C1 + 1, % position of the first square of the row plus 1
     C1s1 #= C1 - 1, % position of the first square of the next row plus 1
     C1p1 #< C2,     % check that C2 is greater than C1 and there is a space beetwen them
-    C3p1 #= C3 + 1,  % position of the first square of the next row plus 1
-    C3p1 #< C4,     % check that C4 is greater than C3 and there is a space beetwen them
+    C3 + 1 #< C4,     % check that C4 is greater than C3 and there is a space beetwen them
     (C1p1 #< C3 #\/ C1s1 #> C3),  % check that C1 and C3 are spaced
     (C1p1 #< C4 #\/ C1s1 #> C4), % check that C1 and C4 are spaced
     C2p1 #= C2 + 1,
@@ -65,7 +68,7 @@ restrict_distances([C1, C2, C3, C4| Rest]) :-
     
 % check the distance between the two elements of the last row
 restrict_distances([C1, C2]) :-
-    % check that C1 and C2 don't touch and C1 is less than C2
+    % check that C1 and C2 don't touch and C1 is lower than C2
     C1 + 1 #< C2.   % check that C2 is greater than C1 and there is a space beetwen them
 
 restrict_specific_distances(Vars, Board_Size, Row_Restrictions, Column_Restrictions) :-
