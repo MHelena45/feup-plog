@@ -40,5 +40,6 @@ get_board_size(_Board_Size) :-
     invalid_board_size_message,
     fail.
 
-% TODO: SEE VALID BOARD SIZES
-valid_board_size(_Board_Size).
+% board with less than 8 rows/columns are not valid
+valid_board_size(Board_Size) :-
+    Board_Size >= 8.

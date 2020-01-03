@@ -35,11 +35,8 @@ get_vars_list(Board_Size, Vars) :-
  + makes sure there are only two black squares per column and row
  */
 restrict_cardinality(Board_Size, Vars) :-
-    get_cardinality(Board_Size, List_Of_Cardinality),
-    global_cardinality(Vars, List_Of_Cardinality).
-
-get_cardinality(Board_Size, List_Of_Cardinality) :-
-    get_cardinality(Board_Size, [], List_Of_Cardinality).
+    get_cardinality(Board_Size, [], List_Of_Cardinality),
+    global_cardinality(Vars, List_Of_Cardinality).   
 
 get_cardinality(0, List_Of_Cardinality, List_Of_Cardinality).
 get_cardinality(Board_Size, List_Of_Cardinality, Final_List_Of_Cardinality) :-
@@ -198,7 +195,6 @@ generate_restrict_column_distance(Restriction_Left, Board_Size, Vars, Col_Acc, C
     % distance betwwn the 2 squares in the same column
     random(1, Max_Distance, Column_Value),
     restrict_column_distance(0, Column, Column_Value, Vars), 
-    write('Column : '), write(Column), write(' with '), write(Column_Value), nl,
     append(Col_Acc, [Column-Column_Value], New_Column_Restrictions),
     Restriction_Next_Left is Restriction_Left - 1,
     generate_restrict_column_distance(Restriction_Next_Left, Board_Size, Vars, New_Column_Restrictions, Column_Restrictions).
@@ -213,7 +209,6 @@ generate_restrict_row_distance(Restriction_Left, Board_Size, Vars, Row_Acc, Row_
     % distance between the 2 squares in the same row
     random(1, Distance, Row_Value),
     restrict_row_distance(0, Row, Row_Value, Vars),
-    write('Row : '), write(Row), write(' with '), write(Row_Value), nl,
     append(Row_Acc, [Row-Row_Value], New_Row_Restrictions),
     Restriction_Next_Left is Restriction_Left - 1,
     generate_restrict_row_distance(Restriction_Next_Left, Board_Size, Vars, New_Row_Restrictions, Row_Restrictions).
