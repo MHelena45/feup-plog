@@ -176,6 +176,7 @@ get_puzzle(Board_Size) :-
     restrict_cardinality(Board_Size, Vars),
     restrict_distances(Vars),
     Number_of_Restrictions is Board_Size//40 + 1,
+    repeat,
     generate_restrict_column_distance(Number_of_Restrictions, Board_Size, Vars, [], Column_Restrictions),
     generate_restrict_row_distance(Number_of_Restrictions, Board_Size, Vars, [], Row_Restrictions),
     labeling([], Vars),
@@ -205,7 +206,7 @@ generate_restrict_column_distance(Restriction_Left, Board_Size, Vars, Col_Acc, C
 generate_restrict_row_distance(0, _Board_Size, _Vars, Row_Restrictions, Row_Restrictions).
 generate_restrict_row_distance(Restriction_Left, Board_Size, Vars, Row_Acc, Row_Restrictions) :-
     Restriction_Left > 0,
-    % number of the row where the restriction will exists
+    % number of the row where the restriction will exist
     random(1, Board_Size, Row),
     % even if 2 squares are in the maximum distance, that distante is (Board_Size - 2)
     Distance is (Board_Size - 2),
