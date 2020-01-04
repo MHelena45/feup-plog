@@ -13,13 +13,15 @@ play :-
 
 % board has variable size
 play(Board_Size) :-
-    get_vars_list(Board_Size, Vars),  
-    restrict_cardinality(Board_Size, Vars),
-    restrict_distances(Vars),
+    % Vars is a list in which 2 following members represent the column position of the shaded squares of the same row
+    get_vars_list(Board_Size, Vars),
+    restrict_cardinality(Board_Size, Vars), % Restricts the number shaded squares in a row
+    restrict_distances(Vars), % Makes sure that the shaded squares dont touch each other
+    % Prompts the user for constraints to be applied to the rows and/or columns
     restrict_specific_distances(Vars, Board_Size, Row_Constraints, Column_Constraints), 
-    labeling([], Vars),
-    print_solution(Board_Size, Vars, Row_Constraints, Column_Constraints),
-    press_any_button,
+    labeling([], Vars), % Gets the solution
+    print_solution(Board_Size, Vars, Row_Constraints, Column_Constraints), % Prints the solution obtained
+    press_any_button, % Prompts the user to get an interaction form him/her
     main_menu.
 
 /**  gets all vars needed acording to the board size.
@@ -96,6 +98,7 @@ restrict_user_option(column, Vars, Board_Size, Row_Rest_Acc, Col_Rest_Acc, Row_C
 
 restrict_user_option(stop, _Vars, _Board_Size, Row_Rest_Acc, Col_Rest_Acc, Row_Rest_Acc, Col_Rest_Acc) :- !.
 
+% Gets the option from the user
 get_user_option(Option) :-
     repeat, 
     ask_row_or_column(Option),
@@ -158,7 +161,7 @@ restrict_row_distance( _Show_error_message, Row, Row_Value, Vars) :-
 restrict_row_distance(1, _Row, _Row_Value, _Vars) :-
     impossible_distance_Constraint, fail.
 
-% check if the indicated row have the rigth spacing between the 2 black squares
+% check if the indicated row has the rigth spacing between the 2 black squares
 restrict_column_distance(_Show_error_message, Column, Column_Value, Vars) :-  
     element(Position1, Vars, Column),           % gets the index position of the element with the indicated column
     element(Position2, Vars, Column),
@@ -181,9 +184,9 @@ get_puzzle(Board_Size) :-
     generate_restrict_row_distance(Number_of_Constraints, Board_Size, Vars, [], Row_Constraints),
     labeling([], Vars),
     List_Size is Board_Size * 2,
-    create_list(List_Size, -1, List),
-    print_solution(Board_Size, List, Row_Constraints, Column_Constraints),
-    play_puzzle(Board_Size, Row_Constraints, Column_Constraints, Vars, List).
+    create_list(List_Size, -1, List), % Creates a list with all members equal to -1 so that print solution prints an empty puzzle
+    print_solution(Board_Size, List, Row_Constraints, Column_Constraints), % Prints the puzzle
+    play_puzzle(Board_Size, Row_Constraints, Column_Constraints, Vars, List). % Prompts the user to solve the puzzle displayed when its size is 9x9
 
 generate_restrict_column_distance(0, _Board_Size, _Vars, Column_Constraints, Column_Constraints).
 generate_restrict_column_distance(Constraint_Left, Board_Size, Vars, Col_Acc, Column_Constraints) :-
@@ -213,46 +216,57 @@ generate_restrict_row_distance(Constraint_Left, Board_Size, Vars, Row_Acc, Row_C
     Constraint_Next_Left is Constraint_Left - 1,
     generate_restrict_row_distance(Constraint_Next_Left, Board_Size, Vars, New_Row_Constraints, Row_Constraints).
 
+% Prompts the user to solve the puzzle displayed when its size is 9x9
 play_puzzle(9, Row_Constraints, Column_Constraints, Vars, Answers_Acc) :-
-    write(Vars), nl,
-    get_row(Row, 9),
-    get_column(Column, 9),
-    check_answer(Row, Column, Vars),
-    update_answer(Row, Column, Answers_Acc, New_Answers_Acc),
-    print_solution(9, New_Answers_Acc, Row_Constraints, Column_Constraints),
-    play_puzzle(9, Row_Constraints, Column_Constraints, Vars, New_Answers_Acc).
+    get_row(Row, 9), % Gets the row from the user
+    get_column(Column, 9), % Gets the column from the user
+    check_answer(Row, Column, Vars), % Checks if the coordinates corresponde to a shaded square position
+    update_answer(Row, Column, Answers_Acc, New_Answers_Acc), % If the answer is correct the list of answers is updated properly
+    check_finished_puzzle(New_Answers_Acc, Vars), % Checks if the user finished the puzzle
+    print_solution(9, New_Answers_Acc, Row_Constraints, Column_Constraints), % Prints the current progress made by the user
+    play_puzzle(9, Row_Constraints, Column_Constraints, Vars, New_Answers_Acc). % Repeats the loop
 
+% If the board isnt 9x9
 play_puzzle(_Board_Size, _Row_Constraints, _Column_Constraints, _Vars, _Answers_Acc) :-
     press_any_button,
     main_menu.
 
+% Gets a valid row from the user
 get_row(Num_Row, Board_Size) :-
     repeat,
-    ask_row(Num_Row),
-    valid_coord(Num_Row, Board_Size).
+    ask_row(Num_Row), % Asks the row to the user
+    valid_coord(Num_Row, Board_Size). % Verifies if the row is valid
 
+% Gets a valid column from the user
 get_column(Num_Col, Board_Size) :-
     repeat,
-    ask_col(Num_Col),
-    valid_coord(Num_Col, Board_Size).
+    ask_col(Num_Col), % Asks the column to the user
+    valid_coord(Num_Col, Board_Size). % Verifies if the column is valid
 
+% Checks if the answer given by the user is correct
 check_answer(Row, Column, Vars) :-
-    getRow(Row, Vars, Shaded_Col1, Shaded_Col2),
-    check_column(Column, Shaded_Col1, Shaded_Col2).
+    % Gets the column positions of the shaded squares of the row inserted by the user
+    get_row(Row, Vars, Shaded_Col1, Shaded_Col2), 
+    % Checks the column inserted by the user is equal to any of the column position of the shaded square of the row
+    check_column(Column, Shaded_Col1, Shaded_Col2). 
 
+% If the above fails an appropriate error message is displayed to the user
 check_answer(_Row, _Column, _Vars):-
     incorrect_answer,
     fail.
 
-getRow(Row, Vars, Shaded_Col1, Shaded_Col2) :-
+% Gets the column positions of the shaded squares of the row inserted by the user
+get_row(Row, Vars, Shaded_Col1, Shaded_Col2) :-
     Index is (Row - 1) * 2,
     Index1 is Index + 1,
     nth0(Index, Vars, Shaded_Col1),
     nth0(Index1, Vars, Shaded_Col2).
 
+% Checks the column inserted by the user is equal to any of the column position of the shaded square of the row
 check_column(Shaded_Col1, Shaded_Col1, _Shaded_Col2).
 check_column(Shaded_Col2, _Shaded_Col1, Shaded_Col2).
 
+% Updates the list with the answers inserted by the user
 update_answer(Row, Column, Answers, New_Answers) :-
     update_answer(Row, Column, Answers, New_Answers, 1).
 
@@ -265,8 +279,9 @@ update_answer(Row, Column, [Col1, Col2|Rest], [Col1, Col2|More], Row_Counter) :-
 
 update_row([-1|Rest], [Column|Rest], Column).
 update_row([Col_Value, -1|Rest], [Col_Value, Column|Rest], Column).
-%update_row(Answers, Answers, _Column).
+update_row(Answers, Answers, _Column).
 
+% Creates a list of size Size wht all elements equal to Value 
 create_list(Size, Value, List) :-
     create_list(Size, Value, [], List).
 
@@ -275,6 +290,14 @@ create_list(Size, Value, Acc, List) :-
     append(Acc, [Value], New_Acc),
     Size1 is Size - 1,
     create_list(Size1, Value, New_Acc, List).
+
+check_finished_puzzle(Answers, Vars) :-
+    append(Answers, [], Vars), % True if lists are equal
+    congratulations_message, % Congratulates the user on finishing the puzzle
+    press_any_button, % Prompts the user to get an interaction form him/her
+    main_menu. % Goes back to the main menu
+
+check_finished_puzzle(_Answers, _Vars).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
