@@ -1,8 +1,10 @@
 :- dynamic num_cols_per_cell/1.
 :- dynamic num_lines_per_cell/1.
 
+% Prints a grid representing the puzzle, and the also prints the column restrictions above the puzzle
+% and the row restrictions on the left side of the puzzle
 print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions) :-
-    clear_screen,
+    clear_screen, % Clear screen to better visualize puzzle
     sort_restrictions(Row_Restrictions, Column_Restrictions, Sorted_Row_Restrictions, Sorted_Column_Restrictions),
     calc_cell_size(Board_Size),
     print_column_restrictions(Sorted_Column_Restrictions), nl,
