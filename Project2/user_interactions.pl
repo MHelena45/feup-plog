@@ -30,6 +30,14 @@ ask_which_column(Num_Col) :-
     write('\n> Which column do you want to restrict?'),
     read(Num_Col).
 
+ask_row(Row) :-
+    write('\n> In which row do you want to place a shaded square?'),
+    read(Row).
+    
+ask_col(Col) :-
+    write('\n> In which column do you want to place a shaded square?'),
+    read(Col).
+
 ask_distance(Distance) :-
     write('\n> What is the distance between shaded squares you wish to restrict?'),
     read(Distance).
@@ -67,9 +75,12 @@ invalid_coord :-
 invalid_distance :-
     write('\n> Invalid distance.\n\n').
 
-invalid_restriction :-
-    write('\n> Invalid Restriction. You already placed a restriction there.').
+invalid_Constraint :-
+    write('\n> Invalid Constraint. You already placed a Constraint there.').
 
-impossible_distance_restriction :-
+impossible_distance_Constraint :-
     write('\n> There can\'t be two shaded squares together and there can only be two shaded squares per row and per column.').
+
+incorrect_answer :-
+    write('\n> Incorrect answer. Try other coordinates.').
 

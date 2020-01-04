@@ -16,9 +16,9 @@ play(Board_Size) :-
     get_vars_list(Board_Size, Vars),  
     restrict_cardinality(Board_Size, Vars),
     restrict_distances(Vars),
-    restrict_specific_distances(Vars, Board_Size, Row_Restrictions, Column_Restrictions), 
+    restrict_specific_distances(Vars, Board_Size, Row_Constraints, Column_Constraints), 
     labeling([], Vars),
-    print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions),
+    print_solution(Board_Size, Vars, Row_Constraints, Column_Constraints),
     press_any_button,
     main_menu.
 
@@ -71,28 +71,28 @@ restrict_distances([C1, C2]) :-
     % check that C1 and C2 don't touch and C1 is lower than C2
     C1 + 1 #< C2.   % check that C2 is greater than C1 and there is a space beetwen them
 
-restrict_specific_distances(Vars, Board_Size, Row_Restrictions, Column_Restrictions) :-
-    restrict_specific_distances(Vars, Board_Size, [], [], Row_Restrictions, Column_Restrictions).
+restrict_specific_distances(Vars, Board_Size, Row_Constraints, Column_Constraints) :-
+    restrict_specific_distances(Vars, Board_Size, [], [], Row_Constraints, Column_Constraints).
 
-restrict_specific_distances(Vars, Board_Size, Row_Rest_Acc, Col_Rest_Acc, Row_Restrictions, Column_Restrictions) :- 
+restrict_specific_distances(Vars, Board_Size, Row_Rest_Acc, Col_Rest_Acc, Row_Constraints, Column_Constraints) :- 
     get_user_option(Option),
-    !, restrict_user_option(Option, Vars, Board_Size, Row_Rest_Acc, Col_Rest_Acc, Row_Restrictions, Column_Restrictions).
+    !, restrict_user_option(Option, Vars, Board_Size, Row_Rest_Acc, Col_Rest_Acc, Row_Constraints, Column_Constraints).
 
 % Restrict Row
-restrict_user_option(row, Vars, Board_Size, Row_Rest_Acc, Col_Rest_Acc, Row_Restrictions, Column_Restrictions) :-
+restrict_user_option(row, Vars, Board_Size, Row_Rest_Acc, Col_Rest_Acc, Row_Constraints, Column_Constraints) :-
     get_num_row(Num_Row, Board_Size, Row_Rest_Acc), !,
     get_distance(Distance, Board_Size),
     restrict_row_distance(1, Num_Row, Distance, Vars),
     append(Row_Rest_Acc, [Num_Row-Distance], New_Row_Acc),
-    !, restrict_specific_distances(Vars, Board_Size, New_Row_Acc, Col_Rest_Acc, Row_Restrictions, Column_Restrictions).
+    !, restrict_specific_distances(Vars, Board_Size, New_Row_Acc, Col_Rest_Acc, Row_Constraints, Column_Constraints).
 
 % Restrict Column
-restrict_user_option(column, Vars, Board_Size, Row_Rest_Acc, Col_Rest_Acc, Row_Restrictions, Column_Restrictions) :-
+restrict_user_option(column, Vars, Board_Size, Row_Rest_Acc, Col_Rest_Acc, Row_Constraints, Column_Constraints) :-
     get_num_column(Num_Column, Board_Size, Col_Rest_Acc), !,
     get_distance(Distance, Board_Size), 
     restrict_column_distance(1, Num_Column, Distance, Vars),
     append(Col_Rest_Acc, [Num_Column-Distance], New_Col_Acc),
-    !, restrict_specific_distances(Vars, Board_Size, Row_Rest_Acc, New_Col_Acc, Row_Restrictions, Column_Restrictions).
+    !, restrict_specific_distances(Vars, Board_Size, Row_Rest_Acc, New_Col_Acc, Row_Constraints, Column_Constraints).
 
 restrict_user_option(stop, _Vars, _Board_Size, Row_Rest_Acc, Col_Rest_Acc, Row_Rest_Acc, Col_Rest_Acc) :- !.
 
@@ -101,17 +101,17 @@ get_user_option(Option) :-
     ask_row_or_column(Option),
     valid_user_option(Option).
 
-get_num_row(Num_Row, Board_Size, Row_Restrictions) :-
+get_num_row(Num_Row, Board_Size, Row_Constraints) :-
     repeat,
     ask_which_row(Num_Row),
     valid_coord(Num_Row, Board_Size),
-    valid_restriction(Num_Row, Row_Restrictions).
+    valid_Constraint(Num_Row, Row_Constraints).
 
-get_num_column(Num_Column, Board_Size, Column_Restrictions) :-
+get_num_column(Num_Column, Board_Size, Column_Constraints) :-
     repeat,
     ask_which_column(Num_Column),
     valid_coord(Num_Column, Board_Size),
-    valid_restriction(Num_Column, Column_Restrictions).
+    valid_Constraint(Num_Column, Column_Constraints).
 
 get_distance(Distance, Board_Size) :-
     repeat, 
@@ -132,12 +132,12 @@ valid_coord(Coord, Board_Size) :-
 valid_coord(_Coord, _Board_Size) :-
     invalid_coord, fail.
 
-valid_restriction(_Num_Res, []).
-valid_restriction(Num_Res, [Num_Res-_Distance|_Rest]) :-
-    invalid_restriction, !, fail.
+valid_Constraint(_Num_Res, []).
+valid_Constraint(Num_Res, [Num_Res-_Distance|_Rest]) :-
+    invalid_Constraint, !, fail.
 
-valid_restriction(Num_Res, [_Num-_Distance|Rest]) :-
-    valid_restriction(Num_Res, Rest).
+valid_Constraint(Num_Res, [_Num-_Distance|Rest]) :-
+    valid_Constraint(Num_Res, Rest).
 
 valid_distance(Distance, Board_Size) :-
     Distance >= 1,
@@ -156,7 +156,7 @@ restrict_row_distance( _Show_error_message, Row, Row_Value, Vars) :-
     Element2 #= Element1 + Row_Value + 1.
 
 restrict_row_distance(1, _Row, _Row_Value, _Vars) :-
-    impossible_distance_restriction, fail.
+    impossible_distance_Constraint, fail.
 
 % check if the indicated row have the rigth spacing between the 2 black squares
 restrict_column_distance(_Show_error_message, Column, Column_Value, Vars) :-  
@@ -165,7 +165,7 @@ restrict_column_distance(_Show_error_message, Column, Column_Value, Vars) :-
     (Position1 + 1) // 2 #= (Position2 + 1) // 2 + Column_Value  + 1.
 
 restrict_column_distance(1, _Column, _Column_Value, _Vars) :-
-    impossible_distance_restriction, fail.
+    impossible_distance_Constraint, fail.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -175,47 +175,112 @@ get_puzzle(Board_Size) :-
     get_vars_list(Board_Size, Vars),  
     restrict_cardinality(Board_Size, Vars),
     restrict_distances(Vars),
-    Number_of_Restrictions is Board_Size//40 + 1,
+    Number_of_Constraints is Board_Size//40 + 1,
     repeat, % if we can't solve this problem he have to generate other constrains
-    generate_restrict_column_distance(Number_of_Restrictions, Board_Size, Vars, [], Column_Restrictions),
-    generate_restrict_row_distance(Number_of_Restrictions, Board_Size, Vars, [], Row_Restrictions),
+    generate_restrict_column_distance(Number_of_Constraints, Board_Size, Vars, [], Column_Constraints),
+    generate_restrict_row_distance(Number_of_Constraints, Board_Size, Vars, [], Row_Constraints),
     labeling([], Vars),
-    print_unsolved_puzzle(Board_Size, Row_Restrictions, Column_Restrictions),
-    press_any_button,
-    main_menu.
+    List_Size is Board_Size * 2,
+    create_list(List_Size, -1, List),
+    print_solution(Board_Size, List, Row_Constraints, Column_Constraints),
+    play_puzzle(Board_Size, Row_Constraints, Column_Constraints, Vars, List).
 
-generate_restrict_column_distance(0, _Board_Size, _Vars, Column_Restrictions, Column_Restrictions).
-generate_restrict_column_distance(Restriction_Left, Board_Size, Vars, Col_Acc, Column_Restrictions) :-
-    Restriction_Left > 0,
-    % number of the column where the restriction will exists
+generate_restrict_column_distance(0, _Board_Size, _Vars, Column_Constraints, Column_Constraints).
+generate_restrict_column_distance(Constraint_Left, Board_Size, Vars, Col_Acc, Column_Constraints) :-
+    Constraint_Left > 0,
+    % number of the column where the Constraint will exists
     random(1, Board_Size, Column),
     % even if 2 squares are in the maximum distance, that distante is (Board_Size - 2)
     Max_Distance is (Board_Size - 2),
     % distance betwwn the 2 squares in the same column
     random(1, Max_Distance, Column_Value),
     restrict_column_distance(0, Column, Column_Value, Vars), 
-    append(Col_Acc, [Column-Column_Value], New_Column_Restrictions),
-    Restriction_Next_Left is Restriction_Left - 1,
-    generate_restrict_column_distance(Restriction_Next_Left, Board_Size, Vars, New_Column_Restrictions, Column_Restrictions).
+    append(Col_Acc, [Column-Column_Value], New_Column_Constraints),
+    Constraint_Next_Left is Constraint_Left - 1,
+    generate_restrict_column_distance(Constraint_Next_Left, Board_Size, Vars, New_Column_Constraints, Column_Constraints).
 
-generate_restrict_row_distance(0, _Board_Size, _Vars, Row_Restrictions, Row_Restrictions).
-generate_restrict_row_distance(Restriction_Left, Board_Size, Vars, Row_Acc, Row_Restrictions) :-
-    Restriction_Left > 0,
-    % number of the row where the restriction will exist
+generate_restrict_row_distance(0, _Board_Size, _Vars, Row_Constraints, Row_Constraints).
+generate_restrict_row_distance(Constraint_Left, Board_Size, Vars, Row_Acc, Row_Constraints) :-
+    Constraint_Left > 0,
+    % number of the row where the Constraint will exist
     random(1, Board_Size, Row),
     % even if 2 squares are in the maximum distance, that distante is (Board_Size - 2)
     Distance is (Board_Size - 2),
     % distance between the 2 squares in the same row
     random(1, Distance, Row_Value),
     restrict_row_distance(0, Row, Row_Value, Vars),
-    append(Row_Acc, [Row-Row_Value], New_Row_Restrictions),
-    Restriction_Next_Left is Restriction_Left - 1,
-    generate_restrict_row_distance(Restriction_Next_Left, Board_Size, Vars, New_Row_Restrictions, Row_Restrictions).
+    append(Row_Acc, [Row-Row_Value], New_Row_Constraints),
+    Constraint_Next_Left is Constraint_Left - 1,
+    generate_restrict_row_distance(Constraint_Next_Left, Board_Size, Vars, New_Row_Constraints, Row_Constraints).
+
+play_puzzle(9, Row_Constraints, Column_Constraints, Vars, Answers_Acc) :-
+    write(Vars), nl,
+    get_row(Row, 9),
+    get_column(Column, 9),
+    check_answer(Row, Column, Vars),
+    update_answer(Row, Column, Answers_Acc, New_Answers_Acc),
+    print_solution(9, New_Answers_Acc, Row_Constraints, Column_Constraints),
+    play_puzzle(9, Row_Constraints, Column_Constraints, Vars, New_Answers_Acc).
+
+play_puzzle(_Board_Size, _Row_Constraints, _Column_Constraints, _Vars, _Answers_Acc) :-
+    press_any_button,
+    main_menu.
+
+get_row(Num_Row, Board_Size) :-
+    repeat,
+    ask_row(Num_Row),
+    valid_coord(Num_Row, Board_Size).
+
+get_column(Num_Col, Board_Size) :-
+    repeat,
+    ask_col(Num_Col),
+    valid_coord(Num_Col, Board_Size).
+
+check_answer(Row, Column, Vars) :-
+    getRow(Row, Vars, Shaded_Col1, Shaded_Col2),
+    check_column(Column, Shaded_Col1, Shaded_Col2).
+
+check_answer(_Row, _Column, _Vars):-
+    incorrect_answer,
+    fail.
+
+getRow(Row, Vars, Shaded_Col1, Shaded_Col2) :-
+    Index is (Row - 1) * 2,
+    Index1 is Index + 1,
+    nth0(Index, Vars, Shaded_Col1),
+    nth0(Index1, Vars, Shaded_Col2).
+
+check_column(Shaded_Col1, Shaded_Col1, _Shaded_Col2).
+check_column(Shaded_Col2, _Shaded_Col1, Shaded_Col2).
+
+update_answer(Row, Column, Answers, New_Answers) :-
+    update_answer(Row, Column, Answers, New_Answers, 1).
+
+update_answer(Row, Column, Answers, New_Answers, Row) :-
+    update_row(Answers, New_Answers, Column).
+
+update_answer(Row, Column, [Col1, Col2|Rest], [Col1, Col2|More], Row_Counter) :-
+    Row_Counter1 is Row_Counter + 1,
+    update_answer(Row, Column, Rest, More, Row_Counter1).
+
+update_row([-1|Rest], [Column|Rest], Column).
+update_row([Col_Value, -1|Rest], [Col_Value, Column|Rest], Column).
+%update_row(Answers, Answers, _Column).
+
+create_list(Size, Value, List) :-
+    create_list(Size, Value, [], List).
+
+create_list(0, _Value, List, List).
+create_list(Size, Value, Acc, List) :-
+    append(Acc, [Value], New_Acc),
+    Size1 is Size - 1,
+    create_list(Size1, Value, New_Acc, List).
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %           time measure and puzzzle analyse
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% measure time with one restriction in column and row only
+% measure time with one Constraint in column and row only
 time(Board_Size, Column, Column_Value, Row, Row_Value) :-   
     statistics(runtime, _),
     get_vars_list(Board_Size, Vars),  
@@ -226,7 +291,7 @@ time(Board_Size, Column, Column_Value, Row, Row_Value) :-
     write('Backtracking'), % analyse if backtracking exists (once is always print)
     labeling([], Vars),
     statistics(runtime, X),
-    %  print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions),
+    %  print_solution(Board_Size, Vars, Row_Constraints, Column_Constraints),
     % Helena's Path
     % open('C:\\Users\\ferre\\Desktop\\3ano\\feup-plog\\Project2\\times.txt', append, C),
     % Gaspar's Path
@@ -236,7 +301,7 @@ time(Board_Size, Column, Column_Value, Row, Row_Value) :-
    % statistics, 
     told. %write
 
-% measure time with one restriction in a column and two restriction in a row
+% measure time with one Constraint in a column and two Constraint in a row
 time(Board_Size, Column, Column_Value, Row, Row_Value, Row1, Row1_Value) :-   
     statistics(runtime, _),
     get_vars_list(Board_Size, Vars),  
@@ -248,7 +313,7 @@ time(Board_Size, Column, Column_Value, Row, Row_Value, Row1, Row1_Value) :-
     write('Backtracking'), % analyse if backtracking exists (once is always print)
     labeling([], Vars),
     statistics(runtime, X),
-    %  print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions),
+    %  print_solution(Board_Size, Vars, Row_Constraints, Column_Constraints),
     % Helena's Path
     % open('C:\\Users\\ferre\\Desktop\\3ano\\feup-plog\\Project2\\times.txt', append, C),
     % Gaspar's Path
@@ -258,7 +323,7 @@ time(Board_Size, Column, Column_Value, Row, Row_Value, Row1, Row1_Value) :-
     % statistics, 
     told. %write
 
-% measure time with one restriction in a column and three restriction in a row
+% measure time with one Constraint in a column and three Constraint in a row
 time(Board_Size, Column, Column_Value, Row, Row_Value, Row1, Row1_Value, Row2, Row2_Value) :-   
     statistics(runtime, _),
     get_vars_list(Board_Size, Vars),  
@@ -271,7 +336,7 @@ time(Board_Size, Column, Column_Value, Row, Row_Value, Row1, Row1_Value, Row2, R
     write('Backtracking'), % analyse if backtracking exists (once is always print)
     labeling([], Vars),
     statistics(runtime, X),
-    %  print_solution(Board_Size, Vars, Row_Restrictions, Column_Restrictions),
+    %  print_solution(Board_Size, Vars, Row_Constraints, Column_Constraints),
     % Helena's Path
     % open('C:\\Users\\ferre\\Desktop\\3ano\\feup-plog\\Project2\\times.txt', append, C),
     % Gaspar's Path
