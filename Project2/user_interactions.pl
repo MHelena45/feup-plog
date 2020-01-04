@@ -67,9 +67,9 @@ invalid_coord :-
 invalid_distance :-
     write('\n> Invalid distance.\n\n').
 
-invalid_restriction :-
-    write('\n> Invalid Restriction. You already placed a restriction there.').
+invalid_Constraint :-
+    write('\n> Invalid Constraint. You already placed a Constraint there.').
 
-impossible_distance_restriction :-
+impossible_distance_Constraint :-
     write('\n> There can\'t be two shaded squares together and there can only be two shaded squares per row and per column.').
 
