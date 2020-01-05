@@ -8,7 +8,7 @@ print_solution(Board_Size, Vars, Row_Constraints, Column_Constraints) :-
     % Needs to sort the constraints because they can be unordered since they are inserted by the user
     sort_constraints(Row_Constraints, Column_Constraints, Sorted_Row_Constraints, Sorted_Column_Constraints), 
     calc_cell_size(Board_Size), %Calculates the best size for each cell considering the board size
-    print_column_Constraints(Sorted_Column_Constraints), nl, % Prints the column constraints above column of the board
+    print_column_constraints(Sorted_Column_Constraints), nl, % Prints the column constraints above column of the board
     print_first_line_seperator(Board_Size), nl, % Prints the first line seperator of the board
     print_puzzle(Board_Size, Sorted_Row_Constraints, Vars). % Prints the puzzle itself with the row constrains on the left side
 
@@ -42,7 +42,7 @@ print_console_lines(0, _Row_Counter, _Board_Size, _Shaded_Col1, _Shaded_Col2, _R
 print_console_lines(Num_Line, Row_Counter, Board_Size, Shaded_Col1, Shaded_Col2, Row_Constraints) :-
     check_num_line(Num_Line, Print), % Checks if the current console line must print the row restriction
     % Prints the row restriction if the current row has a corresponding restriction and if Print is 1
-    print_row_Constraint(Print, Row_Counter, Row_Constraints), 
+    print_row_constraint(Print, Row_Counter, Row_Constraints), 
     % Prints all the columns of the line, leaving blank the ones that do not correspond to Shaded_Col1 or Shaded_Col2
     print_console_line(Board_Size, Shaded_Col1, Shaded_Col2), nl,
     Num_Line1 is Num_Line - 1,
@@ -50,9 +50,10 @@ print_console_lines(Num_Line, Row_Counter, Board_Size, Shaded_Col1, Shaded_Col2,
     print_console_lines(Num_Line1, Row_Counter, Board_Size, Shaded_Col1, Shaded_Col2, Row_Constraints).
 
 % Puts 1 in the second argument if the first argument, the number of the current console line being draw, is the middle one
+check_num_line(1, 1). % If the number of lines per cell is 1, automatically return 1 to print constraint
 check_num_line(Num_Line, 1) :-
-    num_lines_per_cell(Num_Lines), % Gets the number of lines per cell that was previously calculated
-    Result is div(Num_Lines, 2),
+    num_lines_per_cell(Num_Line), % Gets the number of lines per cell that was previously calculated
+    Result is div(Num_Line, 2),
     Num_Line == Result.
 check_num_line(_Num_Line, 0). % Returns 0 if the current line is not the middle one
 
@@ -216,30 +217,30 @@ sort_constraints(Row_Constraints, Column_Constraints, Sorted_Row_Constraints, So
 
 % Calculates the best size for each cell considering the board size
 calc_cell_size(Board_Size) :-
-    Board_Size =< 12,
+    Board_Size =< 9,
     retract(num_cols_per_cell(_)),
     retract(num_lines_per_cell(_)),
     asserta(num_cols_per_cell(10)),
     asserta(num_lines_per_cell(5)).
 
 calc_cell_size(Board_Size) :-
-    Board_Size > 12,
-    Board_Size =< 18,
+    Board_Size > 9,
+    Board_Size =< 14,
     retract(num_cols_per_cell(_)),
     retract(num_lines_per_cell(_)),
     asserta(num_cols_per_cell(7)),
     asserta(num_lines_per_cell(3)).
 
 calc_cell_size(Board_Size) :-
-    Board_Size > 18,
-    Board_Size =< 25,
+    Board_Size > 14,
+    Board_Size =< 18,
     retract(num_cols_per_cell(_)),
     retract(num_lines_per_cell(_)),
     asserta(num_cols_per_cell(5)),
     asserta(num_lines_per_cell(2)).
 
 calc_cell_size(Board_Size) :-
-    Board_Size > 25,
+    Board_Size > 18,
     retract(num_cols_per_cell(_)),
     retract(num_lines_per_cell(_)),
     asserta(num_cols_per_cell(3)),

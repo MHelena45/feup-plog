@@ -1,5 +1,6 @@
 :- use_module(library(clpfd)).
 :- use_module(library(lists)).
+:- use_module(library(system)).
 :- use_module(library(random)). % used to generate radom puzzles
 :- use_module(library(between)).
 
@@ -178,7 +179,7 @@ get_puzzle(Board_Size) :-
     get_vars_list(Board_Size, Vars),  
     restrict_cardinality(Board_Size, Vars),
     restrict_distances(Vars),
-    Number_of_Constraints is Board_Size//40 + 1,
+    Number_of_Constraints is Board_Size // 15 + 1,
     repeat, % if we can't solve this problem he have to generate other constrains
     generate_restrict_column_distance(Number_of_Constraints, Board_Size, Vars, [], Column_Constraints),
     generate_restrict_row_distance(Number_of_Constraints, Board_Size, Vars, [], Row_Constraints),
@@ -196,7 +197,7 @@ generate_restrict_column_distance(Constraint_Left, Board_Size, Vars, Col_Acc, Co
     % even if 2 squares are in the maximum distance, that distante is (Board_Size - 2)
     Max_Distance is (Board_Size - 2),
     % distance betwwn the 2 squares in the same column
-    random(1, Max_Distance, Column_Value),
+    random(2, Max_Distance, Column_Value),
     restrict_column_distance(0, Column, Column_Value, Vars), 
     append(Col_Acc, [Column-Column_Value], New_Column_Constraints),
     Constraint_Next_Left is Constraint_Left - 1,
@@ -208,9 +209,9 @@ generate_restrict_row_distance(Constraint_Left, Board_Size, Vars, Row_Acc, Row_C
     % number of the row where the Constraint will exist
     random(1, Board_Size, Row),
     % even if 2 squares are in the maximum distance, that distante is (Board_Size - 2)
-    Distance is (Board_Size - 2),
+    Max_Distance is (Board_Size - 2),
     % distance between the 2 squares in the same row
-    random(1, Distance, Row_Value),
+    random(2, Max_Distance, Row_Value),
     restrict_row_distance(0, Row, Row_Value, Vars),
     append(Row_Acc, [Row-Row_Value], New_Row_Constraints),
     Constraint_Next_Left is Constraint_Left - 1,
