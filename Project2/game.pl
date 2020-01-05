@@ -56,8 +56,8 @@ restrict_distances([C1, C2, C3, C4| Rest]) :-
     % check that C1 and C2 don't touch and C1 is lower than C2
     C1p1 #= C1 + 1, % position of the first square of the row plus 1
     C1s1 #= C1 - 1, % position of the first square of the next row plus 1
-    C1p1 #< C2,     % check that C2 is greater than C1 and there is a space beetwen them
-    C3 + 1 #< C4,     % check that C4 is greater than C3 and there is a space beetwen them
+    sum([C1, 1], #<, C2),     % check that C2 is greater than C1 and there is a space betewen them
+    sum([C3, 1], #<, C4),     % check that C4 is greater than C3 and there is a space between them
     (C1p1 #< C3 #\/ C1s1 #> C3),  % check that C1 and C3 are spaced
     (C1p1 #< C4 #\/ C1s1 #> C4), % check that C1 and C4 are spaced
     C2p1 #= C2 + 1,
@@ -69,7 +69,7 @@ restrict_distances([C1, C2, C3, C4| Rest]) :-
 % check the distance between the two elements of the last row
 restrict_distances([C1, C2]) :-
     % check that C1 and C2 don't touch and C1 is lower than C2
-    C1 + 1 #< C2.   % check that C2 is greater than C1 and there is a space beetwen them
+    sum([C1, 1], #<, C2).   % check that C2 is greater than C1 and there is a space between them
 
 restrict_specific_distances(Vars, Board_Size, Row_Constraints, Column_Constraints) :-
     restrict_specific_distances(Vars, Board_Size, [], [], Row_Constraints, Column_Constraints).
