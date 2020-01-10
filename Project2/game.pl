@@ -54,25 +54,48 @@ get_cardinality(Board_Size, List_Of_Cardinality, Final_List_Of_Cardinality) :-
 /**
  * Check if the squares don't touch each other, even at corners.
  * First predicate is used to all rows except the last.
- */
+*/ 
 restrict_distances([C1, C2, C3, C4| Rest]) :-
     % check that C1 and C2 don't touch and C1 is lower than C2
     C1p1 #= C1 + 1, % position of the first square of the row plus 1
     C1s1 #= C1 - 1, % position of the first square of the next row plus 1
     sum([C1, 1], #<, C2),     % check that C2 is greater than C1 and there is a space betewen them
     sum([C3, 1], #<, C4),     % check that C4 is greater than C3 and there is a space between them
-    (C1p1 #< C3 #\/ C1s1 #> C3),  % check that C1 and C3 are spaced
-    (C1p1 #< C4 #\/ C1s1 #> C4), % check that C1 and C4 are spaced
+    (C1p1 #< C3 #\ C1s1 #> C3),  % check that C1 and C3 are spaced
+    (C1p1 #< C4 #\ C1s1 #> C4), % check that C1 and C4 are spaced
     C2p1 #= C2 + 1,
     C2s1 #= C2 - 1,
-    (C2p1 #< C3 #\/ C2s1 #> C3), % check that C2 and C3 are spaced
-    (C2p1 #< C4 #\/ C2s1 #> C4), % check that C2 and C4 are spaced
+    (C2p1 #< C3 #\ C2s1 #> C3), % check that C2 and C3 are spaced
+    (C2p1 #< C4 #\ C2s1 #> C4), % check that C2 and C4 are spaced
     restrict_distances([C3, C4| Rest]).
     
 % check the distance between the two elements of the last row
 restrict_distances([C1, C2]) :-
     % check that C1 and C2 don't touch and C1 is lower than C2
     sum([C1, 1], #<, C2).   % check that C2 is greater than C1 and there is a space between them
+
+/**
+ * Check if the squares don't touch each other, even at corners.
+ */
+ /*
+restrict_distances(SquaresColumns) :-
+    create_rectangles_param(SquaresColumns, [], Rectangles, [], Margin, 1),
+    disjoint2(Rectangles, Margin).
+
+create_rectangles_param([_,_], Rectangles, Rectangles, Margin, Margin, _Row_with_Board_Size_Value).
+create_rectangles_param([Fisrt_square_1_Row, Second_Square_1_Row, Fisrt_square_2_Row, Second_Square_2_Row | Rest], Rectangles, FinalRectangles, Margin, FinalMargin, Row) :-
+    NextRow is Row + 1,
+    create_rectangles_param( [ Fisrt_square_2_Row, Second_Square_2_Row | Rest] , [ 
+                rect(Fisrt_square_1_Row, 1, Row, 1, RectangleType), 
+                rect(Second_Square_1_Row, 1, Row, 1, RectangleType),
+                rect(Fisrt_square_2_Row, 1, Row, 1, RectangleType), 
+                rect(Second_Square_2_Row, 1, Row, 1, RectangleType) | Rectangles
+            ], FinalRectangles,
+            [
+                margin(RectangleType, RectangleType, 1, 1) | Margin
+            ], FinalMargin, NextRow ).
+*/
+
 
 restrict_specific_distances(Vars, Board_Size, Row_Constraints, Column_Constraints) :-
     restrict_specific_distances(Vars, Board_Size, [], [], Row_Constraints, Column_Constraints).
@@ -152,7 +175,7 @@ valid_distance(_Distance, _Board_Size) :-
     invalid_distance, fail.
 
 restrict_row_distance( _Show_error_message, Row, Row_Value, Vars) :-
-    % check if the indicated row have the rigth spacing between the 2 black squares
+    % check if the indicated row have the right spacing between the 2 black squares
     Index2 is Row * 2 ,
     Index1 is Index2 - 1, % subtract operation are faster than multiplication ones
     element(Index1, Vars, Element1), 
@@ -167,6 +190,7 @@ restrict_column_distance(_Show_error_message, Column, Column_Value, Vars) :-
     element(Position1, Vars, Column),           % gets the index position of the element with the indicated column
     element(Position2, Vars, Column),
     (Position1 + 1) // 2 #= (Position2 + 1) // 2 + Column_Value  + 1.
+
 
 restrict_column_distance(1, _Column, _Column_Value, _Vars) :-
     impossible_distance_Constraint, fail.
@@ -312,8 +336,7 @@ time(Board_Size, Column, Column_Value, Row, Row_Value) :-
     restrict_distances(Vars),
     restrict_column_distance(0, Column, Column_Value, Vars), 
     restrict_row_distance(0, Row, Row_Value, Vars),
-    write('Backtracking'), % analyse if backtracking exists (once is always print)
-    labeling([], Vars),
+    labeling([max, step, down], Vars),
     statistics(runtime, X),
     %  print_solution(Board_Size, Vars, Row_Constraints, Column_Constraints),
     % Helena's Path
@@ -322,7 +345,7 @@ time(Board_Size, Column, Column_Value, Row, Row_Value) :-
     % open('C:\\Users\\pasga\\OneDrive - Universidade do Porto\\FEUP\\3rdYear\\PLOG\\feup-plog\\Project2\\times.txt', append, C),
     % set_output(C), % set output to write on the file and not in the console
     write(X), write('ms\n'),
-   % statistics, 
+    statistics, 
     told. %write
 
 % measure time with one Constraint in a column and two Constraint in a row
@@ -357,8 +380,8 @@ time(Board_Size, Column, Column_Value, Row, Row_Value, Row1, Row1_Value, Row2, R
     restrict_row_distance(0, Row, Row_Value, Vars),
     restrict_row_distance(0, Row1, Row1_Value, Vars),
     restrict_row_distance(0, Row2, Row2_Value, Vars),
-    write('Backtracking'), % analyse if backtracking exists (once is always print)
-    labeling([], Vars),
+   % write('Backtracking'), % analyse if backtracking exists (once is always print)
+    labeling([down], Vars),
     statistics(runtime, X),
     %  print_solution(Board_Size, Vars, Row_Constraints, Column_Constraints),
     % Helena's Path
