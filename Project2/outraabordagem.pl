@@ -8,14 +8,28 @@ abordagem(Board_Size, Column, Column_Value, Row, Row_Value) :-
     length(Vars, NumberOfVars),
     domain(Vars, 0, 1),
     check_number_of_squares(Board_Size, Vars),
-    check_distance(Vars, 0, Board_Size),
+    check_distance(Vars, 0, Board_Size ),
+    check_2_squares_row(Vars, Board_Size, Board_Size),
     column_Constraint(Vars, Column, Column_Value, Board_Size),
     row_constraints(Vars, Row, Row_Value, Board_Size),
     labeling([], Vars), 
-    write(Vars).
+    % show
+    nl,
+    show_board(Vars, Board_Size, Board_Size).
+
+check_2_squares_row(_, 0, _).
+check_2_squares_row(Vars, Column, Board_Size) :-
+    NextColumn is Column - 1,
+    element(N, Vars, 1),
+    element(N1, Vars, 1),
+    N #\= N1,
+    (N mod Board_Size) #= NextColumn,
+    (N1 mod Board_Size) #= NextColumn,
+    check_2_squares_row(Vars, NextColumn, Board_Size).
 
 check_distance(Vars, Counter, Board_Size) :-
-    Counter =< Board_Size,
+    Counter >= 0,
+    Counter < (Board_Size - 1),
     element(C1, Vars, 1), % first square of the first row
     element(C2, Vars, 1), % second square of the second row
     element(C3, Vars, 1), % first square of the first row
@@ -44,11 +58,15 @@ check_distance(Vars, Counter, Board_Size) :-
     check_distance(Vars, NextCounter, Board_Size).
 
 check_distance(Vars, Counter, Board_Size) :-
+    Counter > 0,
     element(C1, Vars, 1),
     element(C2, Vars, 1),
     C1 #> (Counter * Board_Size),
     C1 #< ((Counter + 1) * Board_Size - 1),
-    sum([C1, 1], #<, C2) .
+    sum([C1, 1], #<, C2),
+    check_distance(Vars, -1, Board_Size).
+
+check_distance(_Vars, -1, _Board_Size).
 
 row_constraints(Vars, Row, Row_Value, Board_Size) :-
     element(N, Vars, 1), % First square
@@ -72,3 +90,15 @@ column_Constraint(Vars, Column, Column_Value, Board_Size) :-
 check_number_of_squares(Board_Size, Vars) :-
     NumberOfOnes is Board_Size * 2,
     global_cardinality(Vars, [0-_,1-NumberOfOnes] ).
+
+show_board([], 0, _Board_Size).
+show_board(Vars, Line, Board_Size) :-
+    show_board_line(Vars, Get_Rest, Board_Size),
+    Next1 is Line - 1, nl,
+    show_board(Get_Rest, Next1, Board_Size).
+
+show_board_line(Get_Rest, Get_Rest, 0).
+show_board_line([V1 | Vars], Get_Rest, Line) :-
+    write(V1), write(' '),
+    Next1 is Line - 1,
+    show_board_line(Vars, Get_Rest, Next1).
