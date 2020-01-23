@@ -10,7 +10,7 @@ abordagem(Board_Size, Column, Column_Value, Row, Row_Value) :-
     check_number_of_squares(Board_Size, Vars),
     check_distance(Vars, 1, Board_Size, [], Rectangles, [], Margin ),
     disjoint2(Rectangles, Margin),
-   % check_2_squares_row(Vars, Board_Size, Board_Size),
+    check_2_squares_row(Vars, Board_Size, Board_Size),
     column_Constraint(Vars, Column, Column_Value, Board_Size),
     row_constraints(Vars, Row, Row_Value, Board_Size),
     labeling([], Vars), 
@@ -49,18 +49,20 @@ check_distance(Vars, Counter, Board_Size, Rectangles, Final_Rectangles, Margin, 
     C4 #>= (Counter * Board_Size + 2),
     C4 #=< ((Counter + 1) * Board_Size), % only square 2 of the line can occupy the other positions
 
+    C1s1 #= C1 + 1,
+    C2s2 #= C2 + 1,
     C3X #= C3 - Board_Size + 1,
     C4X #= C4 - Board_Size + 1,
 
     NextCounter is Counter + 1,
     check_distance(Vars, NextCounter, Board_Size,
-    [   rect(C1, 1, Counter, 1, Rectangle_Type), 
-        rect(C2, 1, Counter, 1, Rectangle_Type),
+    [   rect(C1s1, 1, Counter, 1, Rectangle_Type), 
+        rect(C2s2, 1, Counter, 1, Rectangle_Type),
         rect(C3X, 1, NextCounter, 1, Rectangle_Type), 
         rect(C4X, 1, NextCounter, 1, Rectangle_Type) | Rectangles], Final_Rectangles, 
     [ margin(Rectangle_Type, Rectangle_Type, 1, 1) | Margin] , Final_Margin).
 
-check_distance(_Vars, -1, _Board_Size, Rectangles, Rectangles, Margin, Margin ).
+check_distance(_Vars, _, _Board_Size, Rectangles, Rectangles, Margin, Margin ).
 
 row_constraints(Vars, Row, Row_Value, Board_Size) :-
     element(N, Vars, 1), % First square
