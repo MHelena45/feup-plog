@@ -329,14 +329,14 @@ check_finished_puzzle(_Answers, _Vars).
 %           time measure and puzzzle analyse
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % measure time with one Constraint in column and row only
-time(Board_Size, Column, Column_Value, Row, Row_Value) :-   
+time(Board_Size, Columns, Rows, Options) :-   
     statistics(runtime, _),
     get_vars_list(Board_Size, Vars),  
     restrict_cardinality(Board_Size, Vars),
     restrict_distances(Vars),
-    restrict_column_distance(0, Column, Column_Value, Vars), 
-    restrict_row_distance(0, Row, Row_Value, Vars),
-    labeling([], Vars),
+    constrain_column(Vars, Columns)
+    constrain_rows(Vars, Rows),
+    labeling(Options, Vars),
     statistics(runtime, X),
     %  print_solution(Board_Size, Vars, Row_Constraints, Column_Constraints),
     % Helena's Path
@@ -344,9 +344,20 @@ time(Board_Size, Column, Column_Value, Row, Row_Value) :-
     % Gaspar's Path
     % open('C:\\Users\\pasga\\OneDrive - Universidade do Porto\\FEUP\\3rdYear\\PLOG\\feup-plog\\Project2\\times.txt', append, C),
     % set_output(C), % set output to write on the file and not in the console
-    write(X), write('ms\n'),
+    write(X), write(','),
     statistics, 
     told. %write
+
+constrain_rows(_, []).
+constrain_rows(Vars, [Row-RowValue | Rest]) :-
+    restrict_row_distance(0, Row, Row_Value, Vars),
+    constrain_rows(Vars, Rest).
+
+constrain_column(_, []).
+constrain_column(Vars, [Column-Column_Value | Rest]) :-
+    restrict_column_distance(0, Column, Column_Value, Vars), 
+    constrain_column(Vars, Rest).
+
 
 % measure time with one Constraint in a column and two Constraint in a row
 time(Board_Size, Column, Column_Value, Row, Row_Value, Row1, Row1_Value) :-   
