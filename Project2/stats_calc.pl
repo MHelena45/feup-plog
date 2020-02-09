@@ -4,13 +4,16 @@
 :- include('2xndisjoint2.pl').
 :- include('nxnautomaton.pl').
 :- include('nxndisjoint.pl').
-:- include('nxnsimples.pl').
+:- include('nxnsimple.pl').
 :- include('2xnsimple.pl').
 
 :- include('util.pl').
 :- include('solution_printer.pl').
 
+filename('C:\\Users\\pasga\\Desktop\\stats.csv').
+
 calc_stats :-
+    write_stats_header,
     board_sizes(Board_Sizes),
     for_each_board_size(Board_Sizes).
 
@@ -52,5 +55,62 @@ order_choice_options([up, down, satisfy, best, all]).
 approaches([automaton_nxn,disjoint2_2xn,disjoint2_nxn,simple_nxn,simple_2xn]).
 
 execute_approach(Approach, Board_Size, Column_Contraints, Row_Contraints, Options) :-   
-   A =.. [Approach, Board_Size, Column_Contraints, Row_Contraints, Options],
-   A.
+    A =.. [Approach, Board_Size, Column_Contraints, Row_Contraints, Options], 
+    reset_stats,
+    A,
+    save_stats(Approach, Board_Size),
+    fd_statistics,
+    statistics.
+
+reset_stats :-
+    fd_statistics(resumptions, _),
+    fd_statistics(entailments, _),
+    fd_statistics(prunings, _),
+    fd_statistics(backtracks, _),
+    fd_statistics(constraints, _),
+    statistics(runtime, _).
+
+save_stats(Approach, Board_Size) :-
+    statistics(runtime, [Runtime,_]),
+    fd_statistics(resumptions, Resumptions),
+    fd_statistics(entailments, Entailments),
+    fd_statistics(prunings, Prunings),
+    fd_statistics(backtracks, Backtracks),
+    fd_statistics(constraints, Constraints),
+
+    filename(Filename),
+    open(Filename, append, C),
+    set_output(C),
+
+    save(Board_Size),
+    save(Approach),
+    save(Runtime),
+    save(Resumptions),
+    save(Entailments),
+    save(Prunings),
+    save(Backtracks),
+    write(Constraints),
+
+    nl,
+    told.
+
+write_stats_header :-
+    filename(Filename),
+    open(Filename, append, C),
+    set_output(C),
+
+    save('Board Size'),
+    save('Approach'),
+    save('Runtime'),
+    save('Resumptions'),
+    save('Entailments'),
+    save('Prunings'),
+    save('Backtracks'),
+    write('Constraints'),
+
+    nl,
+    told.
+
+save(Stat) :-
+    write(Stat),
+    write(',').
