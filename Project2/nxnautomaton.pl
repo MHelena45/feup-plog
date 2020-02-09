@@ -1,17 +1,11 @@
-:- use_module(library(clpfd)).
-:- use_module(library(lists)).
-:- include('util.pl').
 
-abordagem(Board_Size, Column, Column_Value, Row, Row_Value) :-   
-    get_vars(Board_Size, 0, Vars),
-    constrain_columns(Vars, Board_Size, [Column-Column_Value], 1),
-    constrain_rows(Vars, Board_Size, [Row-Row_Value], 1),
-    write('Back'), nl,
+automaton_nxn(Board_Size, Column_Constraints, Row_Constraints, Options) :-   
+    get_vars_matrix(Board_Size, 0, Vars),
+    constrain_columns(Vars, Board_Size, Column_Constraints, 1),
+    constrain_rows(Vars, Board_Size, Row_Constraints, 1),
     append_vars(Vars, [], Final_Vars),
-    labeling([], Final_Vars), 
-    % show
-    nl,
-    show_board(Vars).
+    labeling(Options, Final_Vars), 
+    show_board_matrix(Vars).
 
 constrain_columns(_Vars, Board_Size, _Col_Constraint, Board_Size).
 constrain_columns(Vars, Board_Size, Col_Constraint, Num_Col) :-
@@ -78,5 +72,28 @@ constrain_tuples([A1, _M1, D1], [A2, _M2, D2]) :-
 
 contrain_line_distance(Dist1, Dist2) :-
     abs(Dist1 - Dist2) #> 1.
+
+get_vars_matrix(Board_Size, Board_Size, []).
+get_vars_matrix(Board_Size, Row_Counter, [H|T]) :-
+    length(H, Board_Size),
+    domain(H, 0, 1),
+    Row_Counter1 is Row_Counter + 1,
+    get_vars_matrix(Board_Size, Row_Counter1, T).
+
+append_vars([], Acc, Acc).
+append_vars([H|T], Acc, Final_Vars) :-
+    append(Acc, H, Acc1),
+    append_vars(T, Acc1, Final_Vars).
+
+show_board_matrix([]).
+show_board_matrix([Row|Rest]) :-
+    show_row(Row), 
+    nl,
+    show_board_matrix(Rest).
+
+show_row([]).
+show_row([Col|Rest]) :-
+    write(Col), write(' '),
+    show_row(Rest).
 
 

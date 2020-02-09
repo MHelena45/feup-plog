@@ -252,3 +252,6 @@ calc_cell_size(_Board_Size).
 num_cols_per_cell(10).
 num_lines_per_cell(5).
 
+clear_screen :-
+    write('\33\[2J').
+
