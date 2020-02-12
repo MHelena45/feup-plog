@@ -1,11 +1,13 @@
 
-simple_2xn(Board_Size, Row_Constraints, Column_Constraints, Options) :-
+simple_2xn(Board_Size, Column_Constraints, Row_Constraints, Options) :-
     % Vars is a list in which 2 following members represent the column position of the shaded squares of the same row
     get_vars_list(Board_Size, Vars),
     restrict_cardinality(Board_Size, Vars), % Restricts the number shaded squares in a row
     restrict_distances_simple(Vars), % Makes sure that the shaded squares dont touch each other
-    labeling(Options, Vars), % Gets the solution
-    print_solution(Board_Size, Vars, Row_Constraints, Column_Constraints).
+    restrict_column_constraints(simple_2xn, Column_Constraints, Vars),
+    restrict_row_constraints(simple_2xn, Row_Constraints, Vars),
+    labeling(Options, Vars). % Gets the solution
+    %print_solution(Board_Size, Vars, Row_Constraints, Column_Constraints).
 
 /**
  * Check if the squares don't touch each other, even at corners.

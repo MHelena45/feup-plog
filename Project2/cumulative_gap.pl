@@ -1,6 +1,3 @@
-:-use_module(library(clpfd)).
-:-use_module(library(lists)).
-
 
 % N - Board Size
 % Hor - Horizontal Clues (0 is no clue)
@@ -33,9 +30,9 @@ solver(1, N, Hor, Ver, Options):-
 	
 	append(Board, Vars),
 	
-	labeling(Options, Vars),
-	fd_statistics,
-	showBoard(Board, N, Hor, Ver).
+	labeling(Options, Vars).
+	%fd_statistics,
+	%showBoard(Board, N, Hor, Ver).
 	
 
 % cumulative with horizontal and vertical tasks
@@ -67,9 +64,9 @@ solver(2, N, Hor, Ver, Options):-
 	
 	append([Starts, Ends, TStarts, TEnds], Vars),
 		
-	labeling(Options, Vars),
-	fd_statistics,
-	showBoard(Board, N, Hor, Ver).
+	labeling(Options, Vars).
+	%fd_statistics,
+	%showBoard(Board, N, Hor, Ver).
 
 
 
@@ -96,9 +93,9 @@ solver(3, N, Hor, Ver, Options):-
 
 	gc(Idxs, N),
 	
-	labeling(Options, Idxs),
-	fd_statistics,
-	showBoard(Board, N, Hor, Ver).
+	labeling(Options, Idxs).
+	%fd_statistics,
+	%showBoard(Board, N, Hor, Ver).
 
 
 % cumulative with horizontal tasks and vertical and diagonal constraints, but no mapping to a board
@@ -117,14 +114,14 @@ solver(4, N, Hor, Ver, Options):-
 	
 	gc(Idxs, N),
 	
-	labeling(Options, Idxs),!,
-	fd_statistics,
+	labeling(Options, Idxs),!.
+	/* fd_statistics,
 	
 	length(Board, N),
 	Z is N-2,
 	makeBoard(Board, N, Z),
 	makeTasks(Board, Starts, Ends, Tasks, Hor, 1),
-	showBoard(Board, N, Hor, Ver).
+	showBoard(Board, N, Hor, Ver). */
 	
 makeTasks2(Max, [], [], [], [], N):- N > Max, !.
 makeTasks2(Max, [S|Ss], [E|Es], [task(S, D, E, 1, N)|Ts], [H|Hs], N):-

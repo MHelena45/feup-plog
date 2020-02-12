@@ -8,9 +8,8 @@ simple_nxn(Board_Size, _Column_Contraints, _Row_Constraints, Options) :-
     check_2_squares_row(Vars, Board_Size, Board_Size),
     %column_Constraint(Vars, Column, Column_Value, Board_Size),
     %row_constraints(Vars, Row, Row_Value, Board_Size),
-    write('back'), nl,
-    labeling(Options, Vars), 
-    show_board(Vars, Board_Size, Board_Size).
+    labeling(Options, Vars).
+    %show_board(Vars, Board_Size, Board_Size).
 
 check_distance_simple(Vars, Counter, Board_Size) :-
     Counter >= 0,

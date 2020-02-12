@@ -1,5 +1,5 @@
 
-disjoint2_nxn(Board_Size, _Column_Constraints, _Row_Constraints, Options) :-   
+disjoint2_nxn(Board_Size, Column_Constraints, Row_Constraints, Options) :-   
     NumberOfVars is Board_Size * Board_Size,
     length(Vars, NumberOfVars),
     domain(Vars, 0, 1),
@@ -7,10 +7,10 @@ disjoint2_nxn(Board_Size, _Column_Constraints, _Row_Constraints, Options) :-
     check_distance_disjoint(Vars, 1, Board_Size, [], Rectangles, [], Margin ),
     disjoint2(Rectangles, Margin),
     check_2_squares_row(Vars, Board_Size, Board_Size),
-    %column_Constraint(Vars, Column, Column_Value, Board_Size),
-    %row_constraints(Vars, Row, Row_Value, Board_Size),
-    labeling(Options, Vars), 
-    show_board(Vars, Board_Size, Board_Size).
+    column_constraints(Vars, Column_Constraints, Board_Size),
+    row_constraints(Vars, Row_Constraints, Board_Size),
+    labeling(Options, Vars).
+    %show_board(Vars, Board_Size, Board_Size).
 
 /**
  * Disjoint tem a posição no vetor como x

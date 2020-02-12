@@ -57,3 +57,85 @@ show_board_line([V1 | Vars], Get_Rest, Line) :-
     write(V1), write(' '),
     Next1 is Line - 1,
     show_board_line(Vars, Get_Rest, Next1).
+
+restrict_column_constraints(_Approach, [], _Vars).
+restrict_column_constraints(Approach, [Column_Constraint|Rest], Vars) :-
+    restrict_column_distance(Approach, Column_Constraint, Vars),
+    restrict_column_constraints(Approach, Rest, Vars).
+
+restrict_row_constraints(_Approach, [], _Vars).
+restrict_row_constraints(Approach, [Row_Constraint|Rest], Vars) :-
+    restrict_row_distance(Approach, Row_Constraint, Vars),
+    restrict_row_constraints(Approach, Rest, Vars).
+
+restrict_row_distance(disjoint2_2xn, Row-Row_Value, Vars) :-
+    % check if the indicated row have the right spacing between the 2 black squares
+    Index2 is Row * 2 ,
+    Index1 is Index2 - 1, % subtract operation are faster than multiplication ones
+    element(Index1, Vars, Element1), 
+    element(Index2, Vars, Element2),
+    disjoint2( [
+    rect(Element1, 1, Row, 1, RectangleType), 
+    rect(Element2, 1, Row, 1, RectangleType)],
+    [margin(RectangleType, RectangleType, Row_Value, 1)]).
+
+
+restrict_row_distance(simple_2xn, Row-Row_Value, Vars) :-
+    % check if the indicated row have the right spacing between the 2 black squares
+    Index2 is Row * 2 ,
+    Index1 is Index2 - 1, % subtract operation are faster than multiplication ones
+    element(Index1, Vars, Element1), 
+    element(Index2, Vars, Element2),
+    Element2 #= Element1 + Row_Value + 1.
+
+% check if the indicated row has the rigth spacing between the 2 black squares
+restrict_column_distance(disjoint2_2xn, Column-Column_Value, Vars) :-  
+    element(Position1, Vars, Column),           % gets the index position of the element with the indicated column
+    element(Position2, Vars, Column),
+    (Position1 + 1) // 2 #= (Position2 + 1) // 2 + Column_Value  + 1.
+
+% check if the indicated row has the rigth spacing between the 2 black squares
+restrict_column_distance(simple_2xn, Column-Column_Value, Vars) :-  
+    element(Position1, Vars, Column),           % gets the index position of the element with the indicated column
+    element(Position2, Vars, Column),
+    (Position1 + 1) // 2 #= (Position2 + 1) // 2 + Column_Value  + 1.
+
+cumulative_baseline(Board_Size, Column_Constraints, Row_Constraints, Options) :-
+    parse_constraints(Column_Constraints, Board_Size, 1, [], Parsed_Col_Constraints),
+    parse_constraints(Row_Constraints, Board_Size, 1, [], Parsed_Row_Constraints),
+    solver(1, Board_Size, Parsed_Row_Constraints, Parsed_Col_Constraints, Options).
+
+cumulative_horizontal_and_vertical(Board_Size, Column_Constraints, Row_Constraints, Options) :-
+    parse_constraints(Column_Constraints, Board_Size, 1, [], Parsed_Col_Constraints),
+    parse_constraints(Row_Constraints, Board_Size, 1, [], Parsed_Row_Constraints),
+    solver(2, Board_Size, Parsed_Row_Constraints, Parsed_Col_Constraints, Options).
+
+cumulative_horizontal_only(Board_Size, Column_Constraints, Row_Constraints, Options) :-
+    parse_constraints(Column_Constraints, Board_Size, 1, [], Parsed_Col_Constraints),
+    parse_constraints(Row_Constraints, Board_Size, 1, [], Parsed_Row_Constraints),
+    solver(3, Board_Size, Parsed_Row_Constraints, Parsed_Col_Constraints, Options).
+
+cumulative_horizontal_only_no_board(Board_Size, Column_Constraints, Row_Constraints, Options) :-
+    parse_constraints(Column_Constraints, Board_Size, 1, [], Parsed_Col_Constraints),
+    parse_constraints(Row_Constraints, Board_Size, 1, [], Parsed_Row_Constraints),
+    solver(4, Board_Size, Parsed_Row_Constraints, Parsed_Col_Constraints, Options).
+
+parse_constraints(_Constraints, Board_Size, Coord_Counter, Acc, Acc) :-
+    C1 is (Board_Size + 1),
+    Coord_Counter = C1, !.
+
+parse_constraints([], Board_Size, Coord_Counter, Acc, Parsed) :-
+    append(Acc, [0], Acc1),
+    Coord_Counter1 is Coord_Counter + 1,
+    parse_constraints([], Board_Size, Coord_Counter1, Acc1, Parsed).
+
+parse_constraints([Coord-Dist|R], Board_Size, Coord_Counter, Acc, Parsed) :-
+    Coord \= Coord_Counter,
+    Coord_Counter1 is Coord_Counter + 1,
+    append(Acc, [0], Acc1),
+    parse_constraints([Coord-Dist|R], Board_Size, Coord_Counter1, Acc1, Parsed).
+
+parse_constraints([Coord-Dist|R], Board_Size, Coord, Acc, Parsed) :-
+    append(Acc, [Dist], Acc1),
+    Coord_Counter is Coord + 1,
+    parse_constraints(R, Board_Size, Coord_Counter, Acc1, Parsed).

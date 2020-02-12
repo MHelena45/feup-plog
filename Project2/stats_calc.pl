@@ -6,11 +6,30 @@
 :- include('nxndisjoint.pl').
 :- include('nxnsimple.pl').
 :- include('2xnsimple.pl').
+:- include('cumulative_gap.pl').
 
 :- include('util.pl').
 :- include('solution_printer.pl').
 
 filename('C:\\Users\\pasga\\Desktop\\stats.csv').
+
+% Variable data
+board_sizes([9, 11, 13, 15]).
+approaches([ % simple_nxn and disjoint_nxn missing due to taking too long
+    automaton_nxn, 
+    disjoint2_2xn, 
+    simple_2xn, 
+    cumulative_baseline, 
+    cumulative_horizontal_and_vertical, 
+    cumulative_horizontal_only,
+    cumulative_horizontal_only_no_board
+]). 
+column_contraints([]).
+row_constraints([]).
+
+next_variable_options([leftmost, min, max, ff, anti_first_fail, occurrence, ffc, max_regret]).
+way_choice_options([step, enum, bisect, median, middle]).
+order_choice_options([up, down, satisfy, best, all]).
 
 calc_stats :-
     write_stats_header,
@@ -25,6 +44,7 @@ for_each_board_size([Board_Size|Rest]) :-
 
 for_each_approach(_Board_Size, []).
 for_each_approach(Board_Size, [Approach|Rest]) :-
+    write(Approach), nl,
     next_variable_options(V_Options),
     for_each_next(Board_Size, Approach, V_Options),
     for_each_approach(Board_Size, Rest).
@@ -43,24 +63,16 @@ for_each_way(Board_Size, Approach, V_Option, [W_Option|Rest]) :-
 
 for_each_order(_Board_Size, _Approach, _V_Option, _W_Option, []).
 for_each_order(Board_Size, Approach, V_Option, W_Option, [O_Option|Rest]) :-
-    execute_approach(Approach, Board_Size, [], [], [V_Option, W_Option, O_Option]),
+    column_contraints(Column_Contraints),
+    row_constraints(Row_Contraints),
+    execute_approach(Approach, Board_Size, Column_Contraints, Row_Contraints, [V_Option, W_Option, O_Option]),
     for_each_order(Board_Size, Approach, V_Option, W_Option, Rest).
-
-board_sizes([9, 11, 13, 15]).
-
-next_variable_options([leftmost, min, max, ff, anti_first_fail, occurrence, ffc, max_regret]).
-way_choice_options([step, enum, bisect, median, middle]).
-order_choice_options([up, down, satisfy, best, all]).
-
-approaches([automaton_nxn,disjoint2_2xn,disjoint2_nxn,simple_nxn,simple_2xn]).
 
 execute_approach(Approach, Board_Size, Column_Contraints, Row_Contraints, Options) :-   
     A =.. [Approach, Board_Size, Column_Contraints, Row_Contraints, Options], 
     reset_stats,
     A,
-    save_stats(Approach, Board_Size, Options),
-    fd_statistics,
-    statistics.
+    save_stats(Approach, Board_Size, Options).
 
 reset_stats :-
     fd_statistics(resumptions, _),
@@ -71,7 +83,7 @@ reset_stats :-
     statistics(runtime, _).
 
 save_stats(Approach, Board_Size, Options) :-
-    statistics(runtime, [Runtime,_]),
+    statistics(runtime, [_, Runtime]),
     fd_statistics(resumptions, Resumptions),
     fd_statistics(entailments, Entailments),
     fd_statistics(prunings, Prunings),
