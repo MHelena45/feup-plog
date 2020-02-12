@@ -19,32 +19,32 @@ calc_stats :-
 
 for_each_board_size([]).
 for_each_board_size([Board_Size|Rest]) :-
-    next_variable_options(V_Options),
-    for_each_next(Board_Size, V_Options),
+    approaches(Approaches),
+    for_each_approach(Board_Size, Approaches),
     for_each_board_size(Rest).
 
-for_each_next(_Board_Size, []).
-for_each_next(Board_Size, [V_Option|Rest]) :-
+for_each_approach(_Board_Size, []).
+for_each_approach(Board_Size, [Approach|Rest]) :-
+    next_variable_options(V_Options),
+    for_each_next(Board_Size, Approach, V_Options),
+    for_each_approach(Board_Size, Rest).
+
+for_each_next(_Board_Size, _Approach, []).
+for_each_next(Board_Size, Approach, [V_Option|Rest]) :-
     way_choice_options(W_Options),
-    for_each_way(Board_Size, V_Option, W_Options),
-    for_each_next(Board_Size, Rest).
+    for_each_way(Board_Size, Approach, V_Option, W_Options),
+    for_each_next(Board_Size, Approach, Rest).
 
-for_each_way(_Board_Size, _V_Option, []).
-for_each_way(Board_Size, V_Option, [W_Option|Rest]) :-
+for_each_way(_Board_Size, _Approach, _V_Option, []).
+for_each_way(Board_Size, Approach, V_Option, [W_Option|Rest]) :-
     order_choice_options(O_Options),
-    for_each_order(Board_Size, V_Option, W_Option, O_Options),
-    for_each_way(Board_Size, V_Option, Rest).
+    for_each_order(Board_Size, Approach, V_Option, W_Option, O_Options),
+    for_each_way(Board_Size, Approach, V_Option, Rest).
 
-for_each_order(_Board_Size, _V_Option, _W_Option, []).
-for_each_order(Board_Size, V_Option, W_Option, [O_Option|Rest]) :-
-    approaches(Approaches),
-    for_each_approach(Board_Size, V_Option, W_Option, O_Option, Approaches),
-    for_each_order(Board_Size, V_Option, W_Option, Rest).
-
-for_each_approach(_Board_Size, _V_Option, _W_Option, _O_Option, []).
-for_each_approach(Board_Size, V_Option, W_Option, O_Option, [Approach|Rest]) :-
+for_each_order(_Board_Size, _Approach, _V_Option, _W_Option, []).
+for_each_order(Board_Size, Approach, V_Option, W_Option, [O_Option|Rest]) :-
     execute_approach(Approach, Board_Size, [], [], [V_Option, W_Option, O_Option]),
-    for_each_approach(Board_Size, V_Option, W_Option, O_Option, Rest).
+    for_each_order(Board_Size, Approach, V_Option, W_Option, Rest).
 
 board_sizes([9, 11, 13, 15]).
 
@@ -58,7 +58,7 @@ execute_approach(Approach, Board_Size, Column_Contraints, Row_Contraints, Option
     A =.. [Approach, Board_Size, Column_Contraints, Row_Contraints, Options], 
     reset_stats,
     A,
-    save_stats(Approach, Board_Size),
+    save_stats(Approach, Board_Size, Options),
     fd_statistics,
     statistics.
 
@@ -70,7 +70,7 @@ reset_stats :-
     fd_statistics(constraints, _),
     statistics(runtime, _).
 
-save_stats(Approach, Board_Size) :-
+save_stats(Approach, Board_Size, Options) :-
     statistics(runtime, [Runtime,_]),
     fd_statistics(resumptions, Resumptions),
     fd_statistics(entailments, Entailments),
@@ -84,6 +84,7 @@ save_stats(Approach, Board_Size) :-
 
     save(Board_Size),
     save(Approach),
+    save_options(Options),
     save(Runtime),
     save(Resumptions),
     save(Entailments),
@@ -101,6 +102,7 @@ write_stats_header :-
 
     save('Board Size'),
     save('Approach'),
+    save('Options'),
     save('Runtime'),
     save('Resumptions'),
     save('Entailments'),
@@ -110,6 +112,11 @@ write_stats_header :-
 
     nl,
     told.
+
+save_options([Option1, Option2, Option3]) :-
+    write(Option1), write('-'),
+    write(Option2), write('-'),
+    write(Option3), write(',').
 
 save(Stat) :-
     write(Stat),
