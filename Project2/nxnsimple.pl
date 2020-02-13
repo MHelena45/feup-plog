@@ -3,12 +3,12 @@
 
 simple_nxn(Board_Size, _Column_Contraints, Row_Constraints, Options) :-   
     get_vars_matrix(Board_Size, 0, Vars),
-    % check_number_of_squares(Board_Size, Vars),
-    check_distance_simple(Vars),
-  %  check_2_squares_row(Vars, Board_Size, Board_Size),
-    %column_Constraint(Vars, Column, Column_Value, Board_Size),
-    row_constraint(1, Row_Constraints, Vars),
+    check_distance_simple(Vars, [], Squares),
+    restrict_squares_per_column(Board_Size, Squares ),
+    % column_Constraint(Vars, Column, Column_Value, Board_Size),
+    % row_constraint(1, Row_Constraints, Vars),
     append_vars(Vars, [], Final_Vars),
+    trace,
     labeling(Options, Final_Vars), 
     show_board_matrix(Vars).
 
@@ -21,7 +21,8 @@ row_constraint(Counter, Row_Constraint, [_Line1 | OtherLines]) :-
    NextCounter is Counter + 1,
    row_constraint(NextCounter, Row_Constraint, OtherLines).
 
-check_distance_simple([Line1, Line2 | OtherLines]) :-
+check_distance_simple([_Line], Squares, Squares).
+check_distance_simple([Line1, Line2 | OtherLines], Squares, Final_Squares) :-
     element(C1, Line1, 1), % first square of the first row
     element(C2, Line1, 1), % second square of the second row
     element(C3, Line2, 1), % first square of the first row
@@ -39,13 +40,7 @@ check_distance_simple([Line1, Line2 | OtherLines]) :-
     (C2p1 #< C3 #\ C2s1 #> C3), % check that C2 and C3 are spaced
     (C2p1 #< C4 #\ C2s1 #> C4), % check that C2 and C4 are spaced
 
-    check_distance_simple([Line2 | OtherLines]).
-
-check_distance_simple([Line]) :-
-    element(C1, Line, 1), % first square of the first row
-    element(C2, Line, 1), % second square of the second row
-        % check that C1 and C2 don't touch and C1 is lower than C2
-    sum([C1, 1], #<, C2).   % check that C2 is greater than C1 and there is a space between them
+    check_distance_simple([Line2 | OtherLines], [C1, C2, C3, C4 | Squares], Final_Squares).
 
 /**
  * Creates the variables needed ( list of lists), restrict domain
@@ -74,4 +69,19 @@ show_row([Col|Rest]) :-
     write(Col), write(' '),
     show_row(Rest).
 
+/**
+ * makes sure there are only two black squares per column
+ */
+restrict_squares_per_column( Board_Size, Squares ) :-
+    get_cardinality(Board_Size, [], List_Of_Cardinality),
+    global_cardinality(Squares, List_Of_Cardinality).   
 
+/**
+ * gets the list of cardinality being applied. Every integer number in the domain [1, board_size], 
+ * must appear twice.
+ */
+get_cardinality(0, List_Of_Cardinality, List_Of_Cardinality).
+get_cardinality(Board_Size, List_Of_Cardinality, Final_List_Of_Cardinality) :-
+    Board_Size1 is Board_Size  - 1,
+    append([Board_Size-2], List_Of_Cardinality, List_Of_Cardinality1),
+    get_cardinality(Board_Size1, List_Of_Cardinality1, Final_List_Of_Cardinality).
