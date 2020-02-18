@@ -10,20 +10,17 @@ disjoint2_2xn(Board_Size, Column_Constraints, Row_Constraints, Options) :-
     %print_solution(Board_Size, Vars, Row_Constraints, Column_Constraints).
 
 restrict_distances_disjoint(SquaresColumns) :-
-    create_rectangles_param(SquaresColumns, [], Rectangles, [], Margin, 1),
-    disjoint2(Rectangles, Margin).
+    create_rectangles_param(SquaresColumns, [], Rectangles, 1),
+    disjoint2(Rectangles, [margin(a, a, 1, 1)]).
 
-create_rectangles_param([_,_], Rectangles, Rectangles, Margin, Margin, _Row_with_Board_Size_Value).
-create_rectangles_param([Fisrt_square_1_Row, Second_Square_1_Row, Fisrt_square_2_Row, Second_Square_2_Row | Rest], Rectangles, FinalRectangles, Margin, FinalMargin, Row) :-
+create_rectangles_param([], Rectangles, Rectangles, _Row_with_Board_Size_Value).
+create_rectangles_param([Fisrt_square_1_Row, Second_Square_1_Row | Rest], Rectangles, FinalRectangles, Row) :-
+    Fisrt_square_1_Row #< Second_Square_1_Row,
     NextRow is Row + 1,
-    create_rectangles_param( [ Fisrt_square_2_Row, Second_Square_2_Row | Rest] , [ 
-                rect(Fisrt_square_1_Row, 1, Row, 1, RectangleType), 
-                rect(Second_Square_1_Row, 1, Row, 1, RectangleType),
-                rect(Fisrt_square_2_Row, 1, Row, 1, RectangleType), 
-                rect(Second_Square_2_Row, 1, Row, 1, RectangleType) | Rectangles
-            ], FinalRectangles,
-            [
-                margin(RectangleType, RectangleType, 1, 1) | Margin
-            ], FinalMargin, NextRow).
+    create_rectangles_param(  Rest , [ 
+                rect(Fisrt_square_1_Row, 1, Row, 1, a), 
+                rect(Second_Square_1_Row, 1, Row, 1, a)
+                | Rectangles
+            ], FinalRectangles, NextRow).
 
 
