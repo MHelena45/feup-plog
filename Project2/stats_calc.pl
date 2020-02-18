@@ -29,7 +29,7 @@ row_constraints([]).
 
 next_variable_options([leftmost, min, max, ff, anti_first_fail, occurrence, ffc, max_regret]).
 way_choice_options([step, enum, bisect, median, middle]).
-order_choice_options([up, down, satisfy, best, all]).
+order_choice_options([up, down]).
 
 calc_stats :-
     write_stats_header,
@@ -84,6 +84,10 @@ reset_stats :-
 
 save_stats(Approach, Board_Size, Options) :-
     statistics(runtime, [_, Runtime]),
+    statistics(memory, Memory),
+    statistics(memory_used, Memory_Used),
+    statistics(program, Program),
+
     fd_statistics(resumptions, Resumptions),
     fd_statistics(entailments, Entailments),
     fd_statistics(prunings, Prunings),
@@ -98,6 +102,9 @@ save_stats(Approach, Board_Size, Options) :-
     save(Approach),
     save_options(Options),
     save(Runtime),
+    save(Memory),
+    save(Memory_Used),
+    save(Program),
     save(Resumptions),
     save(Entailments),
     save(Prunings),
@@ -116,6 +123,9 @@ write_stats_header :-
     save('Approach'),
     save('Options'),
     save('Runtime'),
+    save('Memory'),
+    save('Memory_used'),
+    save('Program'),
     save('Resumptions'),
     save('Entailments'),
     save('Prunings'),
