@@ -1,5 +1,3 @@
-:- use_module(library(clpfd)).
-:- use_module(library(lists)).
 
 simple_nxn(Board_Size, _Column_Contraints, Row_Constraints, Options) :-   
     get_vars_matrix(Board_Size, 0, Vars),
@@ -46,32 +44,5 @@ check_distance_simple([Line]) :-
     element(C2, Line, 1), % second square of the second row
         % check that C1 and C2 don't touch and C1 is lower than C2
     sum([C1, 1], #<, C2).   % check that C2 is greater than C1 and there is a space between them
-
-/**
- * Creates the variables needed ( list of lists), restrict domain
- */
-get_vars_matrix(Board_Size, Board_Size, []).
-get_vars_matrix(Board_Size, Row_Counter, [H|T]) :-
-    length(H, Board_Size),                          % create line
-    domain(H, 0, 1),
-    global_cardinality(H, [0-_, 1-2]),
-    Row_Counter1 is Row_Counter + 1,
-    get_vars_matrix(Board_Size, Row_Counter1, T).
-
-append_vars([], Acc, Acc).
-append_vars([H|T], Acc, Final_Vars) :-
-    append(Acc, H, Acc1),
-    append_vars(T, Acc1, Final_Vars).
-
-show_board_matrix([]).
-show_board_matrix([Row|Rest]) :-
-    show_row(Row), 
-    nl,
-    show_board_matrix(Rest).
-
-show_row([]).
-show_row([Col|Rest]) :-
-    write(Col), write(' '),
-    show_row(Rest).
 
 

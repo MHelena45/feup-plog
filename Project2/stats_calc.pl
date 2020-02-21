@@ -69,7 +69,7 @@ for_each_order(Board_Size, Approach, V_Option, W_Option, [O_Option|Rest]) :-
     for_each_order(Board_Size, Approach, V_Option, W_Option, Rest).
 
 execute_approach(Approach, Board_Size, Column_Contraints, Row_Contraints, Options) :-   
-    A =.. [Approach, Board_Size, Column_Contraints, Row_Contraints, Options], 
+    A =.. [Approach, Board_Size, Column_Contraints, Row_Contraints, [satisfy|Options]], 
     reset_stats,
     A,
     save_stats(Approach, Board_Size, Options).

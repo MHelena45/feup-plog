@@ -4,6 +4,29 @@ get_vars_list(Board_Size, Vars) :-
     length(Vars, Board_Squares),
     domain(Vars, 1, Board_Size). % vars can only be between 1 and the board size
 
+get_vars_matrix(Board_Size, Board_Size, []).
+get_vars_matrix(Board_Size, Row_Counter, [H|T]) :-
+    length(H, Board_Size),
+    domain(H, 0, 1),
+    Row_Counter1 is Row_Counter + 1,
+    get_vars_matrix(Board_Size, Row_Counter1, T).
+
+append_vars([], Acc, Acc).
+append_vars([H|T], Acc, Final_Vars) :-
+    append(Acc, H, Acc1),
+    append_vars(T, Acc1, Final_Vars).
+
+show_board_matrix([]).
+show_board_matrix([Row|Rest]) :-
+    show_row(Row), 
+    nl,
+    show_board_matrix(Rest).
+
+show_row([]).
+show_row([Col|Rest]) :-
+    write(Col), write(' '),
+    show_row(Rest).
+
 restrict_cardinality(Board_Size, Vars) :-
     get_cardinality(Board_Size, [], List_Of_Cardinality),
     global_cardinality(Vars, List_Of_Cardinality).   
@@ -79,7 +102,13 @@ restrict_row_distance(disjoint2_2xn, Row-Row_Value, Vars) :-
     rect(Element2, 1, Row, 1, RectangleType)],
     [margin(RectangleType, RectangleType, Row_Value, 1)]).
 
-
+restrict_row_distance(disjoint2_nxn, Row-Row_Value, Vars) :-
+    nth1(Row, Vars, Line),
+    element(Index1, Line, 1),
+    element(Index2, Line, 1),
+    Index1 #< Index2,
+    Row_Value #= Index2 - Index1 - 1.
+    
 restrict_row_distance(simple_2xn, Row-Row_Value, Vars) :-
     % check if the indicated row have the right spacing between the 2 black squares
     Index2 is Row * 2 ,
@@ -93,6 +122,15 @@ restrict_column_distance(disjoint2_2xn, Column-Column_Value, Vars) :-
     element(Position1, Vars, Column),           % gets the index position of the element with the indicated column
     element(Position2, Vars, Column),
     (Position1 + 1) // 2 #= (Position2 + 1) // 2 + Column_Value  + 1.
+
+restrict_column_distance(disjoint2_nxn, Num_Col-Column_Value, Vars) :-
+    nth1(1, Vars, First_Line),
+    length(First_Line, Board_Size),
+    get_column(Vars, Board_Size, Num_Col, 1, Column),
+    element(Index1, Column, 1),
+    element(Index2, Column, 1),
+    Index1 #< Index2,
+    Column_Value #= Index2 - Index1 - 1.
 
 % check if the indicated row has the rigth spacing between the 2 black squares
 restrict_column_distance(simple_2xn, Column-Column_Value, Vars) :-  

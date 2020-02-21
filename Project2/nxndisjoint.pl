@@ -1,39 +1,19 @@
-:-use_module(library(clpfd)).
-:-use_module(library(lists)).
 
 disjoint2_nxn(Board_Size, Column_Constraints, Row_Constraints, Options) :-   
     get_vars_matrix(Board_Size, 0, Vars),
-    check_distance_disjoint(Vars, 1, [], Rectangles, [], Margin ),
+    restrict_cardinality_matrix(Vars)
+    check_distance_disjoint(Vars, 1, [], Rectangles, [], Margin),
     disjoint2(Rectangles, [margin(a, a, 1, 1)]),
-    % constrain_columns(Vars, Board_Size, Column_Constraints, 1),
-    row_constraint(1, Row_Constraints, Vars),
+    restrict_column_constraints(disjoint2_nxn, Column_Constraints, Vars),
+    restrict_row_constraints(disjoint2_nxn, Row_Constraints, Vars),
     append_vars(Vars, [], Final_Vars),
     labeling(Options, Final_Vars),
     show_board_matrix(Vars).
-
-row_constraints([], _Vars).
-row_constraints([Row_Constraint | MoreConstraints], Vars) :-
-    row_constraint(1, Row_Constraint, Vars),
-    row_constraints(MoreConstraints, Vars).
-
-row_constraint(Row, [Row-Row_Value], [Line | _]) :-
-    element(S1, Line, 1), % first square of the first row
-    element(S2, Line, 1), % second square of the second row
-    disjoint2( 
-       [rect(S1, 1, Row, 1, Rectangle_Type), 
-        rect(S2, 1, Row, 1, Rectangle_Type) ],
-       [ margin(Rectangle_Type, Rectangle_Type, Row_Value, 0) ] ).
-
-
-row_constraint(Counter, Row_Constraint, [_Line1 | OtherLines]) :-
-   NextCounter is Counter + 1,
-   row_constraint(NextCounter, Row_Constraint, OtherLines).
 
 /**
  * Disjoint tem a posição no vetor como x
  * usa as linhas a ser utilizadas como y
  */
-
 check_distance_disjoint( [  ], _Board_Size, Rectangles, Rectangles, Margin, Margin).
 check_distance_disjoint([Line1 | OtherLines], Counter, Rectangles, Final_Rectangles, Margin, Final_Margin ):-
 
@@ -49,32 +29,6 @@ check_distance_disjoint([Line1 | OtherLines], Counter, Rectangles, Final_Rectang
     [ margin(a, a, 1, 1) | Margin] , Final_Margin).
 
 
-/**
- * Creates the variables needed ( list of lists), restrict domain
- */
-get_vars_matrix(Board_Size, Board_Size, []).
-get_vars_matrix(Board_Size, Row_Counter, [H|T]) :-
-    length(H, Board_Size),                          % create line
-    domain(H, 0, 1),
-    global_cardinality(H, [0-_, 1-2]),
-    Row_Counter1 is Row_Counter + 1,
-    get_vars_matrix(Board_Size, Row_Counter1, T).
-
-append_vars([], Acc, Acc).
-append_vars([H|T], Acc, Final_Vars) :-
-    append(Acc, H, Acc1),
-    append_vars(T, Acc1, Final_Vars).
-
-show_board_matrix([]).
-show_board_matrix([Row|Rest]) :-
-    show_row(Row), 
-    nl,
-    show_board_matrix(Rest).
-
-show_row([]).
-show_row([Col|Rest]) :-
-    write(Col), write(' '),
-    show_row(Rest).
 
 
 	

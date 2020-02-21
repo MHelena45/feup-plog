@@ -4,17 +4,17 @@ automaton_nxn(Board_Size, Column_Constraints, Row_Constraints, Options) :-
     constrain_columns(Vars, Board_Size, Column_Constraints, 1),
     constrain_rows(Vars, Board_Size, Row_Constraints, 1),
     append_vars(Vars, [], Final_Vars),
-    labeling(Options, Final_Vars).
-    %show_board_matrix(Vars).
+    labeling(Options, Final_Vars),
+    show_board_matrix(Vars).
 
-constrain_columns(_Vars, Board_Size, _Col_Constraint, Board_Size).
+constrain_columns(_Vars, Board_Size, _Col_Constraints, Board_Size).
 constrain_columns(Vars, Board_Size, Col_Constraints, Num_Col) :-
     get_column_tuple(Vars, Board_Size, Num_Col, Tuple1),
-    check_specific_constraint(Num_Col, Col_Constraints, New_Col_Constraints, Tuple1),
     Num_Col1 is Num_Col + 1,
     get_column_tuple(Vars, Board_Size, Num_Col1, Tuple2),
-    check_specific_constraint(Num_Col1, New_Col_Constraints, New_Col_Constraints1, Tuple2),
     constrain_tuples(Tuple1, Tuple2),
+    check_specific_constraint(Num_Col, Col_Constraints, New_Col_Constraints, Tuple1),
+    check_specific_constraint(Num_Col1, New_Col_Constraints, New_Col_Constraints1, Tuple2),
     constrain_columns(Vars, Board_Size, New_Col_Constraints1, Num_Col1).
 
 constrain_rows(_Vars, Board_Size, _Row_Contraint, Num_Row):-
@@ -73,27 +73,5 @@ constrain_tuples([A1, _M1, D1], [A2, _M2, D2]) :-
 contrain_line_distance(Dist1, Dist2) :-
     abs(Dist1 - Dist2) #> 1.
 
-get_vars_matrix(Board_Size, Board_Size, []).
-get_vars_matrix(Board_Size, Row_Counter, [H|T]) :-
-    length(H, Board_Size),
-    domain(H, 0, 1),
-    Row_Counter1 is Row_Counter + 1,
-    get_vars_matrix(Board_Size, Row_Counter1, T).
-
-append_vars([], Acc, Acc).
-append_vars([H|T], Acc, Final_Vars) :-
-    append(Acc, H, Acc1),
-    append_vars(T, Acc1, Final_Vars).
-
-show_board_matrix([]).
-show_board_matrix([Row|Rest]) :-
-    show_row(Row), 
-    nl,
-    show_board_matrix(Rest).
-
-show_row([]).
-show_row([Col|Rest]) :-
-    write(Col), write(' '),
-    show_row(Rest).
 
 

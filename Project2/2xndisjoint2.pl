@@ -6,8 +6,8 @@ disjoint2_2xn(Board_Size, Column_Constraints, Row_Constraints, Options) :-
     restrict_distances_disjoint(Vars), % Makes sure that the shaded squares dont touch each other
     restrict_column_constraints(disjoint2_2xn, Column_Constraints, Vars),
     restrict_row_constraints(disjoint2_2xn, Row_Constraints, Vars),
-    labeling(Options, Vars). % Gets the solution
-    %print_solution(Board_Size, Vars, Row_Constraints, Column_Constraints).
+    labeling(Options, Vars), % Gets the solution
+    print_solution(Board_Size, Vars, Row_Constraints, Column_Constraints).
 
 restrict_distances_disjoint(SquaresColumns) :-
     create_rectangles_param(SquaresColumns, [], Rectangles, 1),
