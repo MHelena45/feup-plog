@@ -1,6 +1,5 @@
 
 simple_2xn(Board_Size, Column_Constraints, Row_Constraints, Options) :-
-    % Vars is a list in which 2 following members represent the column position of the shaded squares of the same row
     get_vars_list(Board_Size, Vars),
     restrict_cardinality(Board_Size, Vars), % Restricts the number shaded squares in a row
     restrict_distances_simple(Vars), % Makes sure that the shaded squares dont touch each other
