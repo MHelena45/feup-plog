@@ -9,7 +9,7 @@ simple_nxn(Board_Size, Column_Constraints, Row_Constraints, Options) :-
     labeling(Options, Final_Vars), 
     show_board_matrix(Vars).
 
-check_distance_simple([_Line], Squares, Squares).
+check_distance_simple([], Squares, Squares).
 check_distance_simple([Line1, Line2 | OtherLines], Squares, Final_Squares) :-
     element(C1, Line1, 1), % first square of the first row
     element(C2, Line1, 1), % second square of the second row
@@ -28,4 +28,12 @@ check_distance_simple([Line1, Line2 | OtherLines], Squares, Final_Squares) :-
     (C2p1 #< C3 #\ C2s1 #> C3), % check that C2 and C3 are spaced
     (C2p1 #< C4 #\ C2s1 #> C4), % check that C2 and C4 are spaced
 
-    check_distance_simple([Line2 | OtherLines], [C1, C2, C3, C4 | Squares], Final_Squares).
+    check_distance_simple([Line2 | OtherLines], [C1, C2 | Squares], Final_Squares).
+
+check_distance_simple([Line1 ], Squares, Final_Squares) :-
+    element(C1, Line1, 1), % first square of the first row
+    element(C2, Line1, 1), % second square of the second row
+    
+    sum([C1, 1], #<, C2),     % check that C2 is greater than C1 and there is a space betewen them
+
+    check_distance_simple([], [C1, C2 | Squares], Final_Squares).

@@ -15,7 +15,6 @@ disjoint2_nxn(Board_Size, Column_Constraints, Row_Constraints, Options) :-
  */
 check_distance_disjoint( [  ], _Board_Size, Rectangles, Rectangles, Squares, Squares).
 check_distance_disjoint([Line1 | OtherLines], Counter, Rectangles, Final_Rectangles, Squares, Final_Squares ):-
-
     element(C1, Line1, 1), % first square of the first row
     element(C2, Line1, 1), % second square of the second row
     C1 #< C2,   

@@ -74,29 +74,6 @@ restrict_distances([C1, C2]) :-
     % check that C1 and C2 don't touch and C1 is lower than C2
     sum([C1, 1], #<, C2).   % check that C2 is greater than C1 and there is a space between them
 
-/**
- * Check if the squares don't touch each other, even at corners.
- */
- /*
-restrict_distances(SquaresColumns) :-
-    create_rectangles_param(SquaresColumns, [], Rectangles, [], Margin, 1),
-    disjoint2(Rectangles, Margin).
-
-create_rectangles_param([_,_], Rectangles, Rectangles, Margin, Margin, _Row_with_Board_Size_Value).
-create_rectangles_param([Fisrt_square_1_Row, Second_Square_1_Row, Fisrt_square_2_Row, Second_Square_2_Row | Rest], Rectangles, FinalRectangles, Margin, FinalMargin, Row) :-
-    NextRow is Row + 1,
-    create_rectangles_param( [ Fisrt_square_2_Row, Second_Square_2_Row | Rest] , [ 
-                rect(Fisrt_square_1_Row, 1, Row, 1, RectangleType), 
-                rect(Second_Square_1_Row, 1, Row, 1, RectangleType),
-                rect(Fisrt_square_2_Row, 1, Row, 1, RectangleType), 
-                rect(Second_Square_2_Row, 1, Row, 1, RectangleType) | Rectangles
-            ], FinalRectangles,
-            [
-                margin(RectangleType, RectangleType, 1, 1) | Margin
-            ], FinalMargin, NextRow ).
-*/
-
-
 restrict_specific_distances(Vars, Board_Size, Row_Constraints, Column_Constraints) :-
     restrict_specific_distances(Vars, Board_Size, [], [], Row_Constraints, Column_Constraints).
 

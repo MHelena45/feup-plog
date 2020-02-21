@@ -7,7 +7,6 @@ get_vars_list(Board_Size, Vars) :-
 get_vars_matrix(Board_Size, Board_Size, []).
 get_vars_matrix(Board_Size, Row_Counter, [H|T]) :-
     length(H, Board_Size),
-    restrict_NxNcardinality(Board_Size, H),
     global_cardinality(H, [0-_, 1-2]),
     domain(H, 0, 1),
     Row_Counter1 is Row_Counter + 1,
@@ -99,10 +98,7 @@ restrict_row_distance(disjoint2_2xn, Row-Row_Value, Vars) :-
     Index1 is Index2 - 1, % subtract operation are faster than multiplication ones
     element(Index1, Vars, Element1), 
     element(Index2, Vars, Element2),
-    disjoint2( [
-    rect(Element1, 1, Row, 1, RectangleType), 
-    rect(Element2, 1, Row, 1, RectangleType)],
-    [margin(RectangleType, RectangleType, Row_Value, 1)]).
+    Element2 #= Element1 + Row_Value + 1.
 
 restrict_row_distance(disjoint2_nxn, Row-Row_Value, Vars) :-
     nth1(Row, Vars, Line),
