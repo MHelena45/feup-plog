@@ -1,4 +1,3 @@
-
 disjoint2_nxn(Board_Size, Column_Constraints, Row_Constraints, Options) :-   
     get_vars_matrix(Board_Size, 0, Vars),
     check_distance_disjoint(Vars, 1, [], Rectangles, [], Squares),
@@ -26,7 +25,3 @@ check_distance_disjoint([Line1 | OtherLines], Counter, Rectangles, Final_Rectang
         rect(C2, 1, Counter, 1, a) | Rectangles], Final_Rectangles, 
     [ C1, C2| Squares] , Final_Squares).
 
-
-
-
-	

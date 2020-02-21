@@ -7,6 +7,8 @@ get_vars_list(Board_Size, Vars) :-
 get_vars_matrix(Board_Size, Board_Size, []).
 get_vars_matrix(Board_Size, Row_Counter, [H|T]) :-
     length(H, Board_Size),
+    restrict_NxNcardinality(Board_Size, H),
+    global_cardinality(H, [0-_, 1-2]),
     domain(H, 0, 1),
     Row_Counter1 is Row_Counter + 1,
     get_vars_matrix(Board_Size, Row_Counter1, T).
