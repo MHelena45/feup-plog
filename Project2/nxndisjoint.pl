@@ -6,11 +6,12 @@ disjoint2_nxn(Board_Size, Column_Constraints, Row_Constraints, Options) :-
     check_distance_disjoint(Vars, 1, [], Rectangles, [], Squares),
     disjoint2(Rectangles, [margin(a, a, 1, 1)]),
     restrict_squares_per_column(Board_Size, Squares ),
-    % constrain_columns(Vars, Board_Size, Column_Constraints, 1),
+   % constrain_columns(Vars, Board_Size, Column_Constraints, 1),
     % row_constraints(1, Row_Constraints, Vars),
     append_vars(Vars, [], Final_Vars),
     labeling(Options, Final_Vars),
     show_board_matrix(Vars).
+
 
 /**
  * makes sure there are only two black squares per column
