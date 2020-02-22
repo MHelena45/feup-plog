@@ -4,8 +4,8 @@ automaton_nxn(Board_Size, Column_Constraints, Row_Constraints, Options) :-
     constrain_columns(Vars, Board_Size, Column_Constraints, 1),
     constrain_rows(Vars, Board_Size, Row_Constraints, 1),
     append_vars(Vars, [], Final_Vars),
-    labeling(Options, Final_Vars),
-    show_board_matrix(Vars).
+    labeling(Options, Final_Vars).
+    % show_board_matrix(Vars).
 
 constrain_columns(_Vars, Board_Size, _Col_Constraints, Board_Size).
 constrain_columns(Vars, Board_Size, Col_Constraints, Num_Col) :-

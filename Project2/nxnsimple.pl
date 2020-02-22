@@ -6,8 +6,8 @@ simple_nxn(Board_Size, Column_Constraints, Row_Constraints, Options) :-
     restrict_column_constraints(disjoint2_nxn, Column_Constraints, Vars),
     restrict_row_constraints(disjoint2_nxn, Row_Constraints, Vars),
     append_vars(Vars, [], Final_Vars),
-    labeling(Options, Final_Vars), 
-    show_board_matrix(Vars).
+    labeling(Options, Final_Vars). 
+    % show_board_matrix(Vars).
 
 check_distance_simple([], Squares, Squares).
 check_distance_simple([Line1, Line2 | OtherLines], Squares, Final_Squares) :-

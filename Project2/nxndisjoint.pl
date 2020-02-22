@@ -6,8 +6,8 @@ disjoint2_nxn(Board_Size, Column_Constraints, Row_Constraints, Options) :-
     restrict_column_constraints(disjoint2_nxn, Column_Constraints, Vars),
     restrict_row_constraints(disjoint2_nxn, Row_Constraints, Vars),
     append_vars(Vars, [], Final_Vars),
-    labeling(Options, Final_Vars),
-    show_board_matrix(Vars).
+    labeling(Options, Final_Vars).
+    % show_board_matrix(Vars).
 
 /**
  * Disjoint tem a posição no vetor como x
