@@ -1,5 +1,6 @@
 :- use_module(library(clpfd)).
 :- use_module(library(lists)).
+:- use_module(library(timeout)).
 
 :- include('2xndisjoint2.pl').
 :- include('nxnautomaton.pl').
@@ -10,8 +11,11 @@
 
 :- include('util.pl').
 :- include('solution_printer.pl').
+:- include('constraints.pl').
 
 filename('C:\\Users\\pasga\\Desktop\\stats.csv').
+
+timeout_ms(60000). % miliseconds = 1 minute
 
 % Variable data
 board_sizes([9, 11, 13, 15]).
@@ -27,9 +31,6 @@ approaches([
     cumulative_horizontal_only_no_board
 ]). 
 
-column_contraints([[], [2-5], [2-5, 8-6]]).
-row_constraints([[], [5-5], [5-5, 7-1]]).
-
 next_variable_options([leftmost, min, max, ff, anti_first_fail, occurrence, ffc, max_regret]).
 way_choice_options([step, enum, bisect, median, middle]).
 order_choice_options([up, down]).
@@ -42,21 +43,15 @@ calc_stats :-
 
 for_each_board_size([]).
 for_each_board_size([Board_Size|Rest]) :-
-    column_contraints(Column_Contraints),
-    for_each_column_constraint(Board_Size, Column_Contraints),
+    findall(Column_Constraint-Row_Constraint, constraints(Board_Size, Column_Constraint, Row_Constraint), List_Of_Constraints),
+    for_each_constraint(Board_Size, List_Of_Constraints),
     for_each_board_size(Rest).
 
-for_each_column_constraint(_Board_Size, []).
-for_each_column_constraint(Board_Size, [Column_Contraint|Rest]) :-
-    row_constraints(Row_Contraints),
-    for_each_row_constraint(Board_Size, Column_Contraint, Row_Contraints),
-    for_each_column_constraint(Board_Size, Rest).
-
-for_each_row_constraint(_Board_Size, _Column_Constraint, []).
-for_each_row_constraint(Board_Size, Column_Contraint, [Row_Contraint|Rest]) :-
-    approaches(Approaches),
-    for_each_approach(Board_Size, Column_Contraint, Row_Contraint, Approaches),
-    for_each_row_constraint(Board_Size, Column_Contraint, Rest).
+for_each_constraint(_Board_Size, []).
+for_each_constraint(Board_Size, [Column_Constraint-Row_Constraint|Rest]) :-
+    approaches(Approaches), 
+    for_each_approach(Board_Size, Column_Constraint, Row_Constraint, Approaches),
+    for_each_constraint(Board_Size, Rest).
 
 for_each_approach(_Board_Size, _Column_Contraint, _Row_Contraint, []).
 for_each_approach(Board_Size, Column_Contraint, Row_Contraint, [Approach|Rest]) :-
@@ -82,11 +77,12 @@ for_each_order(Board_Size, Column_Contraint, Row_Contraint, Approach, V_Option, 
     execute_approach(Approach, Board_Size, Column_Contraint, Row_Contraint, [V_Option, W_Option, O_Option]),
     for_each_order(Board_Size, Column_Contraint, Row_Contraint, Approach, V_Option, W_Option, Rest).
 
-execute_approach(Approach, Board_Size, Column_Contraints, Row_Contraints, Options) :-   
-    A =.. [Approach, Board_Size, Column_Contraints, Row_Contraints, [satisfy|Options]], 
+execute_approach(Approach, Board_Size, Column_Contraints, Row_Contraints, Options) :-  
+    timeout_ms(Timeout),
+    A =.. [Approach, Board_Size, Column_Contraints, Row_Contraints, [satisfy | Options]], 
     reset_stats,
-    A,
-    save_stats(Approach, Board_Size, Column_Contraints, Row_Contraints, Options).
+    time_out(A, Timeout, Flag),
+    save_stats(Approach, Board_Size, Column_Contraints, Row_Contraints, Options, Flag).
 
 reset_stats :-
     fd_statistics(resumptions, _),
@@ -96,7 +92,7 @@ reset_stats :-
     fd_statistics(constraints, _),
     statistics(runtime, _).
 
-save_stats(Approach, Board_Size, Column_Contraints, Row_Contraints, Options) :-
+save_stats(Approach, Board_Size, Column_Contraints, Row_Contraints, Options, Flag) :-
     statistics(runtime, [_, Runtime]),
     statistics(memory, [Memory, _]),
     statistics(memory_used, Memory_Used),
@@ -116,6 +112,7 @@ save_stats(Approach, Board_Size, Column_Contraints, Row_Contraints, Options) :-
     save_constraints(Column_Contraints),
     save_constraints(Row_Contraints),
     save(Approach),
+    save(Flag),
 
     save_options(Options),
     save(Runtime),
@@ -149,6 +146,7 @@ write_stats_header :-
     save('Column Constraints'),
     save('Row Constraints'),
     save('Approach'),
+    save('Result'),
     save('Options'),
     save('Runtime'),
     save('Memory'),
@@ -176,3 +174,28 @@ save_options([Option1, Option2, Option3]) :-
 save(Stat) :-
     write(Stat),
     write(',').
+
+% Predicate to test if the constraints available in 'constraints.pl' 
+% form possible solutions
+test :-
+    board_sizes(Board_Sizes),
+    for_each_board_size2(Board_Sizes).
+
+for_each_board_size2([]).
+for_each_board_size2([Board_Size|Rest]) :-
+    findall(Column_Constraint-Row_Constraint, constraints(Board_Size, Column_Constraint, Row_Constraint), List_Of_Constraints),
+    for_each_constraint2(Board_Size, List_Of_Constraints),
+    for_each_board_size2(Rest).
+
+for_each_constraint2(_Board_Size, []).
+for_each_constraint2(Board_Size, [Column_Constraint-Row_Constraint|Rest]) :-
+    register_log(Board_Size, Column_Constraint, Row_Constraint, simple_2xn),
+    time_out(
+        simple_2xn(Board_Size, Column_Constraint, Row_Constraint, []),
+        10000,
+        Flag),
+    check_flag(Flag),
+    for_each_constraint2(Board_Size, Rest).
+
+check_flag(success).
+check_flag(time_out) :- write('##### TIMEOUT #####\n').
