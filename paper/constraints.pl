@@ -1,7 +1,7 @@
 % constraints(Board_Size, Column_Constraints, Row_Constraints) 
 
 % ######## 1 Column - 0 Row ##############
-/* constraints(_, [], []).
+constraints(_, [], []).
 constraints(9, [2-3], []). 
 constraints(11, [2-2], []).
 constraints(13, [2-2], []).

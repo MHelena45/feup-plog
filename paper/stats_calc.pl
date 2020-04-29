@@ -15,12 +15,12 @@
 
 :- include('../Project2/solution_printer.pl').
 
-filename('C:\\Users\\pasga\\Desktop\\stats_15.csv').
+board_sizes([9, 11, 13, 15]).
+filename('_'). % File name to save results to
 
 timeout_ms(30000). % miliseconds = 0.5 minute
 
 % Variable data
-board_sizes([15]).
 approaches([ 
     automaton_nxn, 
     disjoint2_2xn,
