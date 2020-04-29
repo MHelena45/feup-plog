@@ -22,10 +22,10 @@ public class checker {
 
             reader = Files.newBufferedReader(filePath);
 
-            String fileLine = reader.readLine();
+            String fileLine = reader.readLine() + "\n";
             Files.write(destPath, fileLine.getBytes(), StandardOpenOption.APPEND);
 
-            fileLine = reader.readLine();
+            fileLine = reader.readLine() + "\n";
             do {
                 Files.write(destPath, fileLine.getBytes(),  StandardOpenOption.APPEND);
                 fileLine = parseLine(reader.readLine());
