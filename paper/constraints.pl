@@ -1,5 +1,9 @@
 % constraints(Board_Size, Column_Constraints, Row_Constraints) 
 
+% Extra
+constraints(11, [2-8], []).
+
+/*
 % ######## 1 Column - 0 Row ##############
 constraints(_, [], []).
 constraints(9, [2-3], []). 
@@ -333,7 +337,7 @@ constraints(11, [5-4, 7-2], [1-2]).
 constraints(13, [5-4, 7-3], [1-2]).
 constraints(11, [5-4, 7-5], [1-2]).
 constraints(13, [5-4, 7-5], [1-2]).
-constraints(15, [5-4, 7-5], [1-2]). */
+constraints(15, [5-4, 7-5], [1-2]).
 constraints(15, [5-4, 7-6], [1-2]).
 constraints(11, [5-4, 7-7], [1-2]).
 constraints(13, [5-4, 7-7], [1-2]). 
@@ -1192,4 +1196,4 @@ constraints(15, [7-5], [6-6, 8-7]).
 % ######## 2 Column - 2 Row ############## 
 constraints(_, [2-3, 5-6], [1-2, 8-3]).
 constraints(_, [2-3, 7-6], [1-2, 8-3]).
-constraints(_, [2-4, 5-6], [1-4, 6-5]).
+constraints(_, [2-4, 5-6], [1-4, 6-5]). */
