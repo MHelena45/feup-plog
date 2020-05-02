@@ -15,8 +15,8 @@
 
 :- include('../Project2/solution_printer.pl').
 
-board_sizes([9, 11, 13, 15]).
-filename('_'). % File name to save results to
+board_sizes([11]).
+filename('C:\\Users\\pasga\\Desktop\\extra.csv'). % File name to save results to
 
 timeout_ms(30000). % miliseconds = 0.5 minute
 
